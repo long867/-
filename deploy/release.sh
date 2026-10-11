@@ -41,13 +41,18 @@ fi
 healthy=false
 stack_ready=false
 # Beat's previous leader lease can take 90 seconds to expire after recreation.
-if "${compose[@]}" up -d --no-build --wait --wait-timeout 300; then
+if "${compose[@]}" up -d --no-build --wait --wait-timeout 300 && \
+   "${compose[@]}" exec -T nginx nginx -t && \
+   "${compose[@]}" exec -T nginx nginx -s reload; then
+  # Refresh Docker DNS after API/frontend containers receive new addresses.
   stack_ready=true
 fi
 for attempt in $(seq 1 12); do
   [[ "$stack_ready" == true ]] || break
   if "${compose[@]}" exec -T api python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready', timeout=3)" >/dev/null 2>&1 && \
-     "${compose[@]}" exec -T frontend node -e "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" >/dev/null 2>&1; then
+     "${compose[@]}" exec -T frontend node -e "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" >/dev/null 2>&1 && \
+     "${compose[@]}" exec -T nginx wget -q -O /dev/null http://127.0.0.1/health/ready && \
+     "${compose[@]}" exec -T nginx wget -q -O /dev/null http://127.0.0.1/; then
     healthy=true; break
   fi
   sleep 5
@@ -59,6 +64,7 @@ else
   echo 'Release health checks failed; restoring previous images' >&2
   if [[ -f .images.previous.env ]]; then
     "${base_compose[@]}" --env-file .images.previous.env up -d --no-build
+    "${base_compose[@]}" --env-file .images.previous.env exec -T nginx nginx -s reload
   fi
   exit 1
 fi

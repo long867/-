@@ -1,0 +1,19 @@
+{
+  "mocked_http": false,
+  "real_articles": 14,
+  "filters": true,
+  "sorting": true,
+  "pagination": true,
+  "pages": [
+    "/",
+    "/minerals",
+    "/events",
+    "/policies",
+    "/trends"
+  ],
+  "price_source_link": true,
+  "weekly_digest": true,
+  "mobile_overflow": false,
+  "javascript_errors": [],
+  "api_failures": []
+}

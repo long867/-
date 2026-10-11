@@ -1,0 +1,42 @@
+{
+  "checked_at": "2026-10-11T03:26:08.689929+00:00",
+  "articles": 20,
+  "published": 14,
+  "pending": 6,
+  "published_english": 4,
+  "all_published_english_numeric_checks": true,
+  "prices": 10,
+  "vector_dimensions": [
+    1024
+  ],
+  "latest_quote": {
+    "date": "2026-10-09",
+    "price": "121000.000000",
+    "unit": "吨",
+    "currency": "CNY",
+    "product": "碳酸锂（生意社现期表现货口径）",
+    "source_url": "https://www.100ppi.com/sf/"
+  },
+  "news": [
+    {
+      "title": "McEwen向Discovery出售US$55million的安大略资产",
+      "url": "https://resourceworld.com/mcewen-unveils-us55million-sale-of-ontario-assets-to-discovery/",
+      "summary_characters": 113
+    },
+    {
+      "title": "King Copper选择钻探承包商在其Colquemayo项目启动首次钻探计划",
+      "url": "https://resourceworld.com/king-copper-selects-drill-contractor-for-inaugural-drill-program-at-colquemayo/",
+      "summary_characters": 184
+    },
+    {
+      "title": "GSilver完成墨西哥两座矿井的地下连接",
+      "url": "https://resourceworld.com/gsilver-completes-underground-connection-of-two-mexico-mines/",
+      "summary_characters": 148
+    },
+    {
+      "title": "AuMEGA Metals在纽芬兰岛Intersection项目中发现高品位金",
+      "url": "https://resourceworld.com/aumega-metals-discovers-high-grade-gold-at-intersection-project-newfoundland/",
+      "summary_characters": 177
+    }
+  ]
+}

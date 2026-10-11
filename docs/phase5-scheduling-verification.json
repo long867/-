@@ -1,0 +1,90 @@
+{
+  "verified_at": "2026-10-11T07:23:20.325526+00:00",
+  "timezone": "Asia/Shanghai",
+  "worker_ping": [
+    {
+      "celery@ltt": {
+        "ok": "pong"
+      }
+    }
+  ],
+  "schedules": {
+    "daily-brief": "<crontab: 0 8 * * * (m/h/dM/MY/d)>",
+    "weekly-brief": "<crontab: 0 8 * * 1 (m/h/dM/MY/d)>",
+    "monthly-brief": "<crontab: 0 8 1 * * (m/h/dM/MY/d)>"
+  },
+  "scheduled_report_tasks": {
+    "daily": {
+      "task_id": "1902dd09-564e-45fe-bf8f-27c814809eff",
+      "result": {
+        "status": "unchanged",
+        "report_id": "783bf6d7-ae3c-4571-8a7a-35b72d0d84ae",
+        "kind": "daily"
+      }
+    },
+    "weekly": {
+      "task_id": "b57d15e0-5f54-4b7b-9115-be865bfbd610",
+      "result": {
+        "status": "unchanged",
+        "report_id": "caa38e5c-be0b-4f0b-b323-dca50e9257b7",
+        "kind": "weekly"
+      }
+    },
+    "monthly": {
+      "task_id": "80cc6d66-d5dc-4d6e-b2e0-fbb239691b5b",
+      "result": {
+        "status": "unchanged",
+        "report_id": "4e23ee1c-d101-4989-960b-9ee114e4883e",
+        "kind": "monthly"
+      }
+    }
+  },
+  "warm_cache": {
+    "/trends/hot-minerals?window=24h": {
+      "median_ms": 6.5,
+      "max_ms": 32.12,
+      "ttl_seconds": 1800,
+      "samples": 8
+    },
+    "/trends/price-alerts": {
+      "median_ms": 14.91,
+      "max_ms": 31.28,
+      "ttl_seconds": 60,
+      "samples": 8
+    },
+    "/trends/policy-updates": {
+      "median_ms": 5.9,
+      "max_ms": 29.83,
+      "ttl_seconds": 1800,
+      "samples": 8
+    },
+    "/digest/daily?scope=previous": {
+      "median_ms": 16.43,
+      "max_ms": 31.38,
+      "ttl_seconds": 3600,
+      "samples": 8
+    }
+  },
+  "external_delivery_enabled": false,
+  "insights_refresh": {
+    "events": 13,
+    "price_alerts": 0
+  },
+  "archived_reports": [
+    {
+      "id": "783bf6d7-ae3c-4571-8a7a-35b72d0d84ae",
+      "kind": "daily",
+      "mode": "llm"
+    },
+    {
+      "id": "caa38e5c-be0b-4f0b-b323-dca50e9257b7",
+      "kind": "weekly",
+      "mode": "llm"
+    },
+    {
+      "id": "4e23ee1c-d101-4989-960b-9ee114e4883e",
+      "kind": "monthly",
+      "mode": "llm"
+    }
+  ]
+}

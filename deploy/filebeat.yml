@@ -1,0 +1,16 @@
+# Optional ELK shipper on a separate monitoring host, or mounted beside the app.
+filebeat.inputs:
+  - type: filestream
+    id: miningintel-json
+    paths: [/var/log/miningintel/miningintel-*.jsonl*]
+    parsers:
+      - ndjson:
+          target: ''
+          add_error_key: true
+    fields: {service.name: miningintel}
+    fields_under_root: true
+output.elasticsearch:
+  hosts: ['${ELASTICSEARCH_URL}']
+  username: '${ELASTICSEARCH_USERNAME}'
+  password: '${ELASTICSEARCH_PASSWORD}'
+  ssl.verification_mode: full

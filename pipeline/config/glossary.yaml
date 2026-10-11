@@ -1,0 +1,42 @@
+# Chinese canonical terms are also used by entity extraction and search.
+terms:
+  lithium: 锂
+  cobalt: 钴
+  rare earth: 稀土
+  rare earths: 稀土
+  graphite: 石墨
+  nickel: 镍
+  copper: 铜
+  iron ore: 铁矿石
+  uranium: 铀
+  gold: 金
+  silver: 银
+  aluminium: 铝
+  bauxite: 铝土矿
+  manganese: 锰
+  zinc: 锌
+  lead: 铅
+  tin: 锡
+  tungsten: 钨
+  molybdenum: 钼
+  antimony: 锑
+  platinum: 铂
+  palladium: 钯
+  spodumene: 锂辉石
+  lithium carbonate: 碳酸锂
+  lithium hydroxide: 氢氧化锂
+  critical minerals: 关键矿产
+  mineral resources: 矿产资源
+  mineral reserves: 矿产储量
+  offtake agreement: 承购协议
+  tailings: 尾矿
+  beneficiation: 选矿
+  smelting: 冶炼
+  ore grade: 矿石品位
+  feasibility study: 可行性研究
+  epithermal: 低温热液
+  concentrate: 精矿
+  concentrates: 精矿
+  haulage: 矿石运输
+  flotation plant: 浮选厂
+  life of mine: 矿山服务年限

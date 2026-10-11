@@ -1,0 +1,123 @@
+{
+  "title": "MiningIntel Collectors",
+  "uid": "miningintel-collectors",
+  "schemaVersion": 40,
+  "version": 1,
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "refresh": "30s",
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Fetched by source / minute",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "targets": [
+        {
+          "expr": "sum by (source) (rate(miningintel_collector_fetched_total[5m])) * 60",
+          "refId": "A",
+          "legendFormat": "{{source}} {{stage}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Inserted by source / minute",
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "targets": [
+        {
+          "expr": "sum by (source) (rate(miningintel_collector_inserted_total[5m])) * 60",
+          "refId": "A",
+          "legendFormat": "{{source}} {{stage}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Duplicate candidates / minute",
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "targets": [
+        {
+          "expr": "sum by (source) (rate(miningintel_collector_duplicates_total[5m])) * 60",
+          "refId": "A",
+          "legendFormat": "{{source}} {{stage}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Errors by source and stage",
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "targets": [
+        {
+          "expr": "sum by (source, stage) (increase(miningintel_collector_errors_total[1h]))",
+          "refId": "A",
+          "legendFormat": "{{source}} {{stage}}"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Collection p95 seconds",
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, source) (rate(miningintel_collector_duration_seconds_bucket[5m])))",
+          "refId": "A",
+          "legendFormat": "{{source}} {{stage}}"
+        }
+      ]
+    }
+  ]
+}

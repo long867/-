@@ -1,0 +1,162 @@
+{
+  "rule_files": [
+    "alerts.yml"
+  ],
+  "evaluation_interval": "1m",
+  "tests": [
+    {
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "miningintel_source_consecutive_failures{source=\"USGS\",job=\"miningintel\",instance=\"api:8000\"}",
+          "values": "3+0x10"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "eval_time": "2m",
+          "alertname": "MiningIntelSourceFailedThreeTimes",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "severity": "warning",
+                "source": "USGS",
+                "job": "miningintel",
+                "instance": "api:8000"
+              },
+              "exp_annotations": {
+                "summary": "信源连续采集失败：USGS",
+                "description": "检查信源地址、访问许可、凭据与管理后台运行记录。"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "miningintel_last_article_insert_timestamp_seconds{job=\"miningintel\",instance=\"api:8000\"}",
+          "values": "0+0x140"
+        },
+        {
+          "series": "miningintel_active_sources{job=\"miningintel\",instance=\"api:8000\"}",
+          "values": "1+0x140"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "eval_time": "130m",
+          "alertname": "MiningIntelNoNewArticles",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "severity": "warning",
+                "job": "miningintel",
+                "instance": "api:8000"
+              },
+              "exp_annotations": {
+                "summary": "超过两小时没有新增文章",
+                "description": "检查 Worker、Beat、信源采集及去重记录。"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "miningintel_http_requests_total{route=\"/api/articles\",status=\"500\"}",
+          "values": "0+10x15"
+        },
+        {
+          "series": "miningintel_http_requests_total{route=\"/api/articles\",status=\"200\"}",
+          "values": "0+90x15"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "eval_time": "10m",
+          "alertname": "MiningIntelApiErrorRate",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "severity": "critical"
+              },
+              "exp_annotations": {
+                "summary": "API 五分钟错误率超过 5%",
+                "description": "通过 request_id 对照 JSON 日志定位错误。"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "miningintel_chat_duration_seconds_bucket{le=\"5\"}",
+          "values": "0+0x15"
+        },
+        {
+          "series": "miningintel_chat_duration_seconds_bucket{le=\"10\"}",
+          "values": "0+10x15"
+        },
+        {
+          "series": "miningintel_chat_duration_seconds_bucket{le=\"+Inf\"}",
+          "values": "0+10x15"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "eval_time": "10m",
+          "alertname": "MiningIntelSlowChat",
+          "exp_alerts": [
+            {
+              "exp_labels": {
+                "severity": "warning"
+              },
+              "exp_annotations": {
+                "summary": "咨询完整回答的 P95 延迟超过 5 秒",
+                "description": "包含检索、生成、校验与提交；SSE 首帧时间不代表完整耗时。"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "interval": "1m",
+      "input_series": [
+        {
+          "series": "miningintel_source_consecutive_failures{source=\"USGS\"}",
+          "values": "2+0x15"
+        },
+        {
+          "series": "miningintel_http_requests_total{route=\"/api/articles\",status=\"500\"}",
+          "values": "0+1x15"
+        },
+        {
+          "series": "miningintel_http_requests_total{route=\"/api/articles\",status=\"200\"}",
+          "values": "0+99x15"
+        }
+      ],
+      "alert_rule_test": [
+        {
+          "eval_time": "10m",
+          "alertname": "MiningIntelSourceFailedThreeTimes",
+          "exp_alerts": []
+        },
+        {
+          "eval_time": "10m",
+          "alertname": "MiningIntelApiErrorRate",
+          "exp_alerts": []
+        }
+      ]
+    }
+  ]
+}

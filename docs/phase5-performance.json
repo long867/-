@@ -1,0 +1,119 @@
+{
+  "environment": "Windows / Edge / Next.js production standalone / real API",
+  "mobile_runs": [
+    {
+      "lighthouse_version": "12.8.2",
+      "fetch_time": "2026-10-11T06:10:27.749Z",
+      "url": "http://127.0.0.1:3000/",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 762.7201,
+        "largest-contentful-paint": 1962.7201,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "settings": {
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        }
+      }
+    },
+    {
+      "lighthouse_version": "12.8.2",
+      "fetch_time": "2026-10-11T06:11:44.454Z",
+      "url": "http://127.0.0.1:3000/",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 96,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": 764.6797,
+        "largest-contentful-paint": 1999.3594,
+        "total-blocking-time": 0,
+        "cumulative-layout-shift": 0
+      },
+      "settings": {
+        "formFactor": "mobile",
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        }
+      }
+    }
+  ],
+  "mobile_median_lcp_ms": 1981.03975,
+  "desktop": {
+    "lighthouse_version": "12.8.2",
+    "fetch_time": "2026-10-11T06:11:54.757Z",
+    "url": "http://127.0.0.1:3000/",
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "metrics": {
+      "first-contentful-paint": 370.2726,
+      "largest-contentful-paint": 570.2726,
+      "total-blocking-time": 0,
+      "cumulative-layout-shift": 0
+    },
+    "settings": {
+      "formFactor": "desktop",
+      "throttlingMethod": "simulate",
+      "throttling": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "screenEmulation": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      }
+    }
+  },
+  "baseline_phase4_mobile": {
+    "performance": 92,
+    "lcp_ms": 3316.89
+  },
+  "limits": "Local simulated measurements; real devices and networks vary."
+}

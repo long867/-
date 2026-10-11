@@ -1,0 +1,37 @@
+groups:
+  - name: miningintel
+    interval: 30s
+    rules:
+      - alert: MiningIntelSourceFailedThreeTimes
+        expr: miningintel_source_consecutive_failures >= 3
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: '信源连续采集失败：{{ $labels.source }}'
+          description: '检查信源地址、访问许可、凭据与管理后台运行记录。'
+      - alert: MiningIntelNoNewArticles
+        expr: (time() - miningintel_last_article_insert_timestamp_seconds > 7200) and on(job, instance) (miningintel_active_sources > 0)
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: '超过两小时没有新增文章'
+          description: '检查 Worker、Beat、信源采集及去重记录。'
+      - alert: MiningIntelApiErrorRate
+        expr: (sum(rate(miningintel_http_requests_total{route=~"/api/.*",status=~"5.."}[5m])) / clamp_min(sum(rate(miningintel_http_requests_total{route=~"/api/.*"}[5m])), 0.001)) > 0.05
+        for: 5m
+        labels: {severity: critical}
+        annotations:
+          summary: 'API 五分钟错误率超过 5%'
+          description: '通过 request_id 对照 JSON 日志定位错误。'
+      - alert: MiningIntelSlowChat
+        expr: histogram_quantile(0.95, sum by (le) (rate(miningintel_chat_duration_seconds_bucket[5m]))) > 5
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: '咨询完整回答的 P95 延迟超过 5 秒'
+          description: '包含检索、生成、校验与提交；SSE 首帧时间不代表完整耗时。'
+      - alert: MiningIntelServiceDown
+        expr: up{job=~"miningintel|miningintel-collector"} == 0
+        for: 2m
+        labels: {severity: critical}
+        annotations: {summary: 'MiningIntel 服务无法抓取指标'}

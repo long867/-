@@ -1,0 +1,177 @@
+name: miningintel
+x-app: &app
+  env_file: ../.env
+  environment: &container-environment
+    DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-miningintel}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-miningintel}
+    REDIS_URL: redis://redis:6379/0
+    CELERY_BROKER_URL: redis://redis:6379/1
+    CELERY_RESULT_BACKEND: redis://redis:6379/2
+    MODEL_CACHE_DIR: /home/appuser/.cache/huggingface/hub
+    FETCH_BROWSER_CHANNEL: ''
+    QDRANT_URL: http://qdrant:6333
+    LOG_DIR: /var/log/miningintel
+  restart: unless-stopped
+  networks: [internal]
+  depends_on:
+    postgres: {condition: service_healthy}
+    redis: {condition: service_healthy}
+    migrate: {condition: service_completed_successfully}
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-miningintel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-miningintel}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [internal]
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    command: [redis-server, --appendonly, 'yes', --maxmemory-policy, noeviction]
+    volumes: [redis_data:/data]
+    healthcheck: {test: [CMD, redis-cli, ping], interval: 5s, timeout: 3s, retries: 20}
+    networks: [internal]
+    restart: unless-stopped
+  qdrant:
+    image: qdrant/qdrant:v1.19.2
+    volumes: [qdrant_data:/qdrant/storage]
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY:-}
+    # Private service; API/worker use http://qdrant:6333.
+    networks: [internal]
+    restart: unless-stopped
+  migrate:
+    image: ${API_IMAGE:-miningintel-api:dev}
+    build: {context: .., dockerfile: backend/Dockerfile}
+    env_file: ../.env
+    environment: *container-environment
+    command: [alembic, upgrade, head]
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [internal]
+    restart: 'no'
+  api:
+    <<: *app
+    image: ${WORKER_IMAGE:-miningintel-worker:dev}
+    build:
+      context: ..
+      dockerfile: pipeline/Dockerfile
+      args: {INSTALL_ML: '${INSTALL_ML:-false}'}
+    # Shared ML image ensures query and document encoders are the same model.
+    command: [uvicorn, app.main:app, --host, 0.0.0.0, --port, '8000', --proxy-headers, --forwarded-allow-ips, '*']
+    volumes: [model_cache:/home/appuser/.cache, app_logs:/var/log/miningintel]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+  worker:
+    <<: *app
+    image: ${WORKER_IMAGE:-miningintel-worker:dev}
+    build: {context: .., dockerfile: pipeline/Dockerfile, args: {INSTALL_ML: '${INSTALL_ML:-false}'}}
+    volumes: [model_cache:/home/appuser/.cache, app_logs:/var/log/miningintel]
+    command: [python, -m, pipeline.worker, --loglevel=INFO, '--queues=celery,nlp,insights', '--concurrency=${WORKER_CONCURRENCY:-1}', --max-tasks-per-child=50]
+    healthcheck:
+      test: [CMD, python, -c, "import socket; from app.core.task_history import client; assert client().exists('miningintel:ops:worker:celery@' + socket.gethostname())"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+  beat:
+    <<: *app
+    image: ${API_IMAGE:-miningintel-api:dev}
+    build: {context: .., dockerfile: backend/Dockerfile}
+    volumes: [app_logs:/var/log/miningintel, beat_data:/var/lib/miningintel/beat]
+    command: [celery, -A, 'app.tasks.celery_app:celery_app', beat, --loglevel=INFO, --schedule=/var/lib/miningintel/beat/schedule]
+    healthcheck:
+      test: [CMD, python, -c, "import socket; from app.core.task_history import client; host = client().get('miningintel:ops:beat-host') or b''; assert host.startswith((socket.gethostname() + ':').encode())"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    # Run exactly one Beat instance.
+  frontend:
+    image: ${FRONTEND_IMAGE:-miningintel-frontend:dev}
+    build: {context: .., dockerfile: frontend/Dockerfile}
+    environment: {API_INTERNAL_URL: 'http://api:8000'}
+    depends_on:
+      api: {condition: service_healthy}
+    networks: [internal]
+    restart: unless-stopped
+  nginx:
+    image: nginx:1.28-alpine
+    ports: ['${GATEWAY_BIND:-127.0.0.1}:${GATEWAY_PORT:-8080}:80']
+    volumes: [./nginx.conf:/etc/nginx/nginx.conf:ro]
+    depends_on: [frontend, api]
+    networks: [internal]
+    restart: unless-stopped
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    profiles: [monitoring]
+    volumes: [./prometheus.yml:/etc/prometheus/prometheus.yml:ro, ./alerts.yml:/etc/prometheus/alerts.yml:ro, prometheus_data:/prometheus]
+    command: [--config.file=/etc/prometheus/prometheus.yml, --storage.tsdb.retention.time=7d, --storage.tsdb.retention.size=1GB]
+    ports: ['127.0.0.1:${PROMETHEUS_PORT:-9090}:9090']
+    networks: [internal]
+    restart: unless-stopped
+  grafana:
+    image: grafana/grafana:11.6.0
+    profiles: [monitoring]
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+    volumes: [grafana_data:/var/lib/grafana, ./grafana/provisioning:/etc/grafana/provisioning:ro, ./grafana/dashboards:/var/lib/grafana/dashboards:ro]
+    ports: ['127.0.0.1:3001:3000']
+    networks: [internal]
+    restart: unless-stopped
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    profiles: [monitoring]
+    command: [--config.file=/etc/alertmanager/alertmanager.yml, --storage.path=/alertmanager]
+    volumes: [./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro, alertmanager_data:/alertmanager]
+    ports: ['127.0.0.1:9093:9093']
+    networks: [internal]
+    restart: unless-stopped
+  backup:
+    image: ${BACKUP_IMAGE:-miningintel-backup:dev}
+    build: {context: .., dockerfile: deploy/backup/Dockerfile}
+    profiles: [backup]
+    env_file: ../.env
+    environment:
+      PGHOST: postgres
+      PGPORT: '5432'
+      PGUSER: ${POSTGRES_USER:-miningintel}
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB:-miningintel}
+      BACKUP_DIR: /var/backups/miningintel
+    volumes: [backup_status:/var/backups/miningintel]
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [internal]
+    restart: unless-stopped
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    profiles: [mail]
+    ports: ['127.0.0.1:1025:1025', '127.0.0.1:8025:8025']
+    networks: [internal]
+    restart: unless-stopped
+
+networks:
+  internal: {}
+volumes:
+  postgres_data: {}
+  redis_data: {}
+  qdrant_data: {}
+  model_cache: {}
+  prometheus_data: {}
+  grafana_data: {}
+  app_logs: {}
+  beat_data: {}
+  alertmanager_data: {}
+  backup_status: {}

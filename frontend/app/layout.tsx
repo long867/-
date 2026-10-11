@@ -1,0 +1,58 @@
+import type { Metadata, Viewport } from "next";
+import { Providers } from "./providers";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { PwaRegister } from "@/components/pwa-register";
+import "./fonts.css";
+import "./globals.css";
+export const metadata: Metadata = {
+  title: {
+    default: "MiningIntel · 全球矿产情报",
+    template: "%s · MiningIntel",
+  },
+  description:
+    "全球矿产政策、市场与产业情报。追踪真实来源，用证据回答每一个问题。",
+  applicationName: "MiningIntel",
+  manifest: "/manifest.webmanifest",
+  icons: { icon: "/icon.svg", apple: "/icon-192.png" },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent" },
+};
+export const viewport: Viewport = {
+  themeColor: "#0b111c",
+  width: "device-width",
+  initialScale: 1,
+};
+const preferencesScript =
+  "try{document.documentElement.dataset.theme=localStorage.getItem('mi-theme')==='light'?'light':'dark';document.documentElement.lang=localStorage.getItem('mi-language')==='en'?'en':'zh-CN'}catch(e){}";
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="zh-CN" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/miningintel-display.woff2"
+          media="(min-width: 801px)"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <script dangerouslySetInnerHTML={{ __html: preferencesScript }} />
+      </head>
+      <body>
+        <a href="#main-content" className="skip-link">
+          跳转到内容 / Skip to content
+        </a>
+        <Providers>
+          <Header />
+          <div id="main-content">{children}</div>
+          <Footer />
+          <PwaRegister />
+        </Providers>
+      </body>
+    </html>
+  );
+}

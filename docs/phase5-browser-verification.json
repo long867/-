@@ -1,0 +1,24 @@
+{
+  "reports": {
+    "daily": {
+      "id": "783bf6d7-ae3c-4571-8a7a-35b72d0d84ae",
+      "articles": 1,
+      "mode": "llm"
+    },
+    "weekly": {
+      "id": "caa38e5c-be0b-4f0b-b323-dca50e9257b7",
+      "articles": 3,
+      "mode": "llm"
+    },
+    "monthly": {
+      "id": "4e23ee1c-d101-4989-960b-9ee114e4883e",
+      "articles": 8,
+      "mode": "llm"
+    }
+  },
+  "trend_windows_and_real_sparklines": true,
+  "archive_navigation_and_monthly_charts": true,
+  "email_and_price_warning_consent": true,
+  "owned_read_state_and_mobile_inbox": true,
+  "javascript_errors": []
+}

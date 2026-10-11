@@ -1,0 +1,637 @@
+# Editorial authority scores; access restrictions are explicit.
+version: 1
+sources:
+  english_news:
+  - name: Mining.com
+    url: https://www.mining.com/feed/
+    type: rss
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: runtime_probe_403_2026-10-10
+      access_note: 当前网络请求403；默认关闭，使用正式授权渠道，不绕过访问限制
+      fetch_full_content: true
+      proxy_env: FETCH_PROXY
+  - name: Mining Journal
+    url: https://www.mining-journal.com/
+    type: web
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: article a[href]
+      requires_license: true
+      proxy_env: FETCH_PROXY
+  - name: Northern Miner
+    url: https://www.northernminer.com/feed/
+    type: rss
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      fetch_full_content: false
+      requires_license: true
+      proxy_env: FETCH_PROXY
+  - name: Mining Weekly
+    url: https://www.miningweekly.com/page/latest-news/feed
+    type: rss
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: true
+    parser_config:
+      max_items: 10
+      verification: live_rss_with_article_2026-10-10
+      access_note: RSS和robots已通过真实请求；仅保存公开Feed内容，全文使用需另行核实
+      fetch_full_content: false
+      proxy_env: FETCH_PROXY
+  - name: Mining Technology
+    url: https://www.mining-technology.com/feed/
+    type: rss
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: true
+    parser_config:
+      max_items: 10
+      verification: live_rss_with_article_2026-10-10
+      access_note: RSS和robots已通过真实请求；仅保存公开Feed内容，全文使用需另行核实
+      fetch_full_content: false
+      proxy_env: FETCH_PROXY
+  - name: Australian Mining
+    url: https://www.australianmining.com.au/feed/
+    type: rss
+    category: news
+    region: 澳大利亚
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: runtime_probe_403_2026-10-10
+      access_note: 当前网络请求403；默认关闭，使用正式授权渠道，不绕过访问限制
+      fetch_full_content: false
+      proxy_env: FETCH_PROXY
+  - name: Resource World
+    url: https://resourceworld.com/feed/
+    type: rss
+    category: news
+    region: 加拿大
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: true
+    parser_config:
+      max_items: 10
+      verification: live_rss_200_2026-10-10
+      access_note: RSS 与 robots 已通过真实请求，默认保存 RSS 提供的正文；全文另行核实使用许可
+      fetch_full_content: false
+      proxy_env: FETCH_PROXY
+  - name: Reuters Mining
+    url: https://www.reuters.com/markets/commodities/
+    type: web
+    category: news
+    region: 全球
+    language: en
+    authority_score: 10
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      link_selector: article a[href]
+      proxy_env: FETCH_PROXY
+  - name: Bloomberg Commodities
+    url: https://www.bloomberg.com/markets/commodities
+    type: web
+    category: news
+    region: 全球
+    language: en
+    authority_score: 10
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      dynamic: true
+      link_selector: article a[href]
+      proxy_env: FETCH_PROXY
+  - name: S&P Global Mining
+    url: https://www.spglobal.com/marketintelligence/en/news-insights/latest-news-headlines
+    type: web
+    category: news
+    region: 全球
+    language: en
+    authority_score: 9
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      link_selector: article a[href]
+      proxy_env: FETCH_PROXY
+  critical_minerals:
+  - name: Benchmark Mineral Intelligence
+    url: https://www.benchmarkminerals.com/
+    type: web
+    category: report
+    region: 全球
+    language: en
+    authority_score: 9
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      proxy_env: FETCH_PROXY
+  - name: Lithium Market
+    url: https://www.miningweekly.com/page/lithium
+    type: web
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      provider: Mining Weekly lithium topic
+      link_selector: a[href*="/article/"]
+      proxy_env: FETCH_PROXY
+  - name: Rare Earths News
+    url: https://www.miningweekly.com/page/rare-earth-minerals
+    type: web
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      provider: Mining Weekly rare-earth topic
+      link_selector: a[href*="/article/"]
+      proxy_env: FETCH_PROXY
+  - name: Uranium Market
+    url: https://www.world-nuclear-news.org/
+    type: web
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      provider: World Nuclear News
+      link_selector: a[href*="/articles/"]
+      proxy_env: FETCH_PROXY
+  - name: Cobalt Institute
+    url: https://www.cobaltinstitute.org/feed/
+    type: rss
+    category: news
+    region: 全球
+    language: en
+    authority_score: 9
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: rss_empty_2026-10-10
+      access_note: 启用前核实 robots、使用条款与解析配置
+      fetch_full_content: false
+      proxy_env: FETCH_PROXY
+  - name: Graphite News
+    url: https://www.miningweekly.com/page/graphite
+    type: web
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      provider: Mining Weekly graphite topic
+      link_selector: a[href*="/article/"]
+      proxy_env: FETCH_PROXY
+  policies:
+  - name: USGS Mineral Resources
+    url: https://www.usgs.gov/programs/mineral-resources-program/news
+    type: web
+    category: policy
+    region: 美国
+    language: en
+    authority_score: 10
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      max_items: 10
+      verification: live_web_article_2026-10-10
+      access_note: robots、带路径约束的列表选择器和文章正文均已实测；官方RSS当前为空Feed
+      link_selector: a[href*="/news/"]
+      proxy_env: FETCH_PROXY
+      link_pattern: /news/(?:state-news-release|national-news-release|featured-story|science-snippet)/[^/]+$
+      rss_url: https://www.usgs.gov/news/minerals/feed
+  - name: IEA Critical Minerals
+    url: https://www.iea.org/topics/critical-minerals
+    type: web
+    category: policy
+    region: 全球
+    language: en
+    authority_score: 10
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      proxy_env: FETCH_PROXY
+  - name: 澳大利亚地球科学局
+    url: https://www.ga.gov.au/news
+    type: web
+    category: policy
+    region: 澳大利亚
+    language: en
+    authority_score: 10
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: a[href*="/news/"]
+      proxy_env: FETCH_PROXY
+  - name: 加拿大自然资源部
+    url: https://www.canada.ca/en/natural-resources-canada/news.html
+    type: web
+    category: policy
+    region: 加拿大
+    language: en
+    authority_score: 10
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: a[href*="/news/"]
+      proxy_env: FETCH_PROXY
+  - name: 智利矿业部
+    url: https://www.minmineria.cl/
+    type: web
+    category: policy
+    region: 智利
+    language: es
+    authority_score: 10
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: article a[href]
+      proxy_env: FETCH_PROXY
+  - name: 南非矿产部
+    url: https://www.dmre.gov.za/
+    type: web
+    category: policy
+    region: 南非
+    language: en
+    authority_score: 10
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      proxy_env: FETCH_PROXY
+  - name: 欧盟关键原材料法案页面
+    url: https://single-market-economy.ec.europa.eu/sectors/raw-materials/areas-specific-interest/critical-raw-materials/critical-raw-materials-act_en
+    type: web
+    category: policy
+    region: 欧盟
+    language: en
+    authority_score: 10
+    fetch_interval: 86400
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      proxy_env: FETCH_PROXY
+  - name: 中国自然资源部
+    url: https://www.mnr.gov.cn/gk/zc/
+    type: web
+    category: policy
+    region: 中国
+    language: zh
+    authority_score: 10
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: a[href$=".html"]
+      proxy_env: FETCH_PROXY
+  prices:
+  - name: 生意社碳酸锂公开现货价格
+    url: https://www.100ppi.com/sf/
+    type: web
+    category: price
+    region: 中国
+    language: zh
+    authority_score: 8
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      adapter: ppi_lithium_spot
+      max_items: 10
+      dynamic: true
+      wait_for_selector: table
+      verification: live_table_probe_2026_10_11
+      documentation: https://www.100ppi.com/sf/1162.html
+      access_note: 公开现期表现货列；遵守 robots；商业分发权限需向数据商核实
+      contract_note: 碳酸锂现货，CNY/吨，原表未注明品级；不等同于锂矿石、期货结算价或SMM电池级报价
+      proxy_env: FETCH_PROXY
+  - name: LME 公开数据
+    url: https://www.lme.com/en/Metals/Non-ferrous/LME-Copper
+    type: web
+    category: price
+    region: 全球
+    language: en
+    authority_score: 10
+    fetch_interval: 86400
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      dynamic: true
+      proxy_env: FETCH_PROXY
+  - name: Yahoo Finance Commodities API
+    url: https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?interval=1d&range=5d
+    type: api
+    category: price
+    region: 全球
+    language: en
+    authority_score: 7
+    fetch_interval: 86400
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      adapter: yahoo_chart
+      contract_note: HG=F 的日收盘价，保留 USD/lb 期货口径，与现货铜价格分开存储；接口可用性和商业使用许可需核实
+      proxy_env: FETCH_PROXY
+      constants:
+        mineral: 铜（COMEX期货）
+        unit: lb
+  - name: SMM 上海有色网
+    url: https://www.smm.cn/prices
+    type: web
+    category: price
+    region: 中国
+    language: zh
+    authority_score: 9
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      dynamic: true
+      proxy_env: FETCH_PROXY
+  - name: Fastmarkets
+    url: https://www.fastmarkets.com/
+    type: web
+    category: price
+    region: 全球
+    language: en
+    authority_score: 9
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      auth:
+        token_env: FASTMARKETS_API_TOKEN
+        header: Authorization
+        prefix: 'Bearer '
+      proxy_env: FETCH_PROXY
+  - name: Argus Media
+    url: https://www.argusmedia.com/en
+    type: web
+    category: price
+    region: 全球
+    language: en
+    authority_score: 9
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      auth:
+        token_env: ARGUS_API_TOKEN
+        header: Authorization
+        prefix: 'Bearer '
+      proxy_env: FETCH_PROXY
+  chinese_news:
+  - name: 上海有色网
+    url: https://news.smm.cn/
+    type: web
+    category: news
+    region: 中国
+    language: zh
+    authority_score: 9
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      link_selector: a[href*="/news/"]
+      proxy_env: FETCH_PROXY
+  - name: 中国矿业报
+    url: https://www.zgkyb.com/
+    type: web
+    category: news
+    region: 中国
+    language: zh
+    authority_score: 9
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: a[href$=".html"]
+      proxy_env: FETCH_PROXY
+  - name: 自然资源部
+    url: https://www.mnr.gov.cn/dt/ywbb/
+    type: web
+    category: news
+    region: 中国
+    language: zh
+    authority_score: 10
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: a[href$=".html"]
+      proxy_env: FETCH_PROXY
+  - name: 中国稀土行业协会
+    url: https://www.ac-rei.org.cn/
+    type: web
+    category: news
+    region: 中国
+    language: zh
+    authority_score: 9
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: a[href$=".html"]
+      proxy_env: FETCH_PROXY
+  - name: 中国有色金属工业协会
+    url: https://www.chinania.org.cn/
+    type: web
+    category: news
+    region: 中国
+    language: zh
+    authority_score: 9
+    fetch_interval: 21600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      link_selector: a[href$=".html"]
+      proxy_env: FETCH_PROXY
+  reports_announcements:
+  - name: SEC EDGAR（矿业公司）
+    url: https://data.sec.gov/submissions/CIK0000831259.json
+    type: api
+    category: company
+    region: 美国
+    language: en
+    authority_score: 10
+    fetch_interval: 3600
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      adapter: sec_submissions
+      record_format: columnar
+      records_path: filings.recent
+      forms:
+      - 10-K
+      - 10-Q
+      - 8-K
+      headers_env:
+        User-Agent: SEC_USER_AGENT
+      documentation: https://www.sec.gov/search-filings/edgar-application-programming-interfaces
+      watchlist_note: 示例 CIK 为 Freeport-McMoRan；按公司增加独立信源。联系邮箱必填，遵守 SEC fair access
+      proxy_env: FETCH_PROXY
+  - name: ASX Announcements
+    url: https://www.asx.com.au/markets/trade-our-cash-market/announcements
+    type: web
+    category: company
+    region: 澳大利亚
+    language: en
+    authority_score: 10
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      dynamic: true
+      proxy_env: FETCH_PROXY
+  - name: TSX Announcements
+    url: https://www.tsx.com/news
+    type: web
+    category: company
+    region: 加拿大
+    language: en
+    authority_score: 10
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      provider: TSX issuer news entry; authorized feed required
+      proxy_env: FETCH_PROXY
+  - name: 巨潮资讯（中国矿业公司）
+    url: https://www.cninfo.com.cn/new/index
+    type: web
+    category: company
+    region: 中国
+    language: zh
+    authority_score: 10
+    fetch_interval: 1800
+    active: false
+    parser_config:
+      max_items: 10
+      verification: pending_runtime_probe
+      access_note: 启用前核实 robots、使用条款与解析配置
+      requires_license: true
+      dynamic: true
+      contract_note: 需授权公告检索接口和矿业公司代码白名单；首页不是完整公告 API
+      proxy_env: FETCH_PROXY

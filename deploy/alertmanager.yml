@@ -1,0 +1,13 @@
+global:
+  resolve_timeout: 5m
+route:
+  receiver: local
+  group_by: [alertname, source]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+receivers:
+  - name: local
+# Alerts are visible in the local Alertmanager UI by default.
+# Configure a receiver in this file for external delivery; keep webhook secrets
+# in a separately mounted, gitignored file via webhook_configs.url_file.

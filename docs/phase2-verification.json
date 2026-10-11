@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-11",
+  "backend_tests_passed": 96,
+  "python_files_format_checked": 80,
+  "ruff_check": "passed",
+  "pip_check": "passed",
+  "frontend_typecheck": "passed",
+  "frontend_build": "passed",
+  "frontend_sse_tests_passed": 3,
+  "browser_fixture_smoke": "passed",
+  "browser_live_http_smoke": "passed",
+  "browser_live_javascript_errors": 0,
+  "real_encoder": {
+    "model": "BAAI/bge-m3",
+    "dimensions": 1024,
+    "token_budget": 512,
+    "pgvector_semantic_recall": "passed"
+  },
+  "real_reranker": {
+    "model": "BAAI/bge-reranker-v2-m3",
+    "relevant_passage_score": 0.9466944270240963,
+    "weather_passage_score": 0.00001610692179643459
+  },
+  "real_llm_grounded_fixture": {
+    "model": "glm-4-flash",
+    "test_data": "explicitly synthetic, removed after test",
+    "grounded_answer": "passed",
+    "followup": "passed",
+    "exact_citation_span": "passed",
+    "weather_insufficiency": "passed"
+  },
+  "current_corpus_price_question": {
+    "question": "2026年锂矿价格走势如何",
+    "answer": "根据现有资料，未找到相关信息",
+    "mode": "insufficient",
+    "sources": []
+  },
+  "migration": "0003_vector_index",
+  "existing_corpus": {
+    "total_articles": 18,
+    "published_synthetic_demo_articles": 8,
+    "real_articles_processed": 9,
+    "real_articles_pending_backfill": 1,
+    "real_bge_indexed_articles": 8
+  },
+  "translation_backfill_sample": {
+    "source": "Resource World",
+    "status": "rejected, pending retry",
+    "observed_validation_failure": "Translation changed numeric evidence",
+    "original_and_existing_entities": "preserved",
+    "successful_translation_claimed": false
+  },
+  "alembic_schema_drift": false,
+  "local_database": "PGlite PostgreSQL 18.3 + pgvector",
+  "local_rate_limiter": "explicit development memory mode",
+  "qdrant_functional_tests": "in-memory client",
+  "qdrant_server_performance_verified": false,
+  "native_postgresql_16_verified_locally": false,
+  "docker_runtime_verified_locally": false,
+  "redis_celery_concurrency_verified_locally": false,
+  "remote_ci_executed": false,
+  "frontend_url": "http://127.0.0.1:3000/chat",
+  "api_url": "http://127.0.0.1:8001/docs"
+}

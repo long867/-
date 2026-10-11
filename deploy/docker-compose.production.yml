@@ -1,0 +1,14 @@
+# Use built SHA-tagged images on the 2-vCPU / 2-GiB ECS; build in GitHub Actions.
+services:
+  postgres:
+    command: [postgres, -c, shared_buffers=128MB, -c, max_connections=60]
+  redis:
+    command: [redis-server, --appendonly, 'yes', --maxmemory, 128mb, --maxmemory-policy, noeviction]
+  api:
+    environment: {APP_ENV: production}
+  worker:
+    environment: {APP_ENV: production}
+  beat:
+    environment: {APP_ENV: production}
+  nginx:
+    ports: !override ['${GATEWAY_BIND:-0.0.0.0}:${GATEWAY_PORT:-3030}:80']

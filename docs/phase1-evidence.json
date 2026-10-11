@@ -1,0 +1,112 @@
+{
+  "date": "2026-10-10",
+  "database": "PostgreSQL 18.3 WASM (PGlite 0.5.8), not the production PostgreSQL 16 deployment",
+  "live": {
+    "source": "Resource World",
+    "articles": 10,
+    "chunks": 120,
+    "with_minerals": 10,
+    "with_regions": 10,
+    "with_companies": 10,
+    "with_events": 10,
+    "processed": 10,
+    "foreign_articles": 10,
+    "translated_foreign": 0
+  },
+  "first_run": [
+    {
+      "source": "Resource World",
+      "status": "succeeded",
+      "fetched": 10,
+      "duplicates": 0,
+      "errors": 0,
+      "article_ids": [
+        "6909e4a2-b971-47a6-aef5-2191e3c5dade",
+        "15fd69c6-8838-455a-be57-b1ce22e9ecff",
+        "15d9b3f2-fc01-4ea2-988a-6d7fcda0141c",
+        "4a8d8c3d-fc68-46db-9683-8ae24cd26006",
+        "15bf5ee2-5869-40df-a209-5dc32cc00217",
+        "f020e97c-9026-4adb-a8b4-093c83ca69b5",
+        "a1ab0b0a-73ee-4ae2-9af7-c19c732e23c2",
+        "2c6bfa97-5c74-428c-a256-5c3c2ba0cdb1",
+        "606da6e4-113f-40e2-906d-4b03f5af3a10",
+        "2d9d3751-c1f1-41ba-92e9-142efda30c9f"
+      ],
+      "new_articles": 10,
+      "prices": 0
+    }
+  ],
+  "replay": [
+    {
+      "source": "Resource World",
+      "status": "succeeded",
+      "fetched": 0,
+      "duplicates": 0,
+      "errors": 0,
+      "article_ids": [],
+      "new_articles": 0,
+      "prices": 0
+    }
+  ],
+  "source_probes": [
+    {
+      "name": "Mining.com",
+      "articles": 0,
+      "error_type": "HTTPStatusError",
+      "status": 403
+    },
+    {
+      "name": "Mining Weekly",
+      "articles": 1,
+      "errors": [],
+      "language": "en",
+      "sample_url": "https://www.miningweekly.com/article/galiano-secures-ghanaian-mining-licence-extensions-2026-10-09"
+    },
+    {
+      "name": "Mining Technology",
+      "articles": 1,
+      "errors": [],
+      "language": "en",
+      "sample_url": "https://www.mining-technology.com/features/pushing-crushing-capabilities-how-digitalisation-is-improving-comminution/"
+    },
+    {
+      "name": "Australian Mining",
+      "articles": 0,
+      "error_type": "HTTPStatusError",
+      "status": 403
+    },
+    {
+      "name": "Cobalt Institute",
+      "articles": 0,
+      "errors": [],
+      "language": null,
+      "sample_url": null
+    },
+    {
+      "name": "USGS Mineral Resources",
+      "articles": 1,
+      "errors": [],
+      "language": "en",
+      "sample_url": "https://www.usgs.gov/news/state-news-release/media-alert-low-level-flights-image-geology-over-eastern-california",
+      "verified_article_selector": true
+    },
+    {
+      "name": "中国矿业报",
+      "articles": 0,
+      "error_type": "ConnectTimeout",
+      "status": null
+    },
+    {
+      "name": "自然资源部",
+      "articles": 0,
+      "error_type": "ValueError",
+      "status": null
+    },
+    {
+      "name": "中国稀土行业协会",
+      "articles": 0,
+      "error_type": "ValueError",
+      "status": null
+    }
+  ]
+}

@@ -1,0 +1,322 @@
+{
+  "minerals": {
+    "铜": [
+      "cobre",
+      "copper",
+      "cuivre",
+      "медь",
+      "铜"
+    ],
+    "锂": [
+      "lithium",
+      "litio",
+      "lítio",
+      "锂"
+    ],
+    "镍": [
+      "nickel",
+      "niquel",
+      "níquel",
+      "镍"
+    ],
+    "钴": [
+      "cobalt",
+      "cobalto",
+      "钴"
+    ],
+    "铁矿石": [
+      "iron ore",
+      "minerai de fer",
+      "mineral de hierro",
+      "铁矿石"
+    ],
+    "金": [
+      "gold",
+      "黄金",
+      "金矿"
+    ],
+    "稀土": [
+      "rare earth",
+      "rare earths",
+      "terres rares",
+      "tierras raras",
+      "稀土"
+    ],
+    "石墨": [
+      "grafito",
+      "graphite",
+      "石墨"
+    ],
+    "铝": [
+      "aluminium",
+      "aluminum",
+      "铝",
+      "bauxite"
+    ],
+    "铀": [
+      "uranio",
+      "uranium",
+      "铀"
+    ],
+    "银": [
+      "silver",
+      "白银",
+      "银矿"
+    ],
+    "磷": [
+      "phosphate",
+      "磷矿",
+      "磷酸盐"
+    ],
+    "锌": [
+      "zinc",
+      "锌"
+    ],
+    "锰": [
+      "manganese",
+      "锰"
+    ],
+    "钨": [
+      "tungsten",
+      "钨"
+    ],
+    "煤": [
+      "coal",
+      "煤矿"
+    ],
+    "钾": [
+      "potash",
+      "钾盐"
+    ],
+    "钼": [
+      "molybdenum",
+      "钼"
+    ],
+    "铂": [
+      "platinum",
+      "铂"
+    ],
+    "铬": [
+      "chromium",
+      "chromite",
+      "铬"
+    ]
+  },
+  "regions": {
+    "中国": [
+      "China",
+      "Chine",
+      "china",
+      "chinese",
+      "中国"
+    ],
+    "澳大利亚": [
+      "Australia",
+      "Australie",
+      "australia",
+      "australian",
+      "澳大利亚"
+    ],
+    "智利": [
+      "Chili",
+      "chile",
+      "chilean",
+      "智利"
+    ],
+    "刚果（金）": [
+      "democratic republic of congo",
+      "drc",
+      "刚果（金）"
+    ],
+    "美国": [
+      "Arizona",
+      "Estados Unidos",
+      "Nevada",
+      "u.s.",
+      "united states",
+      "États-Unis",
+      "美国"
+    ],
+    "欧盟": [
+      "european union",
+      "eu",
+      "欧盟"
+    ],
+    "印度尼西亚": [
+      "indonesia",
+      "indonesian",
+      "印度尼西亚",
+      "印尼"
+    ],
+    "加拿大": [
+      "British Columbia",
+      "Canadá",
+      "Newfoundland",
+      "Ontario",
+      "Quebec",
+      "Québec",
+      "canada",
+      "canadian",
+      "加拿大"
+    ],
+    "巴西": [
+      "Brasil",
+      "Brésil",
+      "brazil",
+      "brazilian",
+      "巴西"
+    ],
+    "南非": [
+      "South Africa",
+      "南非"
+    ],
+    "秘鲁": [
+      "Peru",
+      "Peruvian",
+      "秘鲁"
+    ],
+    "墨西哥": [
+      "Mexico",
+      "Mexican",
+      "墨西哥"
+    ],
+    "阿根廷": [
+      "Argentina",
+      "阿根廷"
+    ],
+    "印度": [
+      "India",
+      "印度"
+    ],
+    "哈萨克斯坦": [
+      "Kazakhstan",
+      "哈萨克斯坦"
+    ],
+    "蒙古": [
+      "Mongolia",
+      "蒙古"
+    ],
+    "赞比亚": [
+      "Zambia",
+      "赞比亚"
+    ]
+  },
+  "companies": {
+    "BHP": [
+      "bhp",
+      "必和必拓"
+    ],
+    "Rio Tinto": [
+      "rio tinto",
+      "力拓"
+    ],
+    "Glencore": [
+      "glencore",
+      "嘉能可"
+    ],
+    "紫金矿业": [
+      "zijin mining",
+      "紫金矿业"
+    ],
+    "SQM": [
+      "sqm"
+    ],
+    "Albemarle": [
+      "albemarle",
+      "雅保"
+    ],
+    "Freeport-McMoRan": [
+      "Freeport-McMoRan",
+      "Freeport McMoRan"
+    ],
+    "Vale": [
+      "Vale"
+    ],
+    "CMOC": [
+      "CMOC",
+      "洛阳钼业"
+    ],
+    "NeoTerrex": [
+      "NeoTerrex"
+    ],
+    "King Copper": [
+      "King Copper"
+    ],
+    "McEwen Mining": [
+      "McEwen",
+      "McEwen Mining"
+    ],
+    "Discovery Silver": [
+      "Discovery Silver"
+    ],
+    "Guanajuato Silver": [
+      "GSilver",
+      "Guanajuato Silver"
+    ],
+    "Nevada Organic Phosphate": [
+      "Nevada Organic Phosphate"
+    ],
+    "Spanish Mountain Gold": [
+      "Spanish Mountain Gold"
+    ],
+    "AuMEGA Metals": [
+      "AuMEGA Metals"
+    ],
+    "Equity Metals": [
+      "Equity Metals"
+    ],
+    "Kirkland Lake Discoveries": [
+      "Kirkland Lake Discoveries"
+    ],
+    "Westward Gold": [
+      "Westward Gold"
+    ],
+    "Cameco": [
+      "Cameco"
+    ],
+    "Lynas Rare Earths": [
+      "Lynas"
+    ]
+  },
+  "projects": {
+    "Oyu Tolgoi": [
+      "oyu tolgoi",
+      "奥尤陶勒盖"
+    ],
+    "Kamoa-Kakula": [
+      "kamoa-kakula",
+      "卡莫阿",
+      "卡库拉"
+    ],
+    "Colquemayo": [
+      "Colquemayo"
+    ],
+    "Silver Queen": [
+      "Silver Queen"
+    ],
+    "Murdock Mountain": [
+      "Murdock Mountain"
+    ],
+    "Intersection Project": [
+      "Intersection Project"
+    ],
+    "Tanbreez": [
+      "Tanbreez"
+    ],
+    "MARA": [
+      "MARA project"
+    ]
+  },
+  "policies": {
+    "出口限制": [
+      "export restriction",
+      "export ban",
+      "出口限制",
+      "出口禁令"
+    ],
+    "关键矿产": [
+      "critical mineral",
+      "关键矿产"
+    ]
+  }
+}

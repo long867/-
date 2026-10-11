@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-10-11T03:27:22.909843+00:00",
+  "question": "2026年10月9日生意社碳酸锂现货报价是多少？请给出币种和单位。",
+  "answer": "2026年10月9日生意社碳酸锂现货报价为121000.00元/吨。 [1]\n\n参考来源：\n[1] 2026-10-09 生意社碳酸锂现货价格为121000.00元/吨 · 生意社碳酸锂公开现货价格 · 2026-10-09 · https://www.100ppi.com/sf/day-2026-10-09.html",
+  "sources": [
+    {
+      "index": 1,
+      "article_id": "dc5d9e4e-2ca5-4387-a4a3-a949f9791c12",
+      "chunk_id": "63c8ac9f-61b5-4acb-91e3-1daf4dc4e547",
+      "title": "2026-10-09 生意社碳酸锂现货价格为121000.00元/吨",
+      "url": "https://www.100ppi.com/sf/day-2026-10-09.html",
+      "quote": "2026年10月09日商品现货与期货价格对比表 - 现期表 - 生意社\n原表字段：商品、现货价格、期货合约、期货结算价格、现期差及现期差百分比。\n碳酸锂 121000.00 2610 121000 0.00 0.00% 2701 117000 4000 3.31%\n黄金为元/克，白银为元/千克，玻璃现货为元/平方米，鸡蛋现货为元/公斤，鸡蛋期货为元/500千克，其余元/吨。",
+      "start_char": 0,
+      "end_char": 188,
+      "published_at": "2026-10-08T16:00:00Z",
+      "source_name": "生意社碳酸锂公开现货价格",
+      "id": 1,
+      "snippet": "2026年10月09日商品现货与期货价格对比表 - 现期表 - 生意社\n原表字段：商品、现货价格、期货合约、期货结算价格、现期差及现期差百分比。\n碳酸锂 121000.00 2610 121000 0.00 0.00% 2701 117000 4000 3.31%\n黄金为元/克，白银为元/千克，玻璃现货为元/平方米，鸡蛋现货为元/公斤，鸡蛋期货为元/500千克，其余元/吨。"
+    }
+  ],
+  "runtime": "actual frontend and API; no mocked HTTP",
+  "login": true,
+  "sse": true,
+  "off_topic_insufficient": true,
+  "grounded_citation_card": true,
+  "answer_mode": "grounded",
+  "followup_mode": "grounded",
+  "followup_same_session": true,
+  "delete_session": true,
+  "javascript_errors": [],
+  "temporary_user_removed": true
+}

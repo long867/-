@@ -1,0 +1,13 @@
+{
+  "verified_at": "2026-10-11T07:29:57.966448+00:00",
+  "concurrency": 16,
+  "rounds": 3,
+  "requests": 48,
+  "all_statuses_200": true,
+  "readiness": {
+    "status": "ready"
+  },
+  "published_articles": 14,
+  "archived_reports": 3,
+  "uses_test_fixtures": false
+}

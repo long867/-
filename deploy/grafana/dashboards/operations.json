@@ -1,0 +1,424 @@
+{
+  "uid": "miningintel-operations",
+  "title": "MiningIntel 运维与采集",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "tags": [
+    "miningintel"
+  ],
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "采集成功率",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(miningintel_fetch_runs_total{outcome=\"success\"}[30m])) / clamp_min(sum(rate(miningintel_fetch_runs_total[30m])), 0.0001)",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "每小时新增文章",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (source) (increase(miningintel_collector_inserted_total[1h]))",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "翻译成功率",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(miningintel_translation_runs_total{outcome=\"success\"}[30m])) / clamp_min(sum(rate(miningintel_translation_runs_total{outcome=~\"success|failure\"}[30m])), 0.0001)",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "问答量",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(increase(miningintel_chat_requests_total[1h]))",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "API 错误率",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(miningintel_http_requests_total{route=~\"/api/.*\",status=~\"5..\"}[5m])) / clamp_min(sum(rate(miningintel_http_requests_total{route=~\"/api/.*\"}[5m])), 0.001)",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "问答完整回答 P95",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(miningintel_chat_duration_seconds_bucket[5m])))",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "文章状态分布",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "miningintel_articles",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "矿种文章分布",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "miningintel_mineral_articles",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "信源连续失败次数",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "miningintel_source_consecutive_failures",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "title": "任务耗时 P95",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le,task) (rate(miningintel_task_duration_seconds_bucket[15m])))",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "title": "任务执行状态",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 40,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (task,state) (increase(miningintel_task_runs_total[1h]))",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "title": "API 响应 P95",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "miningintel-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 40,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le,route) (rate(miningintel_http_duration_seconds_bucket[5m])))",
+          "legendFormat": "{{source}}{{mineral}}{{status}}{{task}}{{state}}{{route}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      }
+    }
+  ]
+}

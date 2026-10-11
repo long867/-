@@ -1,0 +1,32 @@
+{
+  "mobile": {
+    "scores": {
+      "performance": 92,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "metrics": {
+      "first-contentful-paint": 1366.89,
+      "largest-contentful-paint": 3316.89,
+      "speed-index": 1366.89,
+      "total-blocking-time": 86,
+      "cumulative-layout-shift": 0
+    }
+  },
+  "desktop": {
+    "scores": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "metrics": {
+      "first-contentful-paint": 345.85,
+      "largest-contentful-paint": 737.95,
+      "speed-index": 402.5,
+      "total-blocking-time": 0,
+      "cumulative-layout-shift": 0
+    }
+  }
+}

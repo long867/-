@@ -1,0 +1,18 @@
+{
+  "infinite_scroll": 14,
+  "filters_reload_detail_bookmarks": true,
+  "theme_language_persistence": true,
+  "multi_select": true,
+  "real_price_chart": true,
+  "map": true,
+  "search_highlight": true,
+  "weekly_digest": true,
+  "subscription_dialog": true,
+  "responsive": [
+    390,
+    768,
+    1440
+  ],
+  "page_errors": [],
+  "api_errors": []
+}

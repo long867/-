@@ -1,0 +1,6 @@
+{
+  "checked_at": "2026-10-11T03:21:24.981513+00:00",
+  "limit": "120/minute per IP, method and route template",
+  "backend": "Redis",
+  "slowapi_429": true
+}

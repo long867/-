@@ -13,6 +13,8 @@ def main() -> None:
         ".venv",
         "node_modules",
         ".next",
+        ".next-preview",
+        ".next-upgrade",
         "__pycache__",
         ".ruff_cache",
         ".pytest_cache",

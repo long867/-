@@ -137,7 +137,7 @@ jobs:
           printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/miningintel
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/miningintel ~/.ssh/known_hosts
-          printf 'Host ecs\n HostName %s\n User %s\n Port %s\n IdentityFile ~/.ssh/miningintel\n StrictHostKeyChecking yes\n' "$DEPLOY_HOST" "$DEPLOY_USER" "$DEPLOY_PORT" > ~/.ssh/config
+          printf 'Host ecs\n HostName %s\n User %s\n Port %s\n IdentityFile ~/.ssh/miningintel\n StrictHostKeyChecking yes\n ConnectTimeout 20\n ServerAliveInterval 10\n ServerAliveCountMax 3\n' "$DEPLOY_HOST" "$DEPLOY_USER" "$DEPLOY_PORT" > ~/.ssh/config
       - name: Transfer configuration and immutable image references
         shell: bash
         run: |

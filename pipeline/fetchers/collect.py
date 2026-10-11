@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import Any
 
 from app.models import Source
-
 from pipeline.fetchers.api_fetcher import APIFetcher
 from pipeline.fetchers.base import BaseFetcher, timestamp
 from pipeline.fetchers.price_fetcher import PPIPriceFetcher

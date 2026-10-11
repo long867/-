@@ -4,7 +4,6 @@ from datetime import datetime
 from typing import Any
 
 from app.core.config import get_settings
-
 from pipeline.processors.extractor import extract, quality_score
 from pipeline.processors.translator import translate
 from pipeline.schemas import Category

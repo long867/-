@@ -4,6 +4,8 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 import pytest
+from pydantic import ValidationError
+
 from app.core.config import Settings
 from app.core.security import create_token, decode_token, hash_password, verify_password
 from app.rag.chunking import split_evidence
@@ -11,8 +13,6 @@ from app.rag.embedding import embed, validate_vector
 from app.rag.qa import Claim, GroundedAnswer, validate_claims
 from app.rag.retriever import reciprocal_rank_fusion, search_terms
 from app.schemas.api import Citation, Credentials, PriceInput, SourceInput
-from pydantic import ValidationError
-
 from pipeline.fetchers.collect import timestamp
 from pipeline.fetchers.http import canonical_url
 from pipeline.processors.enrich import enrich

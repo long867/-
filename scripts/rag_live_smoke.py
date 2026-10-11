@@ -9,12 +9,13 @@ import json
 from datetime import UTC, datetime
 from uuid import uuid4
 
+from sqlalchemy import delete, select
+
 from app.core.config import get_settings
 from app.core.db import SessionFactory
 from app.models import Article, ArticleChunk, Source, User
 from app.rag.qa_chain import INSUFFICIENT, answer_question
 from app.schemas.api import ChatInput
-from sqlalchemy import delete, select
 
 BODY = (
     "【虚构测试资料，不是真实行情】2026年1月2日，测试锂矿报价从100美元/吨"

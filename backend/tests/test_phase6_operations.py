@@ -6,13 +6,14 @@ import os
 from uuid import uuid4
 
 import pytest
+from test_business_api import business as business
+
 from app.core import task_history
 from app.core.logging import JsonFormatter
 from app.models import Article
 from app.tasks.celery_app import celery_app
 from app.tasks.cleanup_task import cleanup
 from app.tasks.scheduler import LeaderScheduler
-from test_business_api import business as business
 
 
 def test_schedule_cadence_and_retry_contract():
@@ -128,9 +129,10 @@ def test_redis_history_prevents_late_producer_regression_and_hides_payloads():
 @pytest.mark.integration
 def test_single_beat_lease_and_cleanup_scope(tmp_path, monkeypatch):
     """Another Beat cannot dispatch; cleanup preserves active logs and foreign keys."""
+    from celery import Celery
+
     from app.core.config import Settings
     from app.tasks import cleanup_task, scheduler
-    from celery import Celery
 
     settings = Settings(LOG_DIR=str(tmp_path), LOG_RETENTION_DAYS=1)
     monkeypatch.setattr(cleanup_task, "get_settings", lambda: settings)

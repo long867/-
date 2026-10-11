@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock
 from uuid import uuid4
 
 import pytest
+
 from app.core.config import Settings
 from app.schemas.intelligence import DigestOut, DigestSource, DigestStats
 from app.services.digest_service import period_bounds

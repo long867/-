@@ -5,8 +5,8 @@ from unittest.mock import AsyncMock
 import httpx
 import pytest
 import respx
-from app.core.config import Settings
 
+from app.core.config import Settings
 from pipeline.fetchers.http import safe_get, validate_public_url
 
 

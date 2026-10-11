@@ -3,10 +3,10 @@
 from pathlib import Path
 
 import yaml
-from app.models import Source
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.models import Source
 from pipeline.schemas import SourceDefinition
 
 DEFAULT_CATALOG = Path(__file__).with_name("sources.yaml")

@@ -14,8 +14,9 @@ def main() -> None:
             if path.is_file() and not path.is_symlink():
                 path.unlink()
     os.environ["PROMETHEUS_MULTIPROC_DIR"] = str(directory)
-    from app.tasks.celery_app import celery_app
     from prometheus_client import CollectorRegistry, multiprocess, start_http_server
+
+    from app.tasks.celery_app import celery_app
 
     registry = CollectorRegistry()
     multiprocess.MultiProcessCollector(registry)

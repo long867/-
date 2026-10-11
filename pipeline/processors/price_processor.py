@@ -4,7 +4,6 @@ from datetime import datetime
 from typing import Any
 
 from app.schemas.api import PriceInput
-
 from pipeline.processors.extractor import quality_score
 
 

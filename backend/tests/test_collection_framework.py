@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock
 import httpx
 import pytest
 import respx
-from app.core.config import Settings
 
+from app.core.config import Settings
 from pipeline.config.catalog import load_sources
 from pipeline.fetchers.api_fetcher import APIFetcher
 from pipeline.fetchers.rss_fetcher import RSSFetcher

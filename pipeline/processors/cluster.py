@@ -3,11 +3,11 @@
 import math
 from datetime import UTC, datetime, timedelta
 
-from app.core.config import get_settings
-from app.models import Article, Event, Source
 from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import get_settings
+from app.models import Article, Event, Source
 from pipeline.processors.dedup import title_similarity
 from pipeline.processors.extractor import freshness
 

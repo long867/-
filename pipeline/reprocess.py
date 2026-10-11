@@ -7,11 +7,12 @@ from uuid import UUID
 
 import httpx
 import structlog
+from sqlalchemy import and_, or_, select
+
 from app.core.config import get_settings
 from app.core.db import SessionFactory
 from app.models import Article, Source
 from app.tasks.ingest import process_one
-from sqlalchemy import and_, or_, select
 
 logger = structlog.get_logger()
 

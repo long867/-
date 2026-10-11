@@ -5,8 +5,8 @@ from decimal import Decimal
 from uuid import uuid4
 
 import pytest
-from app.models import PriceRecord
 
+from app.models import PriceRecord
 from pipeline.analyzers.event_ranker import importance_score
 from pipeline.analyzers.hot_detector import detect_hotspots
 from pipeline.analyzers.policy_tracker import policy_themes

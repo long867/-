@@ -3,12 +3,13 @@
 import argparse
 import asyncio
 
+from sqlalchemy import Text, delete, func, select
+
 from app.core.cache import invalidate_public_cache
 from app.core.config import get_settings
 from app.core.db import SessionFactory
 from app.models import Article, Event, Policy, PriceRecord, Report, Source
 from app.services.article_service import DEMO_PREFIX
-from sqlalchemy import Text, delete, func, select
 
 
 async def remove_demo(*, dry_run: bool = False) -> dict[str, int]:

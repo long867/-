@@ -3,6 +3,7 @@
 import httpx
 import pytest
 import respx
+
 from app.core.config import Settings
 from app.services.llm import MalformedModelResponseError, request_json
 

@@ -9,6 +9,9 @@ from uuid import uuid4
 
 import numpy as np
 import pytest
+from llama_index.core.schema import NodeWithScore, TextNode
+from qdrant_client import AsyncQdrantClient
+
 from app.core.config import Settings
 from app.models import Article
 from app.rag.indexer import index_text, revision_hash
@@ -24,8 +27,6 @@ from app.rag.qa_chain import (
 from app.rag.qdrant_store import QdrantStore
 from app.rag.retriever import HybridRetriever
 from app.schemas.api import ChatInput, Citation
-from llama_index.core.schema import NodeWithScore, TextNode
-from qdrant_client import AsyncQdrantClient
 
 
 def source() -> Citation:

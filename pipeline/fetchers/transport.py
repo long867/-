@@ -13,10 +13,10 @@ from urllib.robotparser import RobotFileParser
 
 import httpx
 import redis.asyncio as redis
-from app.core.config import get_settings
 from tenacity import AsyncRetrying, retry_if_exception_type, stop_after_attempt
 from tenacity.wait import wait_random_exponential
 
+from app.core.config import get_settings
 from pipeline.fetchers.http import canonical_url, validate_public_url
 from pipeline.fetchers.resolver import public_addresses
 

@@ -7,6 +7,7 @@ from statistics import median
 from time import perf_counter
 
 import httpx
+
 from app.core.config import get_settings
 from app.tasks.celery_app import celery_app
 from app.tasks.insights import refresh_insights

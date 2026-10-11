@@ -7,7 +7,6 @@ from uuid import UUID
 
 from app.core.db import SessionFactory
 from app.models import Article
-
 from pipeline.processors.translator import numeric_translation_valid, translate
 
 

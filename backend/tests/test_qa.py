@@ -5,11 +5,12 @@ from unittest.mock import AsyncMock
 from uuid import uuid4
 
 import pytest
+from llama_index.core.retrievers import BaseRetriever
+from llama_index.core.schema import NodeWithScore, TextNode
+
 from app.core.config import Settings
 from app.rag.qa import answer_question
 from app.schemas.api import ChatInput
-from llama_index.core.retrievers import BaseRetriever
-from llama_index.core.schema import NodeWithScore, TextNode
 
 
 @pytest.mark.parametrize("scenario", ["valid", "invented", "outage", "empty"])

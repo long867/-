@@ -5,9 +5,10 @@ import asyncio
 import json
 from pathlib import Path
 
+from sqlalchemy import func, select
+
 from app.core.db import SessionFactory
 from app.models import Article, ArticleChunk, Source
-from sqlalchemy import func, select
 
 
 async def inspect(source_name: str) -> dict:

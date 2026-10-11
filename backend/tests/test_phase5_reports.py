@@ -4,6 +4,11 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 import pytest
+from sqlalchemy import delete
+from test_business_api import business as business
+from test_notification_transports import smtp_receiver as smtp_receiver
+from test_notification_transports import webhook_receiver as webhook_receiver
+
 from app.models import Article, Notice, NoticeDispatch, Report, Subscription, User
 from app.services.notification_service import (
     create_report_notice,
@@ -11,11 +16,6 @@ from app.services.notification_service import (
     mark_read,
 )
 from app.services.report_service import get_report
-from sqlalchemy import delete
-from test_business_api import business as business
-from test_notification_transports import smtp_receiver as smtp_receiver
-from test_notification_transports import webhook_receiver as webhook_receiver
-
 from pipeline.reporters.common import build_report
 
 pytestmark = pytest.mark.integration
@@ -158,9 +158,10 @@ async def test_empty_completed_period_is_stored_honestly(business):
 async def test_opted_in_report_sends_once_through_real_smtp(
     business, smtp_receiver, monkeypatch
 ):
+    from sqlalchemy import select
+
     from app.core.config import Settings
     from app.services import notification_service, subscription_service
-    from sqlalchemy import select
 
     settings = Settings(
         APP_ENV="test",

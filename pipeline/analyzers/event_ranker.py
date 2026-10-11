@@ -2,10 +2,11 @@
 
 from datetime import UTC, datetime
 
-from app.models import Article, Event, Source
-from app.services.article_service import public_conditions
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.models import Article, Event, Source
+from app.services.article_service import public_conditions
 
 
 def importance_score(article_count: int, authority: float, age_days: float) -> float:

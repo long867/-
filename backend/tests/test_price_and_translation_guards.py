@@ -4,8 +4,8 @@ import json
 from unittest.mock import AsyncMock
 
 import pytest
-from app.core.config import Settings
 
+from app.core.config import Settings
 from pipeline.fetchers.price_fetcher import parse_ppi_quote
 from pipeline.processors.translator import (
     mask_evidence,

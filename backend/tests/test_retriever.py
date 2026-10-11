@@ -4,9 +4,10 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock
 from uuid import uuid4
 
+from sqlalchemy.dialects import postgresql
+
 from app.core.config import Settings
 from app.rag.retriever import HybridRetriever
-from sqlalchemy.dialects import postgresql
 
 
 async def test_llamaindex_retrieval_keeps_filters_and_source_diversity(

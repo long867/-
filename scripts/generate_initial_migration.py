@@ -6,6 +6,7 @@ from alembic.autogenerate.api import AutogenContext
 from alembic.autogenerate.render import render_op_text
 from alembic.migration import MigrationContext
 from alembic.operations import ops
+
 from app.models import Base
 
 

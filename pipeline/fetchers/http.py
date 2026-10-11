@@ -4,8 +4,8 @@ from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 from urllib.robotparser import RobotFileParser
 
 import httpx
-from app.core.config import get_settings
 
+from app.core.config import get_settings
 from pipeline.fetchers.resolver import public_addresses
 
 

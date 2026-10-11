@@ -6,12 +6,13 @@ import secrets
 import sys
 from uuid import uuid4
 
+from playwright.async_api import async_playwright, expect
+from sqlalchemy import delete
+
 from app.core.config import get_settings
 from app.core.db import SessionFactory
 from app.core.security import hash_password
 from app.models import Source, User
-from playwright.async_api import async_playwright, expect
-from sqlalchemy import delete
 
 
 async def run() -> None:

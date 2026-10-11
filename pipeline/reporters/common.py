@@ -4,6 +4,9 @@ from datetime import UTC, date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 import structlog
+from sqlalchemy import func, select
+from sqlalchemy.dialects.postgresql import insert
+
 from app.core.cache import invalidate_public_cache
 from app.core.config import get_settings
 from app.core.db import SessionFactory
@@ -16,9 +19,6 @@ from app.services.digest_service import (
     period_bounds,
     summarize_digest,
 )
-from sqlalchemy import func, select
-from sqlalchemy.dialects.postgresql import insert
-
 from pipeline.analyzers.event_ranker import rank_events
 from pipeline.analyzers.hot_detector import hot_minerals
 from pipeline.analyzers.policy_tracker import track_policies

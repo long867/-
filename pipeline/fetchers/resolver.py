@@ -7,6 +7,7 @@ import time
 from urllib.parse import urlsplit
 
 import httpx
+
 from app.core.config import get_settings
 
 _cache: dict[tuple[str, str], tuple[float, list[str]]] = {}

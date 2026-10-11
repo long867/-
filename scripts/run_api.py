@@ -6,6 +6,7 @@ import sys
 from urllib.parse import urlsplit
 
 import uvicorn
+
 from app.core.config import get_settings
 
 

@@ -5,11 +5,12 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock
 from uuid import uuid4
 
+from httpx import ASGITransport, AsyncClient
+
 from app.api.routes import events
 from app.core.db import get_db
 from app.main import app
 from app.models import Event
-from httpx import ASGITransport, AsyncClient
 
 
 async def test_liveness_and_openapi() -> None:

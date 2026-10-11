@@ -8,6 +8,11 @@ from uuid import uuid4
 
 import pytest
 import pytest_asyncio
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy import delete, func, select
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.pool import NullPool
+
 from app.core.db import get_db
 from app.main import app
 from app.models import (
@@ -22,11 +27,6 @@ from app.models import (
 from app.rag.retriever import HybridRetriever
 from app.schemas.api import PriceInput
 from app.services.prices import store_price
-from httpx import ASGITransport, AsyncClient
-from sqlalchemy import delete, func, select
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.pool import NullPool
-
 from pipeline.analyzers.events import cluster_article
 from pipeline.fetchers.collect import Document, FetchBatch
 
@@ -308,9 +308,10 @@ async def test_admin_can_reprocess_reviewed_article_but_must_withdraw_published(
     """Processed rows can be translated later after public rows are withdrawn."""
     from types import SimpleNamespace
 
+    from fastapi import HTTPException
+
     from app.api.routes import retry_article
     from app.tasks.ingest import process_article
-    from fastapi import HTTPException
 
     article = await make_article(db, "processed")
     monkeypatch.setattr(db, "commit", AsyncMock())
@@ -380,10 +381,9 @@ async def test_source_replay_does_not_duplicate_articles(monkeypatch) -> None:
 async def test_full_english_processing_with_explicit_llm_fixture(monkeypatch) -> None:
     """Verify persisted translations, original chunks, entities and event membership."""
     import app.tasks.ingest as module
-    from app.core.config import Settings
-
     import pipeline.processors.extractor as extractor
     import pipeline.processors.translator as translator
+    from app.core.config import Settings
 
     engine = create_async_engine(os.environ["TEST_DATABASE_URL"], poolclass=NullPool)
     factory = async_sessionmaker(engine, expire_on_commit=False)

@@ -1,14 +1,15 @@
 """Development limits remain real limits and cannot weaken production settings."""
 
 import pytest
-from app.core.config import Settings
-from app.core.rate_limit import build_rate_limit_guard, client_route_key
-from app.main import _local_windows, memory_limited
 from fastapi import APIRouter, Depends, FastAPI, Request
 from fastapi.responses import JSONResponse
 from httpx import ASGITransport, AsyncClient
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
+
+from app.core.config import Settings
+from app.core.rate_limit import build_rate_limit_guard, client_route_key
+from app.main import _local_windows, memory_limited
 
 
 def test_local_limit_resets_and_groups_all_chat_aliases() -> None:

@@ -8,6 +8,9 @@ from decimal import Decimal
 from pathlib import Path
 from uuid import UUID
 
+from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert
+
 from app.core.db import SessionFactory
 from app.models import (
     Article,
@@ -19,8 +22,6 @@ from app.models import (
     Report,
     Source,
 )
-from sqlalchemy import select
-from sqlalchemy.dialects.postgresql import insert
 
 TABLES = [Source, Event, Article, ArticleChunk, PriceRecord, Policy, Report, Notice]
 

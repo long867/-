@@ -8,6 +8,7 @@ from email.parser import BytesParser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import pytest
+
 from app.core.config import Settings
 from app.services import notification_service, subscription_service
 

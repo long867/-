@@ -5,10 +5,10 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
-from app.core.db import SessionFactory
-from app.models import Article, PriceRecord, Source
 from sqlalchemy import func, select
 
+from app.core.db import SessionFactory
+from app.models import Article, PriceRecord, Source
 from pipeline.processors.translator import numeric_translation_valid
 
 

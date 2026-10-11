@@ -9,6 +9,12 @@ from uuid import uuid4
 
 import pytest
 import pytest_asyncio
+from httpx import ASGITransport, AsyncClient
+from qdrant_client import AsyncQdrantClient
+from sqlalchemy import delete, func, select
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.pool import NullPool
+
 from app.core.config import Settings
 from app.core.db import get_db
 from app.core.security import create_token
@@ -16,11 +22,6 @@ from app.main import app
 from app.models import Article, ArticleChunk, ChatSession, Source, User, VectorSyncJob
 from app.rag.qdrant_store import QdrantStore
 from app.rag.retriever import HybridRetriever
-from httpx import ASGITransport, AsyncClient
-from qdrant_client import AsyncQdrantClient
-from sqlalchemy import delete, func, select
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.pool import NullPool
 
 pytestmark = pytest.mark.integration
 VECTOR = [1.0] + [0.0] * 1023  # Injected test vector; never a runtime fallback.

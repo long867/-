@@ -12,13 +12,13 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import structlog
+from sqlalchemy import select
+
 from app.core.config import get_settings
 from app.core.db import SessionFactory
 from app.core.logging import configure_logging
 from app.models import Source
 from app.tasks.ingest import fetch_source, ingest_source, process_one
-from sqlalchemy import select
-
 from pipeline.config.catalog import DEFAULT_CATALOG, load_sources, sync_sources
 from pipeline.fetchers.collect import create_fetcher
 from pipeline.processors.dedup import normalize_url

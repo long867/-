@@ -7,12 +7,13 @@ import sys
 from pathlib import Path
 from uuid import uuid4
 
+from playwright.async_api import async_playwright
+from sqlalchemy import delete
+
 from app.core.config import get_settings
 from app.core.db import SessionFactory
 from app.core.security import hash_password
 from app.models import User
-from playwright.async_api import async_playwright
-from sqlalchemy import delete
 
 ROOT = Path(__file__).resolve().parents[1]
 

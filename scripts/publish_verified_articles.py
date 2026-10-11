@@ -4,13 +4,13 @@ import argparse
 import asyncio
 import json
 
+from sqlalchemy import select
+
 from app.core.cache import invalidate_public_cache
 from app.core.config import get_settings
 from app.core.db import SessionFactory
 from app.models import Article, Source
 from app.rag.indexer import enqueue_sync
-from sqlalchemy import select
-
 from pipeline.processors.translator import (
     numeric_translation_valid,
     summary_measurements_valid,

@@ -6,11 +6,12 @@ from math import sqrt
 from statistics import mean, pstdev
 from typing import Literal
 
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.models import Article
 from app.schemas.intelligence import HotMineral
 from app.services.article_service import public_conditions
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 Window = Literal["24h", "48h", "7d"]
 WINDOW_HOURS = {"24h": 24, "48h": 48, "7d": 168}

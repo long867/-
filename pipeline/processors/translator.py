@@ -9,9 +9,10 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from pydantic import BaseModel, Field, ValidationError, field_validator
+
 from app.core.config import get_settings
 from app.services.llm import complete_json
-from pydantic import BaseModel, Field, ValidationError, field_validator
 
 
 @lru_cache

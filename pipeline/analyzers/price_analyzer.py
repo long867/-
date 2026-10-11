@@ -4,11 +4,12 @@ from collections import defaultdict
 from datetime import date, timedelta
 from decimal import Decimal
 
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.core.config import get_settings
 from app.models import PriceRecord
 from app.schemas.intelligence import PriceAlert, PriceTrend
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 def analyze_prices(

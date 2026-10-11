@@ -8,11 +8,12 @@ from pathlib import Path
 from uuid import uuid4
 
 import httpx
+from playwright.async_api import async_playwright, expect
+from sqlalchemy import delete, func, select
+
 from app.core.db import SessionFactory
 from app.core.security import hash_password
 from app.models import NoticeRead, Subscription, User
-from playwright.async_api import async_playwright, expect
-from sqlalchemy import delete, func, select
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "http://127.0.0.1:3000"

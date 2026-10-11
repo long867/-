@@ -9,10 +9,10 @@ from functools import lru_cache
 from typing import Any
 
 import spacy
-from app.core.config import get_settings
-from app.services.llm import complete_json
 from pydantic import BaseModel, Field
 
+from app.core.config import get_settings
+from app.services.llm import complete_json
 from pipeline.processors.entities import extract_entities, lexicon
 from pipeline.schemas import Category
 

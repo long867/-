@@ -7,6 +7,11 @@ from uuid import uuid4
 
 import pytest
 import pytest_asyncio
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy import delete
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.pool import NullPool
+
 from app.core.cache import invalidate_public_cache
 from app.core.db import get_db
 from app.core.security import create_token, hash_password
@@ -24,10 +29,6 @@ from app.models import (
 )
 from app.schemas.api import PriceInput
 from app.services.prices import store_price
-from httpx import ASGITransport, AsyncClient
-from sqlalchemy import delete
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.pool import NullPool
 
 pytestmark = pytest.mark.integration
 

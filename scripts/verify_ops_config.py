@@ -26,6 +26,15 @@ def main() -> None:
     }
     assert required <= compose["services"].keys()
     assert "--queues=celery,nlp,insights" in compose["services"]["worker"]["command"]
+    small = yaml.safe_load(
+        (root / "deploy/docker-compose.small.yml").read_text(encoding="utf-8")
+    )["services"]
+    assert "--concurrency=1" in small["worker"]["command"]
+    assert small["qdrant"]["profiles"] == ["vector"]
+    for service in ("api", "worker", "beat"):
+        assert small[service]["environment"]["ML_ENABLED"] == "false"
+        assert small[service]["environment"]["QDRANT_URL"] == ""
+        assert "mem_limit" in small[service]
     rules = yaml.safe_load((root / "deploy/alerts.yml").read_text(encoding="utf-8"))
     assert len(rules["groups"][0]["rules"]) >= 4
     dashboard = json.loads(

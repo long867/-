@@ -1,0 +1,40 @@
+# Applied after production.yml when /opt/miningintel/.deploy-mode contains small.
+# Optional service volumes remain intact. BGE is not loaded on a 2-GiB host.
+services:
+  postgres:
+    command: [postgres, -c, shared_buffers=64MB, -c, max_connections=32]
+    mem_limit: 256m
+  redis:
+    command: [redis-server, --appendonly, 'yes', --maxmemory, 64mb, --maxmemory-policy, noeviction]
+    mem_limit: 128m
+  migrate:
+    mem_limit: 256m
+    environment: {ML_ENABLED: 'false', QDRANT_URL: ''}
+  api:
+    mem_limit: 384m
+    environment:
+      ML_ENABLED: 'false'
+      QDRANT_URL: ''
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+  worker:
+    mem_limit: 512m
+    cpus: 0.75
+    environment:
+      ML_ENABLED: 'false'
+      QDRANT_URL: ''
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+    command: [python, -m, pipeline.worker, --loglevel=INFO, '--queues=celery,nlp,insights', --concurrency=1, --max-tasks-per-child=50]
+  beat:
+    mem_limit: 256m
+    environment: {ML_ENABLED: 'false', QDRANT_URL: '', OPENBLAS_NUM_THREADS: '1', OMP_NUM_THREADS: '1'}
+  frontend:
+    mem_limit: 192m
+    environment: {NODE_OPTIONS: '--max-old-space-size=128'}
+  nginx:
+    mem_limit: 64m
+  qdrant:
+    profiles: [vector]

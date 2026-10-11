@@ -43,7 +43,17 @@ docker compose --project-name miningintel --env-file .env --env-file .images.env
 
 2 GiB ECS 启用 LLM 翻译与咨询、真实关键词检索，默认不在本机加载 BGE/重排序模型；`INSTALL_ML=false`、`ML_ENABLED=false` 明确显示实际检索模式。启用本地向量模型前需提供足够的内存或独立推理服务，不会生成假向量。
 
-原有网站的删除仅限已核验的 `/opt/library-survey` 和 `/etc/systemd/system/library-survey.service`，并先验证 D 盘备份。其它项目、宿主 Nginx、MySQL 和 Docker 卷均保留。
+小内存服务器可在部署目录写入 `.deploy-mode`，内容为 `small`。发布脚本会追加 `deploy/docker-compose.small.yml`，限制服务内存、固定 Worker 单并发，并停止本项目 Qdrant、Prometheus、Grafana、Alertmanager 与备份容器，保留其数据卷。管理后台仍提供系统指标与任务历史；小内存模式使用数据库关键词检索与云端 LLM。相同镜像在本机的七个核心服务空闲内存合计约 633 MiB，实际采集和问答峰值另需留余量。
+
+```bash
+cd /opt/miningintel
+printf 'small\n' > .deploy-mode
+MININGINTEL_IMAGES_PRELOADED=true bash deploy/release.sh /opt/miningintel
+```
+
+发布等待核心服务健康，最长 300 秒，涵盖 Beat 重建时旧的 90 秒租约。已有 `.deploy-mode` 不会被 CI 覆盖。恢复标准模式时写入 `standard`，再根据实际资源启用需要的 profiles。
+
+服务器清理须逐项确认程序目录、服务归属与静态站入口，先在 D 盘验证私密备份，再删除明确不保留的旧项目。保留 `/opt/gbm`、其 MySQL 与宿主 Nginx，以及 `/var/www/html/homePage` 指向的个人主页及其发布目录；不使用全局 Docker 清理或删除共享数据库。
 
 ## GitHub Actions
 

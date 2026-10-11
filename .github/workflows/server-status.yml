@@ -1,0 +1,51 @@
+name: Read-only server diagnostics
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: production
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+      DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+      DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+    steps:
+      - name: Configure pinned SSH connection
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9.-]+$ && "$DEPLOY_USER" =~ ^[a-zA-Z0-9_-]+$ && "$DEPLOY_PORT" =~ ^[0-9]+$ ]]
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/miningintel
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/miningintel ~/.ssh/known_hosts
+          printf 'Host ecs\n HostName %s\n User %s\n Port %s\n IdentityFile ~/.ssh/miningintel\n StrictHostKeyChecking yes\n ConnectTimeout 20\n ServerAliveInterval 10\n ServerAliveCountMax 3\n' "$DEPLOY_HOST" "$DEPLOY_USER" "$DEPLOY_PORT" > ~/.ssh/config
+      - name: Read memory, container health and gateway status
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh ecs 'bash -s' <<'REMOTE'
+          set -u
+          date -u
+          uptime
+          free -m
+          df -h /opt
+          docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+          docker stats --no-stream --format 'table {{.Name}}\t{{.MemUsage}}\t{{.CPUPerc}}'
+          for service in gbm-web government nginx mysql; do
+            printf '%s: ' "$service"
+            systemctl is-active "$service" || true
+          done
+          if [[ ! -e /opt/library-survey && ! -e /etc/systemd/system/library-survey.service ]]; then
+            echo 'Library website removed'
+          fi
+          curl --max-time 10 -sS -o /dev/null -w 'MiningIntel health: %{http_code}\n' http://127.0.0.1:3030/health/ready || true
+          REMOTE

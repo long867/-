@@ -91,7 +91,7 @@ services:
     volumes: [app_logs:/var/log/miningintel, beat_data:/var/lib/miningintel/beat]
     command: [celery, -A, 'app.tasks.celery_app:celery_app', beat, --loglevel=INFO, --schedule=/var/lib/miningintel/beat/schedule]
     healthcheck:
-      test: [CMD, python, -c, "import socket; from app.core.task_history import client; host = client().get('miningintel:ops:beat-host') or b''; assert host.startswith((socket.gethostname() + ':').encode())"]
+      test: [CMD, python, -c, "import socket; from app.core.task_history import client; host = client().get('miningintel:ops:beat-host') or ''; assert host.startswith(socket.gethostname() + ':')"]
       interval: 15s
       timeout: 5s
       retries: 10

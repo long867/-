@@ -57,7 +57,7 @@ CI 在测试成功后发布 `ghcr.io/<owner>/miningintel-<image>:<git-sha>`，�
 
 备份容器每天 03:00 执行 PostgreSQL 16 `pg_dump` 自定义格式，运行 `pg_restore --list`，上传 S3/OSS 后以 HEAD 校验文件长度和 SHA256，全部通过才记录成功状态。临时文件在成功和失败后均清理，失败重试最多 3 次。使用 HTTPS，OSS endpoint 示例为成都区域；对象前缀限定在本项目。
 
-默认 `BACKUP_ENABLED=false`。启用云备份还需填写 `BACKUP_BUCKET`、`BACKUP_S3_ENDPOINT`、`AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY`、`AWS_DEFAULT_REGION`；对象保留期由存储桶生命周期配置。未经真实凭据和上传验证，不宣称云备份成功。
+默认 `BACKUP_ENABLED=false`。启用云备份还需填写 `BACKUP_S3_BUCKET`、`BACKUP_S3_ENDPOINT`、`AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY`、`AWS_DEFAULT_REGION`；对象保留期由存储桶生命周期配置。未经真实凭据和上传验证，不宣称云备份成功。
 
 恢复时先在独立临时数据库执行 `pg_restore --no-owner --no-privileges` 并校验表和数量，再按维护计划切换；不直接覆盖运行中的数据库。邮件/Webhook 也需要对应 SMTP/渠道配置，未启用时不发送。
 

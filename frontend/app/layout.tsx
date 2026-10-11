@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer";
 import { PwaRegister } from "@/components/pwa-register";
 import "./fonts.css";
 import "./globals.css";
+import "./mineral-design.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",
@@ -23,7 +24,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 const preferencesScript =
-  "try{document.documentElement.dataset.theme=localStorage.getItem('mi-theme')==='light'?'light':'dark';document.documentElement.lang=localStorage.getItem('mi-language')==='en'?'en':'zh-CN'}catch(e){}";
+  "try{document.documentElement.dataset.theme=localStorage.getItem('mi-theme')==='light'?'light':'dark';document.documentElement.lang=localStorage.getItem('mi-language')==='en'?'en':'zh-CN';document.documentElement.dataset.motion=localStorage.getItem('mi-motion')==='paused'?'paused':'running'}catch(e){}";
 export default function RootLayout({
   children,
 }: {

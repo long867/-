@@ -35,6 +35,10 @@ export default function Chat() {
   const [pending, setPending] = useState<Pending>();
   const controller = useRef<AbortController>();
   useEffect(() => {
+    const suggested = new URLSearchParams(location.search).get("q");
+    if (suggested) setQuestion(suggested.slice(0, 2000));
+  }, []);
+  useEffect(() => {
     setAnswers([]);
     setSessionId(undefined);
     setPending(undefined);
@@ -122,7 +126,11 @@ export default function Chat() {
           )}
         </p>
         <Button asChild>
-          <Link href="/login">{t("登录 / 注册", "Sign in / Register")}</Link>
+          <Link
+            href={`/login?next=${encodeURIComponent(`/chat${question ? `?q=${encodeURIComponent(question)}` : ""}`)}`}
+          >
+            {t("登录 / 注册", "Sign in / Register")}
+          </Link>
         </Button>
       </main>
     );

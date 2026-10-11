@@ -22,7 +22,13 @@ export default function Login() {
       }),
     onSuccess: (token) => {
       auth.login(token);
-      router.push("/");
+      const destination = new URLSearchParams(location.search).get("next");
+      // Consultation entry points can resume locally; external redirects are excluded.
+      router.push(
+        destination === "/chat" || destination?.startsWith("/chat?")
+          ? destination
+          : "/",
+      );
     },
   });
   return (

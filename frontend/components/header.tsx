@@ -38,10 +38,12 @@ export function Header() {
         className="brand"
         aria-label="MiningIntel 首页 / Home"
       >
-        <Mountain size={28} strokeWidth={1.5} />
+        <span className="brand-emblem">
+          <Mountain size={25} strokeWidth={1.4} />
+        </span>
         <span>
           Mining<span className="text-primary">Intel</span>
-          <small>GLOBAL MINING INTELLIGENCE</small>
+          <small>THE RESOURCE OBSERVATORY</small>
         </span>
       </Link>
       <nav className="main-nav" aria-label={t("主导航", "Main navigation")}>

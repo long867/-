@@ -110,7 +110,7 @@ jobs:
           docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" prom/prometheus:v3.2.1 check rules /rules/alerts.yml
           docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules prom/prometheus:v3.2.1 test rules alert-tests.yml
       - name: Validate deploy scripts
-        run: bash -n deploy/release.sh
+        run: bash -n deploy/release.sh deploy/pull_images.sh
   deploy:
     runs-on: ubuntu-latest
     needs: [backend, frontend, containers, monitoring]
@@ -149,24 +149,11 @@ jobs:
             printf '%s_IMAGE=%s/miningintel-%s:%s\n' "${image^^}" "$registry" "$image" "$GITHUB_SHA"
           done > .images.next.env
           scp .images.next.env "ecs:$DEPLOY_DIR/.images.next.env"
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Transfer authenticated images and deploy
         shell: bash
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          registry="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}"
-          images=()
-          for image in api worker frontend backup; do
-            reference="$registry/miningintel-$image:$GITHUB_SHA"
-            docker pull "$reference"
-            images+=("$reference")
-          done
-          docker save "${images[@]}" | gzip -3 > images.tar.gz
-          checksum=$(sha256sum images.tar.gz | cut -d ' ' -f 1)
-          scp images.tar.gz "ecs:$DEPLOY_DIR/.images-$GITHUB_SHA.tar.gz"
-          ssh ecs "printf '%s  %s\n' '$checksum' '$DEPLOY_DIR/.images-$GITHUB_SHA.tar.gz' | sha256sum -c - && gzip -dc '$DEPLOY_DIR/.images-$GITHUB_SHA.tar.gz' | docker load && rm -- '$DEPLOY_DIR/.images-$GITHUB_SHA.tar.gz'"
+          printf '%s\n' "$GHCR_TOKEN" | ssh ecs "bash '$DEPLOY_DIR/deploy/pull_images.sh' '${GITHUB_REPOSITORY_OWNER,,}' '$GITHUB_SHA' '$GITHUB_ACTOR'"
           ssh ecs "MININGINTEL_IMAGES_PRELOADED=true COMPOSE_PROFILES=monitoring,backup bash '$DEPLOY_DIR/deploy/release.sh' '$DEPLOY_DIR'"

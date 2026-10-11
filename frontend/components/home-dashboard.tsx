@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useRef, type PointerEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowUpRight,
@@ -24,6 +25,8 @@ import type {
 } from "@/types";
 import { SubscriptionDialog } from "./subscription-dialog";
 import { ErrorState, SkeletonCards } from "./ui/states";
+import { ResourceOverview } from "./resource-overview";
+import { IntelligenceTicker } from "./intelligence-ticker";
 export interface HomeData {
   articles?: ArticlePage;
   hot?: Article[];
@@ -32,8 +35,44 @@ export interface HomeData {
   minerals?: Insights["hotspots"];
   alerts?: Price[];
   policies?: Policy[];
+  prices?: Price[];
+  featured?: ArticlePage;
 }
 export function HomeDashboard({ initial }: { initial: HomeData }) {
+  const surface = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (
+      !surface.current ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("resource-arriving");
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.12 },
+    );
+    surface.current
+      .querySelectorAll(".observatory-card, .hot-card, .panel, .consult-panel")
+      .forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, []);
+  function illuminate(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "mouse" || !(event.target instanceof Element))
+      return;
+    const card = event.target.closest<HTMLElement>(
+      ".observatory-card, .hot-card, .article-card",
+    );
+    if (!card) return;
+    const bounds = card.getBoundingClientRect();
+    card.style.setProperty("--pointer-x", `${event.clientX - bounds.left}px`);
+    card.style.setProperty("--pointer-y", `${event.clientY - bounds.top}px`);
+  }
   const { t, language } = usePreferences();
   const hot = useQuery({
     queryKey: ["hot-articles"],
@@ -59,14 +98,32 @@ export function HomeDashboard({ initial }: { initial: HomeData }) {
     initialData: initial.alerts,
     staleTime: 300000,
   });
-  const hotItems = hot.data || [];
+  const prices = useQuery({
+    queryKey: ["home-lithium-prices"],
+    queryFn: () => publicApi<Price[]>("/minerals/%E9%94%82/prices"),
+    initialData: initial.prices,
+    staleTime: 300000,
+  });
+  const isHot = Boolean(hot.data?.length);
+  const hotItems = isHot ? hot.data || [] : initial.featured?.items || [];
   return (
-    <div className="home-content">
+    <div className="home-content" ref={surface} onPointerMove={illuminate}>
+      <IntelligenceTicker articles={initial.featured?.items || []} />
+      <ResourceOverview
+        prices={prices.data}
+        facets={initial.facets}
+        pricePending={prices.isPending}
+        priceError={prices.isError}
+      />
       <div className="section-line">
         <h2>
           <Flame size={15} className="text-primary" />
-          {t("值得关注", "On the radar")}
-          <span className="kicker">48H HOTSPOTS</span>
+          {isHot
+            ? t("值得关注", "On the radar")
+            : t("情报精选", "Intelligence briefing")}
+          <span className="kicker">
+            {isHot ? "48H HOTSPOTS" : "FROM THE ARCHIVE"}
+          </span>
         </h2>
         <Link href="/trends" className="text-link" prefetch={false}>
           {t("全部趋势", "Explore trends")}
@@ -77,7 +134,11 @@ export function HomeDashboard({ initial }: { initial: HomeData }) {
         {hotItems.slice(0, 3).map((article, index) => (
           <article className="hot-card" key={article.id}>
             <div className="hot-rank">
-              {String(index + 1).padStart(2, "0")} / {t("热点追踪", "IN FOCUS")}
+              <span>
+                {String(index + 1).padStart(2, "0")} /{" "}
+                {isHot ? t("热点追踪", "IN FOCUS") : t("精选报道", "IN BRIEF")}
+              </span>
+              <ArrowUpRight size={14} />
             </div>
             <h3>
               <Link href={`/articles/${article.id}`} prefetch={false}>
@@ -113,6 +174,19 @@ export function HomeDashboard({ initial }: { initial: HomeData }) {
           )}
         </div>
       )}
+      <div
+        className="section-line intelligence-section-heading"
+        id="intelligence-feed"
+      >
+        <h2>
+          {t("全球情报流", "The intelligence stream")}
+          <span className="kicker">THE RESOURCE DESK</span>
+        </h2>
+        <Link href="/digest" className="text-link" prefetch={false}>
+          {t("阅读研究简报", "Read the brief")}
+          <ArrowUpRight size={13} />
+        </Link>
+      </div>
       <div className="dashboard">
         <ArticleFeed
           initial={initial.articles}
@@ -180,8 +254,8 @@ export function HomeDashboard({ initial }: { initial: HomeData }) {
             {!policies.data?.length && (
               <p className="subtitle text-xs">
                 {t(
-                "近一周暂无已发布的政策更新。",
-                "No published policy updates in the last week.",
+                  "近一周暂无已发布的政策更新。",
+                  "No published policy updates in the last week.",
                 )}
               </p>
             )}

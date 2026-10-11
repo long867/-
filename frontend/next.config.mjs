@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  distDir: process.env.NEXT_BUILD_DIR || ".next",
   poweredByHeader: false,
   webpack(config, { isServer, dev }) {
     if (!isServer && !dev && config.optimization.splitChunks) {

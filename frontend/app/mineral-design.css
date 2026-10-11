@@ -1,0 +1,1531 @@
+/* MiningIntel's resource observatory: geological blue, copper and paper gold. */
+:root {
+  --bg: #090f17;
+  --surface: #101923;
+  --surface-2: #17222d;
+  --border: #263440;
+  --accent: #e2b184;
+  --gold: #e5cc9b;
+  --text: #f1f3f5;
+  --muted: #a4b1bf;
+  --atlas-land: #182937;
+  --atlas-outline: #3c5364;
+}
+[data-theme="light"] {
+  --bg: #f5f4f0;
+  --surface: #fffefa;
+  --surface-2: #eeeee8;
+  --border: #d9ddd7;
+  --text: #20323c;
+  --muted: #59676c;
+  --accent: #92542d;
+  --gold: #795620;
+  --atlas-land: #e1e7e5;
+  --atlas-outline: #a3b4b5;
+}
+.header {
+  height: 82px;
+  gap: 30px;
+  background: var(--bg);
+}
+.brand {
+  font-size: 21px;
+  gap: 12px;
+  letter-spacing: -0.65px;
+}
+.brand-emblem {
+  width: 41px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--accent);
+  background: linear-gradient(135deg, #e2b1841a, #e2b18403);
+  border: 1px solid #e2b18444;
+  border-radius: 11px 4px 11px 4px;
+}
+.brand small {
+  font-size: 7px;
+  letter-spacing: 1.9px;
+  margin-top: 4px;
+}
+.main-nav {
+  gap: 9px;
+}
+.main-nav a {
+  height: 34px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 7px;
+  font-size: 12px;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.main-nav a.active {
+  background: #e2b1840f;
+  color: var(--accent);
+}
+.main-nav a:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.header .login-link {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+.mineral-observatory {
+  padding-top: 24px;
+}
+.observatory-context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 17px;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+.observatory-context > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.observatory-context .status-dot {
+  background: var(--accent);
+  box-shadow: 0 0 12px #e2b18435;
+}
+.observatory-context-note {
+  font-size: 10px;
+}
+.observatory-hero {
+  grid-template-columns: 1.02fr 1fr;
+  gap: 0 36px;
+  padding: 42px 42px 0;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 78% 35%, #24485a23 0%, transparent 60%),
+    radial-gradient(ellipse at 4% 0%, #b9804211 0%, transparent 50%),
+    var(--surface);
+}
+.observatory-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    linear-gradient(#7e9aad07 1px, transparent 1px),
+    linear-gradient(90deg, #7e9aad07 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(90deg, transparent 20%, #000);
+}
+.observatory-hero .hero-copy {
+  max-width: none;
+  padding-bottom: 34px;
+}
+.observatory-hero .eyebrow {
+  font-size: 9px;
+  letter-spacing: 2.1px;
+  color: var(--accent);
+}
+.hero-eyebrow-line {
+  width: 22px;
+  height: 1px;
+  background: var(--accent);
+}
+.observatory-hero h1 {
+  font-size: clamp(29px, 3.05vw, 46px);
+  line-height: 1.48;
+  letter-spacing: -1.1px;
+  margin: 22px 0 18px;
+}
+.observatory-hero h1 .hero-line {
+  color: var(--text);
+}
+.observatory-hero h1 .hero-accent {
+  color: var(--gold);
+}
+.observatory-hero .subtitle {
+  max-width: 430px;
+  font-size: 12px;
+  line-height: 2;
+  margin: 0;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 23px 0 18px;
+}
+.observatory-primary,
+.observatory-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 7px;
+  font-size: 11px;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.observatory-primary {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 650;
+  box-shadow: 0 5px 25px #c88c4214;
+}
+.observatory-secondary {
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.observatory-primary:hover,
+.observatory-secondary:hover {
+  transform: translateY(-2px);
+}
+.observatory-secondary:hover {
+  background: var(--surface-2);
+}
+.observatory-hero .hero-search {
+  max-width: 393px;
+  margin: 0;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  padding: 2px 4px 2px 13px;
+}
+.observatory-hero .hero-search .search-field {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  min-width: 0;
+}
+.observatory-hero .hero-search input {
+  background: transparent;
+  border: 0;
+  font-size: 10px;
+  padding: 9px 8px;
+}
+.world-coverage {
+  min-width: 0;
+  align-self: center;
+  padding: 0 0 24px;
+}
+.world-coverage-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 8px;
+  letter-spacing: 1.4px;
+}
+.world-coverage-heading > svg {
+  color: var(--accent);
+}
+.atlas-coordinates {
+  margin-left: auto;
+  font-size: 7px;
+  color: var(--muted);
+  letter-spacing: 0.7px;
+}
+.atlas-canvas {
+  position: relative;
+  margin: 23px -15px 20px;
+}
+.coverage-map {
+  width: 100%;
+  display: block;
+  overflow: visible;
+  position: relative;
+}
+.atlas-gridline {
+  stroke: var(--atlas-outline);
+  stroke-width: 0.5;
+  opacity: 0.28;
+}
+.atlas-land {
+  fill: var(--atlas-land);
+  stroke: var(--atlas-outline);
+  stroke-width: 0.7;
+}
+.atlas-texture {
+  color: #789aae;
+  opacity: 0.55;
+}
+.atlas-orbit {
+  pointer-events: none;
+  position: absolute;
+  border: 1px solid #e2b18413;
+  border-radius: 50%;
+  inset: -22% 12%;
+  transform: rotate(-17deg);
+}
+.atlas-orbit-two {
+  inset: -5% 23%;
+  transform: rotate(17deg);
+  border-color: #789aae16;
+}
+.atlas-point-halo {
+  fill: #e2b18414;
+  stroke: #e2b18444;
+  stroke-width: 1;
+  transition: r 0.2s;
+}
+.atlas-point-core {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 5px #e2b18465);
+}
+.atlas-point-center {
+  fill: var(--surface);
+}
+.atlas-point:hover .atlas-point-halo,
+.atlas-point:focus-visible .atlas-point-halo {
+  r: 20;
+  fill: #e2b18430;
+}
+.atlas-point-label rect {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 0.7;
+}
+.atlas-point-label text {
+  fill: var(--text);
+  font-size: 11px;
+  font-family: inherit;
+}
+.atlas-point-label .atlas-point-count {
+  fill: var(--accent);
+  font-size: 9px;
+}
+.atlas-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 9px;
+  color: var(--muted);
+  position: relative;
+}
+.atlas-footer > span,
+.atlas-footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.atlas-footer a {
+  color: var(--accent);
+}
+.atlas-legend-dot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+.atlas-footnote {
+  font-size: 8px;
+  color: var(--muted);
+  margin: 10px 0 0 12px;
+}
+.observatory-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-column: 1/-1;
+  border-top: 1px solid var(--border);
+  padding: 23px 0;
+}
+.observatory-metric {
+  padding: 0 24px;
+  border-left: 1px solid var(--border);
+}
+.observatory-metric:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.metric-code {
+  font-size: 8px;
+  letter-spacing: 1.4px;
+  color: var(--muted);
+}
+.observatory-metric > div {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 7px;
+}
+.observatory-metric strong {
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.8px;
+}
+.observatory-metric > div > span {
+  color: var(--muted);
+  font-size: 10px;
+}
+.resource-overview {
+  display: grid;
+  grid-template-columns: 1.08fr 1.15fr 1fr;
+  gap: 16px;
+  margin: 23px 0 30px;
+}
+.observatory-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 22px;
+  min-width: 0;
+  overflow: hidden;
+}
+.observatory-card-heading {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+.observatory-card-heading > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 550;
+}
+.observatory-card-heading svg {
+  color: var(--accent);
+}
+.micro-label {
+  font-size: 7px;
+  letter-spacing: 1.3px;
+  color: var(--muted);
+}
+.micro-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9px;
+  color: var(--muted);
+}
+.snapshot-product {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+.snapshot-product a {
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.snapshot-product > span {
+  font-size: 8px;
+  color: var(--muted);
+}
+.snapshot-value {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin-top: 9px;
+  flex-wrap: wrap;
+}
+.snapshot-value strong {
+  font-size: 29px;
+  font-weight: 550;
+  letter-spacing: -1.1px;
+  font-variant-numeric: tabular-nums;
+}
+.snapshot-value > span {
+  font-size: 9px;
+  color: var(--muted);
+}
+.snapshot-value .snapshot-change {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 550;
+}
+.snapshot-value .up {
+  color: var(--green);
+}
+.snapshot-value .down {
+  color: var(--red);
+}
+.price-snapshot-chart {
+  display: block;
+  width: 100%;
+  height: 72px;
+  margin-top: 8px;
+}
+.snapshot-gridline {
+  stroke: var(--border);
+  stroke-width: 0.6;
+  stroke-dasharray: 3 5;
+}
+.snapshot-dates {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.snapshot-source {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 8px;
+  color: var(--muted);
+}
+.snapshot-source a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--accent);
+}
+.snapshot-empty {
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+}
+.observatory-card-description {
+  font-size: 10px;
+  color: var(--muted);
+  margin: 17px 0 19px;
+  line-height: 1.9;
+}
+.element-watchlist {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+}
+.element-tile {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 6px;
+  background: linear-gradient(145deg, #e2b18408, transparent);
+  display: flex;
+  flex-direction: column;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+}
+.element-tile:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+.element-number {
+  color: var(--muted);
+  font-size: 7px;
+}
+.element-tile strong {
+  font-size: 22px;
+  letter-spacing: -0.8px;
+  font-weight: 500;
+  color: var(--gold);
+  margin: 7px 0 3px;
+}
+.element-name {
+  font-size: 10px;
+}
+.element-count {
+  font-size: 8px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.mineral-watch-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 21px;
+  font-size: 8px;
+  color: var(--muted);
+}
+.research-entry {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 100% 100%, #b9804214, transparent 70%),
+    var(--surface);
+}
+.research-entry::before {
+  content: "";
+  position: absolute;
+  top: 85px;
+  right: -40px;
+  width: 110px;
+  height: 110px;
+  border: 1px solid #e2b18414;
+  transform: rotate(35deg);
+  pointer-events: none;
+}
+.research-entry h2 {
+  margin: 19px 0 8px;
+  font-size: 21px;
+  line-height: 1.65;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+.research-entry h2 span {
+  color: var(--gold);
+}
+.research-entry p {
+  font-size: 10px;
+  line-height: 1.9;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+.research-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  color: var(--accent);
+}
+.hot-card {
+  border-radius: 13px;
+  padding: 24px;
+  min-height: 248px;
+  background: linear-gradient(135deg, #789aae05, transparent), var(--surface);
+}
+.hot-card:before {
+  width: 140px;
+  height: 140px;
+  right: -95px;
+  top: -75px;
+  border-color: var(--border);
+  opacity: 1;
+}
+.hot-rank {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.hot-rank > svg {
+  color: var(--muted);
+}
+.hot-card h3 {
+  font-size: 15px;
+  line-height: 1.85;
+  margin-top: 15px;
+}
+.hot-card h3 a:hover {
+  color: var(--accent);
+}
+.hot-card p {
+  font-size: 11px;
+}
+.hot-meta {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.home-content .section-line {
+  margin: 30px 0 16px;
+}
+.home-content .intelligence-section-heading {
+  margin-top: 35px;
+  scroll-margin-top: 24px;
+}
+.home-content .dashboard {
+  margin-top: 0;
+  grid-template-columns: minmax(0, 1fr) 305px;
+  gap: 22px;
+}
+.home-content .dashboard > section {
+  min-width: 0;
+}
+.filter-panel {
+  background: var(--surface);
+  border-radius: 12px;
+}
+.article-card {
+  border-radius: 12px;
+  padding: 24px;
+  border-left: 2px solid var(--border);
+}
+.article-card:hover {
+  border-color: #e2b18466;
+  background: var(--surface);
+}
+.article-card h3 {
+  font-size: 17px;
+  line-height: 1.8;
+}
+.article-summary {
+  font-size: 12px;
+  line-height: 1.95;
+}
+.category-tag {
+  background: #e2b1840b;
+  color: var(--accent);
+  border-color: #e2b18425;
+}
+.article-tags a,
+.article-tags button {
+  border-radius: 5px;
+}
+.panel,
+.consult-panel,
+.directory-card,
+.form-card {
+  border-radius: 12px;
+}
+.panel-title {
+  margin-bottom: 17px;
+}
+.insight-row {
+  padding: 13px 0;
+}
+.consult-panel {
+  background:
+    radial-gradient(ellipse at 100% 0%, #e2b1840e, transparent 70%),
+    var(--surface);
+}
+.consult-panel h3 {
+  color: var(--gold);
+}
+.site-footer {
+  margin-top: 16px;
+}
+
+@media (max-width: 1200px) {
+  .header {
+    gap: 20px;
+  }
+  .main-nav {
+    gap: 0;
+  }
+  .main-nav a {
+    padding: 0 8px;
+    font-size: 11px;
+  }
+  .observatory-hero {
+    padding: 32px 30px 0;
+    gap: 0 20px;
+  }
+  .observatory-hero h1 {
+    font-size: 34px;
+  }
+  .resource-overview {
+    gap: 12px;
+  }
+  .observatory-card {
+    padding: 18px;
+  }
+  .micro-label {
+    display: none;
+  }
+  .element-watchlist {
+    gap: 4px;
+  }
+  .element-tile {
+    padding: 8px 5px;
+  }
+  .home-content .dashboard {
+    grid-template-columns: minmax(0, 1fr) 265px;
+    gap: 18px;
+  }
+}
+@media (max-width: 1000px) {
+  .header {
+    gap: 14px;
+  }
+  .brand {
+    font-size: 18px;
+  }
+  .brand-emblem {
+    width: 35px;
+    height: 37px;
+  }
+  .main-nav a {
+    padding: 0 6px;
+  }
+  .header-actions {
+    gap: 3px;
+  }
+  .observatory-hero h1 {
+    font-size: 30px;
+  }
+  .observatory-hero .subtitle {
+    font-size: 11px;
+  }
+  .atlas-coordinates {
+    display: none;
+  }
+  .observatory-metric {
+    padding: 0 16px;
+  }
+  .observatory-metric > div {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .resource-overview {
+    grid-template-columns: 1fr 1fr;
+  }
+  .research-entry {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 0 26px;
+  }
+  .research-entry .observatory-card-heading {
+    grid-column: 1/-1;
+  }
+  .research-entry h2 {
+    grid-row: span 2;
+    margin: 15px 0 0;
+  }
+  .research-entry p {
+    margin-top: 16px;
+  }
+}
+@media (max-width: 800px) {
+  .header {
+    height: 68px;
+  }
+  .header .brand {
+    font-size: 20px;
+  }
+  .mineral-observatory {
+    padding-top: 20px;
+  }
+  .observatory-context {
+    font-size: 10px;
+    margin-bottom: 13px;
+  }
+  .observatory-hero {
+    grid-template-columns: 1fr;
+    padding: 30px 28px 0;
+    border-radius: 16px;
+  }
+  .observatory-hero .hero-copy {
+    max-width: 580px;
+    padding-bottom: 26px;
+  }
+  .observatory-hero h1 {
+    font-size: clamp(29px, 4.8vw, 40px);
+    margin-top: 18px;
+  }
+  .observatory-hero .subtitle {
+    max-width: 430px;
+    font-size: 12px;
+  }
+  .world-coverage {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding-bottom: 24px;
+  }
+  .atlas-canvas {
+    margin: 16px 0;
+  }
+  .atlas-coordinates {
+    display: inline;
+  }
+  .observatory-metrics {
+    padding: 20px 0;
+  }
+  .observatory-metric {
+    padding: 0 12px;
+  }
+  .observatory-metric strong {
+    font-size: 25px;
+  }
+  .metric-code {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .observatory-metric > div > span {
+    font-size: 9px;
+  }
+  .home-content .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hot-card {
+    min-height: 245px;
+    padding: 18px;
+  }
+  .article-card h3 {
+    font-size: 16px;
+  }
+}
+@media (max-width: 540px) {
+  .header {
+    padding: 0 16px;
+    gap: 6px;
+  }
+  .header .brand {
+    font-size: 17px;
+    gap: 8px;
+  }
+  .brand-emblem {
+    width: 30px;
+    height: 34px;
+    border-radius: 8px 3px;
+  }
+  .brand-emblem svg {
+    width: 21px;
+  }
+  .header .brand small {
+    font-size: 5px;
+    letter-spacing: 1.2px;
+  }
+  .header-actions {
+    gap: 1px;
+  }
+  .header .login-link {
+    border: 0;
+    padding: 8px 3px;
+  }
+  .header-actions a[href="/search"] {
+    display: none;
+  }
+  .observatory-context-note {
+    display: none !important;
+  }
+  .mineral-observatory {
+    padding: 18px 16px 40px;
+  }
+  .observatory-hero {
+    padding: 25px 20px 0;
+    border-radius: 14px;
+  }
+  .observatory-hero .eyebrow {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+  }
+  .observatory-hero h1 {
+    font-size: clamp(25px, 7vw, 33px);
+    line-height: 1.52;
+    letter-spacing: -0.6px;
+    margin: 17px 0 14px;
+  }
+  .observatory-hero .subtitle {
+    font-size: 11px;
+    line-height: 1.95;
+  }
+  .hero-actions {
+    gap: 10px;
+    margin: 19px 0 15px;
+  }
+  .observatory-primary,
+  .observatory-secondary {
+    font-size: 10px;
+    min-height: 39px;
+    padding: 0 13px;
+    gap: 13px;
+  }
+  .observatory-hero .hero-search input {
+    font-size: 9px;
+  }
+  .observatory-hero .hero-copy {
+    padding-bottom: 23px;
+  }
+  .world-coverage-heading {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .atlas-coordinates {
+    font-size: 6px;
+  }
+  .atlas-footer {
+    font-size: 8px;
+  }
+  .atlas-footnote {
+    font-size: 7px;
+  }
+  .world-coverage {
+    padding-bottom: 20px;
+  }
+  .observatory-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0;
+  }
+  .observatory-metric {
+    padding: 17px 14px !important;
+    border-left: 1px solid var(--border);
+  }
+  .observatory-metric:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0 !important;
+  }
+  .observatory-metric:nth-child(n + 3) {
+    border-top: 1px solid var(--border);
+  }
+  .observatory-metric > div {
+    gap: 9px;
+  }
+  .observatory-metric strong {
+    font-size: 25px;
+  }
+  .resource-overview {
+    grid-template-columns: 1fr;
+    margin: 16px 0 24px;
+    gap: 12px;
+  }
+  .observatory-card {
+    padding: 20px;
+  }
+  .micro-label {
+    display: inline;
+  }
+  .snapshot-value strong {
+    font-size: 31px;
+  }
+  .price-snapshot-chart {
+    height: 80px;
+  }
+  .element-watchlist {
+    gap: 7px;
+  }
+  .element-tile {
+    padding: 10px 8px;
+  }
+  .element-tile strong {
+    font-size: 25px;
+  }
+  .research-entry {
+    display: block;
+    grid-column: auto;
+  }
+  .research-entry h2 {
+    margin: 16px 0 9px;
+    font-size: 22px;
+  }
+  .research-entry p {
+    margin: 0 0 17px;
+  }
+  .hot-card {
+    min-height: 0;
+    padding: 20px;
+  }
+  .hot-card h3 {
+    font-size: 15px;
+  }
+  .hot-meta {
+    margin-top: 8px;
+  }
+  .home-content .section-line {
+    margin: 25px 0 13px;
+  }
+  .section-line .kicker {
+    display: none;
+  }
+  .home-content .section-line h2 {
+    font-size: 14px;
+  }
+  .article-card {
+    padding: 19px;
+  }
+  .article-card h3 {
+    font-size: 15px;
+  }
+  .article-summary {
+    font-size: 11px;
+  }
+  .article-meta {
+    gap: 5px;
+    font-size: 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .observatory-primary,
+  .observatory-secondary,
+  .element-tile,
+  .atlas-point-halo {
+    transition: none;
+  }
+  .observatory-primary:hover,
+  .observatory-secondary:hover,
+  .element-tile:hover {
+    transform: none;
+  }
+}
+/* Slow, purposeful motion. Numbers and observations never change for decoration. */
+.atlas-scan {
+  position: absolute;
+  width: 80%;
+  aspect-ratio: 1;
+  left: 10%;
+  top: 50%;
+  margin-top: -40%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 290deg,
+    #e2b18400 315deg,
+    #e2b18413 355deg,
+    transparent 360deg
+  );
+  animation: atlas-sweep 22s linear infinite;
+  pointer-events: none;
+  mask-image: radial-gradient(circle, #000 25%, transparent 70%);
+}
+.atlas-orbit-one {
+  animation: atlas-orbit-turn 100s linear infinite;
+}
+.atlas-orbit-two {
+  animation: atlas-orbit-turn 150s linear infinite reverse;
+}
+.atlas-point-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: atlas-beacon 4s ease-in-out infinite;
+}
+.atlas-point:nth-of-type(2n) .atlas-point-halo {
+  animation-delay: -1.4s;
+}
+.atlas-point:nth-of-type(3n) .atlas-point-halo {
+  animation-delay: -2.8s;
+}
+.atlas-point:hover .atlas-point-halo,
+.atlas-point:focus-visible .atlas-point-halo {
+  animation-play-state: paused;
+}
+.observatory-primary svg {
+  animation: exploration-nudge 3.5s ease-in-out infinite;
+}
+.observatory-card {
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s;
+}
+.observatory-card:hover {
+  border-color: #e2b18455;
+  box-shadow: 0 12px 32px #0000000d;
+  transform: translateY(-3px);
+}
+.observatory-card .micro-link svg,
+.research-question svg,
+.hot-rank > svg {
+  transition: transform 0.25s;
+}
+.observatory-card:hover .micro-link svg,
+.research-question:hover svg,
+.hot-card:hover .hot-rank > svg {
+  transform: translate(2px, -2px);
+  color: var(--accent);
+}
+.snapshot-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: snapshot-draw 1.4s ease-out forwards;
+}
+.price-snapshot-chart polygon {
+  animation: snapshot-area 1.8s ease-out;
+}
+.intelligence-ticker {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 9px;
+  padding: 12px 17px;
+  margin: 17px 0 -6px;
+  overflow: hidden;
+}
+.ticker-label {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 550;
+  border-right: 1px solid var(--border);
+  padding-right: 18px;
+}
+.ticker-window {
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 1%,
+    #000 97%,
+    transparent
+  );
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: headline-flow 70s linear infinite;
+}
+.ticker-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.ticker-group a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.ticker-category {
+  color: var(--accent);
+  border: 1px solid #e2b18425;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 8px;
+}
+.ticker-source {
+  font-size: 8px;
+  color: var(--muted);
+}
+.ticker-separator {
+  color: var(--atlas-outline);
+  font-size: 8px;
+  margin: 0 24px 0 12px;
+}
+.intelligence-ticker:hover .ticker-track,
+.intelligence-ticker:focus-within .ticker-track {
+  animation-play-state: paused;
+}
+.ticker-group a:hover {
+  color: var(--accent);
+}
+@keyframes atlas-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes atlas-orbit-turn {
+  from {
+    transform: rotate(-17deg);
+  }
+  to {
+    transform: rotate(343deg);
+  }
+}
+@keyframes atlas-beacon {
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+@keyframes exploration-nudge {
+  0%,
+  75%,
+  100% {
+    transform: translateY(0);
+  }
+  85% {
+    transform: translateY(3px);
+  }
+}
+@keyframes snapshot-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes snapshot-area {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes headline-flow {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (max-width: 540px) {
+  .intelligence-ticker {
+    margin-top: 13px;
+    padding: 11px 12px;
+    gap: 11px;
+  }
+  .ticker-label {
+    font-size: 9px;
+    padding-right: 12px;
+  }
+  .ticker-group a {
+    font-size: 9px;
+  }
+  .ticker-source {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atlas-scan,
+  .atlas-orbit,
+  .atlas-point-halo,
+  .observatory-primary svg,
+  .snapshot-line,
+  .price-snapshot-chart polygon,
+  .ticker-track {
+    animation: none;
+  }
+  .snapshot-line {
+    stroke-dashoffset: 0;
+  }
+  .atlas-scan {
+    display: none;
+  }
+  .observatory-card,
+  .observatory-card .micro-link svg,
+  .research-question svg,
+  .hot-rank > svg {
+    transition: none;
+  }
+  .observatory-card:hover {
+    transform: none;
+  }
+  .ticker-window {
+    overflow-x: auto;
+    mask-image: none;
+  }
+  .ticker-group[aria-hidden="true"] {
+    display: none;
+  }
+}
+@media (hover: none) {
+  .observatory-card:hover {
+    transform: none;
+  }
+}
+/* Coverage links lead into MiningIntel, rather than implying physical trade routes. */
+.atlas-link-base {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 0.7;
+  opacity: 0.18;
+}
+.atlas-link-flow {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  opacity: 0.65;
+  stroke-dasharray: 5 17;
+  animation: intelligence-flow 7s linear infinite;
+}
+.atlas-intelligence-links > g:nth-child(2n) .atlas-link-flow {
+  animation-delay: -2s;
+}
+.atlas-intelligence-links > g:nth-child(3n) .atlas-link-flow {
+  animation-delay: -4s;
+}
+.atlas-hub {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 0.8;
+}
+.atlas-hub-label {
+  fill: var(--accent);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.6px;
+}
+.atlas-hub-wave {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 0.8;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: intelligence-wave 5s ease-out infinite;
+}
+.atlas-hub-wave-second {
+  animation-delay: -2.5s;
+}
+.atlas-orbit-one::after,
+.atlas-orbit-two::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px 3px #e2b18444;
+}
+.atlas-orbit-two::after {
+  width: 3px;
+  height: 3px;
+  top: -2px;
+  background: #83b8c5;
+  box-shadow: 0 0 10px #83b8c533;
+}
+.atlas-orbit-one {
+  animation-duration: 38s;
+  border-color: #e2b18420;
+}
+.atlas-orbit-two {
+  animation-duration: 60s;
+}
+.atlas-scan {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 280deg,
+    #e2b18400 310deg,
+    #e2b18420 355deg,
+    transparent 360deg
+  );
+}
+.observatory-hero::before {
+  animation: geological-drift 24s linear infinite;
+}
+.resource-arriving {
+  animation: resource-arrive 0.7s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+}
+.resource-arriving:nth-child(3n + 2) {
+  animation-delay: 0.08s;
+}
+.resource-arriving:nth-child(3n) {
+  animation-delay: 0.16s;
+}
+.observatory-card,
+.hot-card,
+.article-card {
+  position: relative;
+  isolation: isolate;
+}
+.observatory-card::after,
+.hot-card::after,
+.article-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    250px circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    #e2b18412,
+    transparent 75%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+  z-index: -1;
+}
+.observatory-card:hover::after,
+.hot-card:hover::after,
+.article-card:hover::after {
+  opacity: 1;
+}
+@keyframes intelligence-flow {
+  to {
+    stroke-dashoffset: -132;
+  }
+}
+@keyframes intelligence-wave {
+  from {
+    transform: scale(0.5);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+@keyframes resource-arrive {
+  from {
+    opacity: 0.5;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes geological-drift {
+  to {
+    background-position:
+      44px 44px,
+      44px 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atlas-link-flow,
+  .atlas-hub-wave,
+  .observatory-hero::before,
+  .resource-arriving {
+    animation: none;
+  }
+  .atlas-hub-wave {
+    display: none;
+  }
+  .resource-arriving {
+    transform: none;
+    opacity: 1;
+  }
+  .observatory-card::after,
+  .hot-card::after,
+  .article-card::after {
+    transition: none;
+  }
+}
+.atlas-motion-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+  margin-left: 1px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 8px;
+  white-space: nowrap;
+}
+.atlas-motion-control:hover {
+  color: var(--accent);
+}
+.atlas-footer a {
+  margin-left: auto;
+}
+[data-motion="paused"] .mineral-observatory *,
+[data-motion="paused"] .mineral-observatory *::before,
+[data-motion="paused"] .mineral-observatory *::after {
+  animation-play-state: paused !important;
+}
+[data-motion="paused"] .resource-arriving {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+[data-motion="paused"] .snapshot-line {
+  stroke-dashoffset: 0;
+  animation: none;
+}
+[data-motion="paused"] .price-snapshot-chart polygon {
+  opacity: 1;
+  animation: none;
+}
+@media (max-width: 540px) {
+  .atlas-footer {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

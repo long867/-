@@ -155,6 +155,10 @@ UNIT_ALIASES = {
     "CAD": "CAD",
     "澳元": "AUD",
     "AUD": "AUD",
+    "英镑": "GBP",
+    "GBP": "GBP",
+    "欧元": "EUR",
+    "EUR": "EUR",
     "元/吨": "元/吨",
     "dollars": "dollars",
     "years": "年",
@@ -174,9 +178,9 @@ UNIT_PATTERN = "|".join(
     re.escape(unit) for unit in sorted(UNIT_ALIASES, key=len, reverse=True)
 )
 MEASUREMENT = re.compile(
-    rf"(?P<currency>US\$|C\$|A\$|USD\s*|CAD\s*|AUD\s*|CNY\s*|[$€£¥￥])?"
+    rf"(?P<currency>US\$|C\$|A\$|USD\s*|CAD\s*|AUD\s*|CNY\s*|GBP\s*|EUR\s*|[$€£¥￥])?"
     rf"(?P<number>{NUMBER})(?P<unit>\s*[-–]?\s*(?:{UNIT_PATTERN}))?"
-    r"(?P<suffix>\s*(?:美元|加元|澳元|人民币|USD\b|CAD\b|AUD\b|CNY\b))?",
+    r"(?P<suffix>\s*(?:美元|加元|澳元|人民币|英镑|欧元|USD\b|CAD\b|AUD\b|CNY\b|GBP\b|EUR\b))?",
     re.I,
 )
 WORDS_ZH = dict(
@@ -203,13 +207,15 @@ def measurements(text: str) -> Counter[tuple[str, str, str]]:
         if not currency:
             suffix = (match.group("suffix") or "").strip()
             currency = UNIT_ALIASES.get(suffix, suffix).upper()
-        currency = {"US$": "USD", "C$": "CAD", "A$": "AUD"}.get(currency, currency)
+        currency = {"US$": "USD", "C$": "CAD", "A$": "AUD", "£": "GBP", "€": "EUR"}.get(
+            currency, currency
+        )
         if unit or currency:
             canonical = next(
                 (v for k, v in UNIT_ALIASES.items() if k.casefold() == unit.casefold()),
                 unit,
             )
-            if canonical in {"USD", "CAD", "AUD", "CNY"} and not currency:
+            if canonical in {"USD", "CAD", "AUD", "CNY", "GBP", "EUR"} and not currency:
                 currency, canonical = canonical, ""
             elif canonical == "元/吨":
                 currency, canonical = currency or "CNY", "吨"

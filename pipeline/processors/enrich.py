@@ -6,7 +6,7 @@ from typing import Any
 from app.core.config import get_settings
 from pipeline.processors.extractor import extract, quality_score
 from pipeline.processors.translator import translate
-from pipeline.schemas import Category
+from pipeline.schemas import Category, RawArticle, SourceDefinition
 
 
 async def enrich(
@@ -17,8 +17,36 @@ async def enrich(
     *,
     published_at: datetime | None = None,
     category: Category = "news",
+    source: SourceDefinition | None = None,
+    url: str | None = None,
 ) -> dict[str, Any]:
     """Preserve original evidence; expose rules-only behavior when LLM is disabled."""
+    if get_settings().ENRICHMENT_MODE == "editorial":
+        from pipeline.processors.backfill import (
+            EditorialDocument,
+            enrich_editorial_batch,
+        )
+
+        if source is None or url is None:
+            raise ValueError("Editorial enrichment requires original provenance")
+        document = EditorialDocument(
+            RawArticle(
+                source_name=source.name,
+                url=url,
+                title=title,
+                content=content,
+                language=language,
+                category=category,
+                published_at=published_at,
+            ),
+            source,
+        )
+        feedback = None
+        for _ in range(2):
+            results, feedback = await enrich_editorial_batch([document], feedback)
+            if url in results:
+                return results[url]
+        raise ValueError("Editorial facts did not pass source validation")
     translated = await translate(title, content, language)
     entities = await extract(title, content, category)
     return translated | {

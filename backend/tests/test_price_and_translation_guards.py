@@ -82,6 +82,14 @@ def test_signed_values_currency_magnitude_and_unique_metadata_anchors():
     assert restore_numeric_literals(content, content_anchors) == "Output 10 tonnes"
 
 
+def test_share_counts_cannot_be_relabelled_as_sterling_or_euro_amounts():
+    original = "Raised £1 million by placing 1.67 billion new shares."
+    assert summary_measurements_valid(original, "筹集1百万英镑，配售1.67 billion股。")
+    assert not summary_measurements_valid(original, "配售1.67 billion英镑的新股票。")
+    assert not summary_measurements_valid(original, "筹集1百万欧元。")
+    assert summary_measurements_valid("Raised €2 million", "筹集2百万欧元。")
+
+
 async def test_unit_substitution_retries_even_when_all_numbers_match(monkeypatch):
     import pipeline.processors.translator as module
 

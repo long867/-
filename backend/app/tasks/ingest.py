@@ -39,6 +39,7 @@ from pipeline.processors.dedup import (
     simhash,
 )
 from pipeline.processors.enrich import enrich
+from pipeline.schemas import SourceDefinition
 
 logger = structlog.get_logger()
 
@@ -299,6 +300,17 @@ async def process_one(article_id: UUID) -> dict:
             source.authority_score,
             published_at=article.published_at,
             category=article.category,
+            source=SourceDefinition(
+                name=source.name,
+                url=source.url,
+                type=source.type,
+                category=source.category,
+                region=source.region,
+                language=source.language,
+                authority_score=source.authority_score,
+                parser_config=source.config_json,
+            ),
+            url=article.url,
         )
     spans = await asyncio.to_thread(split_evidence, article.content)
     vectors = await embed(
@@ -332,6 +344,8 @@ async def process_one(article_id: UUID) -> dict:
                     + "\n"
                     + (current.title_zh or "")
                     + "\n"
+                    + (current.summary_zh or "")
+                    + "\n"
                     + span.text,
                     start_char=span.start,
                     end_char=span.end,
@@ -360,19 +374,44 @@ async def process_one(article_id: UUID) -> dict:
                 )
             )
         settings = get_settings()
+        editorial_ready = (
+            settings.ENRICHMENT_MODE == "editorial"
+            and bool(current.title_zh)
+            and bool(current.summary_zh)
+            and 100 <= len(current.summary_zh) <= 200
+        )
+        threshold = (
+            settings.INITIALIZATION_QUALITY_THRESHOLD
+            if editorial_ready
+            and current.raw_json.get("initialization_requested") is True
+            and source.authority_score >= 7
+            else settings.PUBLISH_QUALITY_THRESHOLD
+        )
         current.status = (
             "published"
             if settings.AUTO_PUBLISH
-            and (current.language.startswith("zh") or current.is_translated)
-            and current.quality_score >= settings.PUBLISH_QUALITY_THRESHOLD
+            and (
+                current.language.startswith("zh")
+                or current.is_translated
+                or editorial_ready
+            )
+            and bool(current.minerals)
+            and current.quality_score >= threshold
             and current.relevance_score > 0
             else "processed"
         )
         current.processing_error = None
+        if editorial_ready:
+            current.raw_json = current.raw_json | {
+                "editorial_translation": "title_and_summary",
+                "body_translation": "original",
+            }
         # The dedicated indexer uses the finalized Chinese fields and model version.
         current.indexed_at = None
     if not article.language.startswith("zh"):
-        TRANSLATIONS.labels("success" if current.is_translated else "skipped").inc()
+        TRANSLATIONS.labels(
+            "success" if current.is_translated or editorial_ready else "skipped"
+        ).inc()
     from app.core.cache import invalidate_public_cache
 
     await invalidate_public_cache()

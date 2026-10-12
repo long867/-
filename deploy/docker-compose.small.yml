@@ -17,6 +17,7 @@ services:
       QDRANT_URL: ''
       ENTITY_MATCHER: dictionary
       SPACY_MODEL: ''
+      ENRICHMENT_MODE: editorial
       OPENBLAS_NUM_THREADS: '1'
       OMP_NUM_THREADS: '1'
       TOKENIZERS_PARALLELISM: 'false'
@@ -28,6 +29,7 @@ services:
       QDRANT_URL: ''
       ENTITY_MATCHER: dictionary
       SPACY_MODEL: ''
+      ENRICHMENT_MODE: editorial
       OPENBLAS_NUM_THREADS: '1'
       OMP_NUM_THREADS: '1'
       TOKENIZERS_PARALLELISM: 'false'

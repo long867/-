@@ -1,4 +1,3 @@
-# Editorial authority scores; access restrictions are explicit.
 version: 1
 sources:
   english_news:
@@ -40,14 +39,14 @@ sources:
     region: 全球
     language: en
     authority_score: 8
-    fetch_interval: 1800
-    active: false
+    fetch_interval: 21600
+    active: true
     parser_config:
-      max_items: 10
-      verification: pending_runtime_probe
-      access_note: 启用前核实 robots、使用条款与解析配置
+      max_items: 40
+      verification: live_public_evidence_2026-10-12
+      access_note: 仅采集公开RSS提供的内容，受限正文不抓取。2026-10-12已实测。
       fetch_full_content: false
-      requires_license: true
+      requires_license: false
       proxy_env: FETCH_PROXY
   - name: Mining Weekly
     url: https://www.miningweekly.com/page/latest-news/feed
@@ -56,14 +55,15 @@ sources:
     region: 全球
     language: en
     authority_score: 8
-    fetch_interval: 1800
+    fetch_interval: 21600
     active: true
     parser_config:
-      max_items: 10
-      verification: live_rss_with_article_2026-10-10
-      access_note: RSS和robots已通过真实请求；仅保存公开Feed内容，全文使用需另行核实
+      max_items: 40
+      verification: live_public_evidence_2026-10-12
+      access_note: 仅采集公开RSS提供的内容，受限正文不抓取。2026-10-12已实测。
       fetch_full_content: false
       proxy_env: FETCH_PROXY
+      requires_license: false
   - name: Mining Technology
     url: https://www.mining-technology.com/feed/
     type: rss
@@ -71,14 +71,15 @@ sources:
     region: 全球
     language: en
     authority_score: 8
-    fetch_interval: 1800
+    fetch_interval: 21600
     active: true
     parser_config:
-      max_items: 10
-      verification: live_rss_with_article_2026-10-10
-      access_note: RSS和robots已通过真实请求；仅保存公开Feed内容，全文使用需另行核实
+      max_items: 40
+      verification: live_public_evidence_2026-10-12
+      access_note: 仅采集公开RSS提供的内容，受限正文不抓取。2026-10-12已实测。
       fetch_full_content: false
       proxy_env: FETCH_PROXY
+      requires_license: false
   - name: Australian Mining
     url: https://www.australianmining.com.au/feed/
     type: rss
@@ -101,14 +102,15 @@ sources:
     region: 加拿大
     language: en
     authority_score: 8
-    fetch_interval: 1800
+    fetch_interval: 21600
     active: true
     parser_config:
-      max_items: 10
-      verification: live_rss_200_2026-10-10
-      access_note: RSS 与 robots 已通过真实请求，默认保存 RSS 提供的正文；全文另行核实使用许可
+      max_items: 40
+      verification: live_public_evidence_2026-10-12
+      access_note: 仅采集公开RSS提供的内容，受限正文不抓取。2026-10-12已实测。
       fetch_full_content: false
       proxy_env: FETCH_PROXY
+      requires_license: false
   - name: Reuters Mining
     url: https://www.reuters.com/markets/commodities/
     type: web
@@ -264,8 +266,8 @@ sources:
     fetch_interval: 21600
     active: true
     parser_config:
-      max_items: 10
-      verification: live_web_article_2026-10-10
+      max_items: 40
+      verification: live_public_evidence_2026-10-12
       access_note: robots、带路径约束的列表选择器和文章正文均已实测；官方RSS当前为空Feed
       link_selector: a[href*="/news/"]
       proxy_env: FETCH_PROXY
@@ -635,3 +637,103 @@ sources:
       dynamic: true
       contract_note: 需授权公告检索接口和矿业公司代码白名单；首页不是完整公告 API
       proxy_env: FETCH_PROXY
+  global_public_feeds:
+  - name: African Mining Market
+    url: https://africanminingmarket.com/feed/
+    type: rss
+    category: news
+    region: 非洲
+    language: en
+    authority_score: 8
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      fetch_full_content: false
+      max_items: 40
+      verification: live_public_feed_2026-10-12
+      access_note: 仅保存公开RSS/Atom提供的资料，保留原文出处与发布日期。
+  - name: Engineering & Mining Journal
+    url: https://www.e-mj.com/feed/
+    type: rss
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      fetch_full_content: false
+      max_items: 40
+      verification: live_public_feed_2026-10-12
+      access_note: 仅保存公开RSS/Atom提供的资料，保留原文出处与发布日期。
+  - name: International Mining
+    url: https://im-mining.com/feed/
+    type: rss
+    category: news
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      fetch_full_content: false
+      max_items: 40
+      verification: live_public_feed_2026-10-12
+      access_note: 仅保存公开RSS/Atom提供的资料，保留原文出处与发布日期。
+  - name: Mining Zimbabwe
+    url: https://miningzimbabwe.com/feed/
+    type: rss
+    category: news
+    region: 津巴布韦
+    language: en
+    authority_score: 7
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      fetch_full_content: false
+      max_items: 40
+      verification: live_public_feed_2026-10-12
+      access_note: 仅保存公开RSS/Atom提供的资料，保留原文出处与发布日期。
+  - name: Portal da Mineração
+    url: https://portaldamineracao.com.br/feed/
+    type: rss
+    category: news
+    region: 巴西
+    language: pt
+    authority_score: 8
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      fetch_full_content: false
+      max_items: 40
+      verification: live_public_feed_2026-10-12
+      access_note: 仅保存公开RSS/Atom提供的资料，保留原文出处与发布日期。
+  - name: Rumbo Minero
+    url: https://www.rumbominero.com/feed/
+    type: rss
+    category: news
+    region: 秘鲁
+    language: es
+    authority_score: 8
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      fetch_full_content: false
+      max_items: 40
+      verification: live_public_feed_2026-10-12
+      access_note: 仅保存公开RSS/Atom提供的资料，保留原文出处与发布日期。
+  - name: 加拿大自然资源部官方动态
+    url: https://api.io.canada.ca/io-server/gc/news/en/v2?dept=naturalresourcescanada&sort=publishedDate&orderBy=desc&pick=50&format=atom&atomtitle=Natural+Resources+Canada
+    type: rss
+    category: news
+    region: 加拿大
+    language: en
+    authority_score: 10
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      fetch_full_content: false
+      max_items: 40
+      verification: live_public_feed_2026-10-12
+      access_note: 仅保存公开RSS/Atom提供的资料，保留原文出处与发布日期。
+      documentation: https://natural-resources.canada.ca/corporate/rss-feeds

@@ -62,12 +62,14 @@ class Settings(BaseSettings):
     TRANSLATION_CHUNK_SIZE: int = Field(default=4000, ge=500, le=6000)
     SPACY_MODEL: str = ""
     ENTITY_MATCHER: Literal["spacy", "dictionary"] = "spacy"
+    ENRICHMENT_MODE: Literal["full", "editorial"] = "full"
     USER_AGENT: str = "MiningIntel/0.1 (+https://example.com/contact)"
     SECRET_KEY: SecretStr = SecretStr("dev-only-change-this-32-character-secret")
     ACCESS_TOKEN_MINUTES: int = Field(default=60, ge=5, le=1440)
     CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8080"]
     AUTO_PUBLISH: bool = False
     PUBLISH_QUALITY_THRESHOLD: float = Field(default=70, ge=0, le=100)
+    INITIALIZATION_QUALITY_THRESHOLD: float = Field(default=50, ge=0, le=100)
     RAG_TOP_K: int = Field(default=5, ge=1, le=20)
     RAG_CANDIDATES: int = Field(default=20, ge=10, le=200)
     RAG_RERANK_CANDIDATES: int = Field(default=20, ge=5, le=100)

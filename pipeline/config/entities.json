@@ -27,13 +27,17 @@
     "铁矿石": [
       "iron ore",
       "minerai de fer",
+      "mineral de ferro",
       "mineral de hierro",
+      "minério de ferro",
       "铁矿石"
     ],
     "金": [
       "gold",
-      "黄金",
-      "金矿"
+      "oro",
+      "ouro",
+      "金矿",
+      "黄金"
     ],
     "稀土": [
       "rare earth",
@@ -43,15 +47,18 @@
       "稀土"
     ],
     "石墨": [
+      "grafite",
       "grafito",
       "graphite",
       "石墨"
     ],
     "铝": [
+      "aluminio",
       "aluminium",
       "aluminum",
-      "铝",
-      "bauxite"
+      "alumínio",
+      "bauxite",
+      "铝"
     ],
     "铀": [
       "uranio",
@@ -59,6 +66,8 @@
       "铀"
     ],
     "银": [
+      "plata",
+      "prata",
       "silver",
       "白银",
       "银矿"
@@ -70,10 +79,13 @@
     ],
     "锌": [
       "zinc",
+      "zinco",
       "锌"
     ],
     "锰": [
       "manganese",
+      "manganeso",
+      "manganês",
       "锰"
     ],
     "钨": [
@@ -81,18 +93,25 @@
       "钨"
     ],
     "煤": [
+      "carbón",
+      "carvão",
       "coal",
       "煤矿"
     ],
     "钾": [
       "potash",
+      "potasio",
+      "potássio",
       "钾盐"
     ],
     "钼": [
+      "molibdeno",
       "molybdenum",
       "钼"
     ],
     "铂": [
+      "platina",
+      "platino",
       "platinum",
       "铂"
     ],
@@ -124,6 +143,7 @@
       "智利"
     ],
     "刚果（金）": [
+      "République démocratique du Congo",
       "democratic republic of congo",
       "drc",
       "刚果（金）"
@@ -168,16 +188,22 @@
     ],
     "南非": [
       "South Africa",
+      "Sudáfrica",
+      "África do Sul",
       "南非"
     ],
     "秘鲁": [
       "Peru",
       "Peruvian",
+      "Perú",
+      "Pérou",
       "秘鲁"
     ],
     "墨西哥": [
-      "Mexico",
       "Mexican",
+      "Mexico",
+      "Mexique",
+      "México",
       "墨西哥"
     ],
     "阿根廷": [
@@ -198,7 +224,162 @@
     ],
     "赞比亚": [
       "Zambia",
+      "Zâmbia",
       "赞比亚"
+    ],
+    "俄罗斯": [
+      "Rusia",
+      "Russia",
+      "Russian",
+      "Russie",
+      "Rússia",
+      "俄罗斯"
+    ],
+    "英国": [
+      "Britain",
+      "British",
+      "United Kingdom",
+      "英国"
+    ],
+    "德国": [
+      "Alemania",
+      "Allemagne",
+      "German",
+      "Germany",
+      "德国"
+    ],
+    "法国": [
+      "France",
+      "Francia",
+      "French",
+      "法国"
+    ],
+    "日本": [
+      "Japan",
+      "Japanese",
+      "Japón",
+      "日本"
+    ],
+    "韩国": [
+      "Korean",
+      "South Korea",
+      "韩国"
+    ],
+    "瑞典": [
+      "Suecia",
+      "Sweden",
+      "Swedish",
+      "瑞典"
+    ],
+    "芬兰": [
+      "Finland",
+      "Finlandia",
+      "Finnish",
+      "芬兰"
+    ],
+    "挪威": [
+      "Noruega",
+      "Norway",
+      "Norwegian",
+      "挪威"
+    ],
+    "津巴布韦": [
+      "Zimbabue",
+      "Zimbabwe",
+      "津巴布韦"
+    ],
+    "纳米比亚": [
+      "Namibia",
+      "Namíbia",
+      "纳米比亚"
+    ],
+    "马达加斯加": [
+      "Madagascar",
+      "马达加斯加"
+    ],
+    "沙特阿拉伯": [
+      "Saudi Arabia",
+      "沙特阿拉伯"
+    ],
+    "土耳其": [
+      "Turkey",
+      "Turquía",
+      "Türkiye",
+      "土耳其"
+    ],
+    "乌兹别克斯坦": [
+      "Uzbekistan",
+      "乌兹别克斯坦"
+    ],
+    "博茨瓦纳": [
+      "Botswana",
+      "博茨瓦纳"
+    ],
+    "坦桑尼亚": [
+      "Tanzania",
+      "Tanzânia",
+      "坦桑尼亚"
+    ],
+    "加纳": [
+      "Ghana",
+      "加纳"
+    ],
+    "莫桑比克": [
+      "Mozambique",
+      "Moçambique",
+      "莫桑比克"
+    ],
+    "几内亚": [
+      "Republic of Guinea",
+      "Guinean",
+      "République de Guinée",
+      "几内亚共和国"
+    ],
+    "菲律宾": [
+      "Philippines",
+      "菲律宾"
+    ],
+    "越南": [
+      "Viet Nam",
+      "Vietnam",
+      "越南"
+    ],
+    "马来西亚": [
+      "Malaysia",
+      "马来西亚"
+    ],
+    "巴布亚新几内亚": [
+      "Papua New Guinea",
+      "巴布亚新几内亚"
+    ],
+    "乌克兰": [
+      "Ukraine",
+      "乌克兰"
+    ],
+    "波兰": [
+      "Poland",
+      "波兰"
+    ],
+    "西班牙": [
+      "España",
+      "Spain",
+      "西班牙"
+    ],
+    "葡萄牙": [
+      "Portugal",
+      "葡萄牙"
+    ],
+    "厄瓜多尔": [
+      "Ecuador",
+      "厄瓜多尔"
+    ],
+    "玻利维亚": [
+      "Bolivia",
+      "玻利维亚"
+    ],
+    "哥伦比亚": [
+      "Colombia",
+      "哥伦比亚"
     ]
   },
   "companies": {

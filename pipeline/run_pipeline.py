@@ -48,6 +48,8 @@ async def dry_run(source: SourceDefinition) -> dict:
                 source.authority_score,
                 published_at=row.published_at,
                 category=row.category,
+                source=source,
+                url=row.url,
             )
             output.append(row.model_dump(mode="json") | values)
         except Exception as exc:

@@ -1,0 +1,361 @@
+/* Reading hierarchy shared by the observatory, articles and decision workspace. */
+:root {
+  --text: #f5f8fc;
+  --copy: #d8e3ed;
+  --muted: #b8c7d6;
+  --reading-size: 16px;
+  --label-size: 13px;
+}
+
+[data-theme="light"] {
+  --text: #142b38;
+  --copy: #344b5a;
+  --muted: #465d6c;
+}
+
+body {
+  font-size: var(--reading-size);
+  line-height: 1.8;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+}
+
+h2,
+.panel-title {
+  font-size: 21px;
+  line-height: 1.6;
+}
+
+.article-card h3,
+.hot-card h3,
+.policy-card h3,
+.directory-card h2 {
+  font-size: 20px;
+  line-height: 1.7;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.article-summary,
+.hot-card p,
+.policy-card p,
+.observatory-hero .subtitle,
+.consult-panel p,
+.research-entry p,
+.observatory-card-description,
+.detail-lead {
+  font-size: var(--reading-size);
+  line-height: 1.9;
+  color: var(--copy);
+}
+
+.article-card {
+  contain-intrinsic-size: auto 320px;
+}
+
+.answer,
+.reading-content,
+.detail-content,
+.digest-prose {
+  font-size: 17px;
+  line-height: 1.95;
+  color: var(--text);
+}
+
+.question,
+.evidence {
+  font-size: var(--reading-size);
+}
+
+.loading,
+.empty,
+.empty p,
+.error,
+.chart-caption,
+.pagination,
+.admin-table {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.text-red-700 {
+  color: var(--red);
+}
+
+.main-nav a,
+.mobile-nav a,
+.header .login-link {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.main-nav {
+  gap: 4px;
+}
+
+.main-nav a {
+  padding-inline: 9px;
+}
+
+.brand small {
+  font-size: 10px;
+  letter-spacing: 1.1px;
+}
+
+.btn,
+.tabs button,
+.filter-panel button,
+.filter-panel select,
+.filter-panel input,
+.policy-filters label,
+.policy-filters input,
+.policy-filters select,
+.observatory-primary,
+.observatory-secondary,
+.research-question,
+.source-form label {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.article-meta,
+.date-filter,
+.filter-meta,
+.reading-meta,
+.timeline-date,
+.ticker-label,
+.ticker-group a,
+.hot-meta,
+.category-tag,
+.article-tags a,
+.article-tags button,
+.tag,
+.score,
+.policy-meta,
+.impact-score,
+.source-link,
+.source-card,
+.rank,
+.panel-title small,
+.snapshot-product > span,
+.snapshot-value > span,
+.snapshot-dates,
+.snapshot-source,
+.element-count,
+.mineral-watch-foot,
+.observatory-context,
+.observatory-context-note,
+.hero-capabilities,
+.resource-atlas-topline,
+.atlas-footer,
+.atlas-footnote,
+.globe-footer,
+.globe-region-strip > button,
+.globe-region-strip > button > small,
+.observatory-metric > div > span,
+.footer-bottom {
+  font-size: var(--label-size);
+  line-height: 1.65;
+}
+
+.article-meta .category-tag,
+.tag,
+.article-tags a,
+.article-tags button,
+.score {
+  font-weight: 500;
+}
+
+.panel-title small,
+.metric-code,
+.micro-label,
+.eyebrow,
+.observatory-hero .eyebrow,
+.hot-rank,
+.hot-rank > span {
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 1.2px;
+}
+
+.micro-link,
+.snapshot-product a,
+.insight-row,
+.element-name,
+.footer-links,
+.assistant-dock-panel > p,
+.assistant-quick-questions > a {
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.observatory-card-heading > span:first-child,
+.consult-panel h3,
+.assistant-dock-heading > span {
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.observatory-metric > div {
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+
+.observatory-metric strong,
+.snapshot-value strong {
+  font-size: 38px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.metric-serial {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+.globe-focus-card > strong {
+  font-size: 20px;
+  font-weight: 650;
+}
+
+.globe-focus-count {
+  font-size: 24px;
+}
+
+.globe-focus-eyebrow {
+  flex-wrap: wrap;
+}
+
+.globe-focus-count small,
+.globe-focus-eyebrow,
+.globe-focus-coordinates,
+.globe-instruction,
+.globe-axis-label,
+.globe-axis-label span,
+.observatory-clock,
+.observatory-clock > span,
+.assistant-dock-trigger small,
+.assistant-dock-panel > small {
+  font-size: 12px;
+  line-height: 1.65;
+  letter-spacing: 0.5px;
+}
+
+.globe-region-strip {
+  flex-wrap: wrap;
+}
+
+.globe-region-strip > button {
+  flex: 1 1 90px;
+}
+
+.globe-footer,
+.footer-links,
+.footer-bottom,
+.hero-capabilities {
+  flex-wrap: wrap;
+}
+
+.assistant-dock-trigger {
+  font-size: 16px;
+}
+
+.assistant-dock-form input,
+input,
+select,
+textarea {
+  font-size: var(--reading-size);
+}
+
+.text-xs {
+  font-size: var(--label-size);
+  line-height: 1.65;
+}
+
+.text-sm {
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.text-base {
+  font-size: var(--reading-size);
+}
+
+.recharts-cartesian-axis-tick-value {
+  font-size: 13px;
+}
+
+@media (max-width: 1279px) {
+  .mobile-nav a {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 800px) {
+  .article-card {
+    contain-intrinsic-size: auto 360px;
+  }
+
+  .article-card h3,
+  .hot-card h3,
+  .policy-card h3 {
+    font-size: 19px;
+  }
+
+  .article-bottom {
+    flex-wrap: wrap;
+  }
+
+  .article-actions {
+    margin-left: auto;
+  }
+
+  .element-watchlist {
+    grid-template-columns: repeat(auto-fit, minmax(62px, 1fr));
+  }
+
+  .observatory-card-heading {
+    flex-wrap: wrap;
+  }
+
+  .observatory-metric strong {
+    font-size: 32px;
+  }
+
+  .observatory-metric > div > span,
+  .metric-code {
+    font-size: 12px;
+  }
+
+  .metric-serial {
+    display: none;
+  }
+
+  .globe-instruction {
+    left: 12px;
+    bottom: 12px;
+    max-width: 42%;
+    font-size: 11px;
+  }
+
+  .globe-focus-card {
+    right: 10px;
+    bottom: 10px;
+    min-width: 0;
+    max-width: 55%;
+    padding: 10px 12px;
+  }
+
+  .globe-focus-card > strong {
+    font-size: 18px;
+  }
+
+  .globe-focus-coordinates {
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+}

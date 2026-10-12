@@ -8,6 +8,7 @@ import "./fonts.css";
 import "./globals.css";
 import "./mineral-design.css";
 import "./mineral-luxe.css";
+import "./readability.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",

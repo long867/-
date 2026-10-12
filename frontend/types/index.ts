@@ -193,7 +193,13 @@ export interface ChatAnswer {
   message_id: string;
   answer: string;
   sources: Citation[];
-  mode: "grounded" | "extractive" | "insufficient" | "identity";
+  mode:
+    | "grounded"
+    | "analytical"
+    | "general"
+    | "extractive"
+    | "insufficient"
+    | "identity";
 }
 export interface ChatMessage {
   id: string;

@@ -13,8 +13,10 @@ from app.rag.qa import answer_question
 from app.schemas.api import ChatInput
 
 
+@pytest.mark.parametrize("question", ["你叫什么名字？", "你能做什么？"])
 async def test_assistant_identity_is_named_without_model_or_article_retrieval(
     monkeypatch,
+    question,
 ) -> None:
     """The configured assistant name must not be inferred from untrusted articles."""
     import app.rag.qa_chain as module
@@ -35,7 +37,7 @@ async def test_assistant_identity_is_named_without_model_or_article_retrieval(
         execute=AsyncMock(),
         scalars=AsyncMock(return_value=SimpleNamespace(all=lambda: [])),
     )
-    result = await answer_question(db, uuid4(), ChatInput(question="你叫什么名字？"))
+    result = await answer_question(db, uuid4(), ChatInput(question=question))
     assert "矿眸智探" in result.answer
     assert result.mode == "identity"
     assert result.sources == []

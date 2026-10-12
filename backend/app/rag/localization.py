@@ -157,19 +157,19 @@ def chinese_excerpt_answer(citations: Sequence[Citation]) -> str:
     """Never publish foreign text as a fallback answer; label summaries honestly."""
     if not citations:
         return "根据现有资料，未找到相关信息"
-    paragraphs = ["已找到相关资料，以下为中文内容，点击来源编号可核对原文："]
-    for source in citations:
+    paragraphs = [
+        "这次未能生成完整的分析回答。先给你两条中文资料线索，"
+        "可点击来源核对；你也可以稍后重试。"
+    ]
+    for source in citations[:2]:
         if source.quote_zh and has_chinese(source.quote_zh):
-            paragraphs.append(f"{source.quote_zh} [{source.index}]")
+            text = source.quote_zh
         elif has_chinese(source.summary_zh):
-            paragraphs.append(
-                f"【来源文章中文摘要】{source.summary_zh} [{source.index}]"
-            )
+            text = f"【来源文章中文摘要】{source.summary_zh}"
         else:
-            paragraphs.append(
-                "已找到相关来源，片段的中文翻译暂时不可用，请稍后重试。"
-                f" [{source.index}]"
-            )
+            text = "已找到相关来源，片段的中文翻译暂时不可用，请稍后重试。"
+        text = text[:240].rstrip() + ("…" if len(text) > 240 else "")
+        paragraphs.append(f"{text} [{source.index}]")
     return "\n\n".join(paragraphs)
 
 

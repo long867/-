@@ -20,7 +20,7 @@ type Pending = {
 };
 const phases: Record<string, string> = {
   retrieving: "正在检索证据…",
-  answering: "正在整理答案并校验引用…",
+  answering: "正在分析原因、影响和应对建议…",
   saving: "正在保存会话…",
 };
 
@@ -123,8 +123,8 @@ export default function Chat() {
         <h1>{AGENT_NAME}</h1>
         <p className="subtitle mb-6">
           {t(
-            "矿产资源研究助手。登录后基于已收录资料咨询，保留多轮会话和原文引用。",
-            "Sign in to consult, save conversations and examine original evidence.",
+            "矿产资源研究助手。结合资料分析原因、影响和应对措施，支持多轮追问与来源核对。",
+            "Analyze mineral resources, implications and actions with follow-up questions and traceable facts.",
           )}
         </p>
         <Button asChild>
@@ -176,8 +176,8 @@ export default function Chat() {
       </div>
       <p className="subtitle mb-6">
         {t(
-          "从持续更新的矿产资料库中寻找答案。点击来源编号查看原文证据，支持继续追问。",
-          "Click a source number to inspect evidence, then ask follow-up questions.",
+          "把问题讲给矿眸智探：分析为什么、会有什么影响，以及下一步怎么做。关键事实附来源，可继续追问。",
+          "Discuss causes, implications and next steps. Key facts cite sources; keep asking follow-up questions.",
         )}
       </p>
       <div className="flex gap-3 mb-4">
@@ -237,14 +237,14 @@ export default function Chat() {
         <div className="chat-intro">
           <h2>
             {t(
-              "从一个有依据的问题开始",
-              "Start with a question grounded in evidence",
+              "说说你关心什么，我们一起分析",
+              "Tell me what matters. Let's analyze it together",
             )}
           </h2>
           <p className="subtitle">
             {t(
-              "价格、政策、项目动态，都可以继续追问。",
-              "Explore prices, policy and projects, with follow-up questions.",
+              "价格为什么变动？政策有什么影响？采购或项目该怎么应对？",
+              "Why do prices move? What does policy change? What should procurement or projects do?",
             )}
           </p>
           <div className="quick-prompts">
@@ -254,12 +254,12 @@ export default function Chat() {
                 "What is the latest lithium carbonate spot quote?",
               ),
               t(
-                "2026年锂矿价格走势如何？请列出来源。",
-                "How are lithium prices trending in 2026? Cite sources.",
+                "我负责采购，碳酸锂价格变化可能带来什么影响，应该怎么应对？",
+                "How might lithium carbonate price changes affect procurement, and how should I respond?",
               ),
               t(
-                "最近有哪些金矿项目进展？",
-                "What are the latest gold project developments?",
+                "最近铜矿项目进展对供应有什么影响？帮我分析机会和风险。",
+                "Analyze how recent copper projects might affect supply, opportunities and risks.",
               ),
             ].map((q) => (
               <button
@@ -283,19 +283,32 @@ export default function Chat() {
             messageId={item.result.message_id}
           />
           <p className="text-xs text-muted mt-3">
-            {item.result.mode === "extractive"
+            {item.result.mode === "analytical"
               ? t(
-                  "中文资料摘录 · 可展开来源核对原文",
-                  "Chinese evidence excerpts · inspect the original sources",
+                  "AI分析 · 事实附来源，推断与建议请结合条件判断",
+                  "AI analysis · cited facts, conditional inference and recommendations",
                 )
-              : item.result.mode === "grounded"
+              : item.result.mode === "general"
                 ? t(
-                    "引用片段已校验 · 结论请结合原文判断",
-                    "Verified citations · review the original context",
+                    "行业知识与分析框架 · 不代表实时行情或已核实事件",
+                    "Industry knowledge and analysis · not real-time market observations",
                   )
-                : item.result.mode === "identity"
-                  ? t("矿眸智探 · 智能体介绍", "矿眸智探 · About the assistant")
-                  : t("证据不足", "Insufficient evidence")}
+                : item.result.mode === "extractive"
+                  ? t(
+                      "中文资料摘录 · 可展开来源核对原文",
+                      "Chinese evidence excerpts · inspect the original sources",
+                    )
+                  : item.result.mode === "grounded"
+                    ? t(
+                        "引用片段已校验 · 结论请结合原文判断",
+                        "Verified citations · review the original context",
+                      )
+                    : item.result.mode === "identity"
+                      ? t(
+                          "矿眸智探 · 智能体介绍",
+                          "矿眸智探 · About the assistant",
+                        )
+                      : t("证据不足", "Insufficient evidence")}
           </p>
         </article>
       ))}
@@ -315,7 +328,7 @@ export default function Chat() {
                 (
                   {
                     retrieving: "Retrieving evidence…",
-                    answering: "Drafting and verifying citations…",
+                    answering: "Analyzing causes, implications and actions…",
                     saving: "Saving conversation…",
                   } as Record<string, string>
                 )[pending.phase] || "Processing…",

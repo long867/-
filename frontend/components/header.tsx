@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { usePreferences } from "@/hooks/use-preferences";
+import { AGENT_NAME } from "@/lib/branding";
 export function Header() {
   const path = usePathname();
   const auth = useAuth();
@@ -27,7 +28,7 @@ export function Header() {
     ["/policies", "政策", "Policy"],
     ["/trends", "趋势", "Trends"],
     ["/digest", "简报", "Briefs"],
-    ["/chat", "AI 咨询", "Ask AI"],
+    ["/chat", AGENT_NAME, AGENT_NAME],
     ...(auth.user?.is_admin ? [["/admin", "管理", "Admin"]] : []),
   ];
   return (
@@ -36,7 +37,7 @@ export function Header() {
         href="/"
         prefetch={false}
         className="brand"
-        aria-label="MiningIntel 首页 / Home"
+        aria-label="MiningIntel · THE RESOURCE OBSERVATORY · 首页 / Home"
       >
         <span className="brand-emblem">
           <Mountain size={25} strokeWidth={1.4} />
@@ -83,7 +84,9 @@ export function Header() {
         <button
           className="icon-button language-toggle"
           onClick={toggleLanguage}
-          aria-label={language === "zh" ? "Switch to English" : "切换中文"}
+          aria-label={
+            language === "zh" ? "Switch to English (EN)" : "切换中文（中）"
+          }
         >
           {language === "zh" ? "EN" : "中"}
         </button>

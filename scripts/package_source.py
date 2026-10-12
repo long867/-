@@ -15,6 +15,7 @@ def main() -> None:
         ".next",
         ".next-preview",
         ".next-upgrade",
+        ".next-luxe",
         "__pycache__",
         ".ruff_cache",
         ".pytest_cache",

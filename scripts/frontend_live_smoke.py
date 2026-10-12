@@ -74,13 +74,13 @@ def main() -> None:
         page.reload()
         expect(page.locator("html")).to_have_attribute("data-theme", "light")
         page.screenshot(path=str(ROOT / "artifacts/frontend-light-desktop.png"))
-        page.get_by_label("Switch to English", exact=True).click()
+        page.get_by_label("Switch to English (EN)", exact=True).click()
         expect(
             page.get_by_role("heading", name="Follow the resources.")
         ).to_be_visible()
         page.reload()
         expect(page.locator("html")).to_have_attribute("lang", "en")
-        page.get_by_label("切换中文", exact=True).click()
+        page.get_by_label("切换中文（中）", exact=True).click()
         page.get_by_label("切换暗色模式", exact=True).click()
         checks["theme_language_persistence"] = True
         page.goto(BASE)

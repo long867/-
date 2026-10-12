@@ -3,9 +3,11 @@ import { Providers } from "./providers";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PwaRegister } from "@/components/pwa-register";
+import { AssistantDock } from "@/components/assistant-dock";
 import "./fonts.css";
 import "./globals.css";
 import "./mineral-design.css";
+import "./mineral-luxe.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",
@@ -51,6 +53,7 @@ export default function RootLayout({
           <Header />
           <div id="main-content">{children}</div>
           <Footer />
+          <AssistantDock />
           <PwaRegister />
         </Providers>
       </body>

@@ -12,6 +12,7 @@ node_modules/
 .next/
 .next-preview/
 .next-upgrade/
+.next-luxe/
 coverage/
 .coverage
 htmlcov/

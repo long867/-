@@ -1,46 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight, Globe2 } from "lucide-react";
 import { WORLD_LAND } from "@/lib/world-land";
+import { REGION_CENTERS as CENTERS } from "@/lib/resource-geography";
 import type { Facets } from "@/types";
 import { Locale } from "./locale";
 import { MotionControl } from "./motion-control";
-
-/** Geographic centers indicate country-level article coverage, not mine locations. */
-const CENTERS: Record<string, [number, number, string]> = {
-  中国: [104, 35, "China"],
-  加拿大: [-106, 56, "Canada"],
-  美国: [-100, 39, "United States"],
-  墨西哥: [-102, 24, "Mexico"],
-  秘鲁: [-75, -10, "Peru"],
-  阿根廷: [-64, -34, "Argentina"],
-  巴西: [-52, -14, "Brazil"],
-  智利: [-71, -30, "Chile"],
-  澳大利亚: [134, -25, "Australia"],
-  南非: [25, -29, "South Africa"],
-  刚果民主共和国: [23, -3, "DR Congo"],
-  "刚果（金）": [23, -3, "DR Congo"],
-  赞比亚: [28, -13, "Zambia"],
-  印度尼西亚: [118, -3, "Indonesia"],
-  印度: [79, 22, "India"],
-  蒙古: [104, 47, "Mongolia"],
-  俄罗斯: [95, 60, "Russia"],
-  哈萨克斯坦: [67, 48, "Kazakhstan"],
-  英国: [-3, 54, "United Kingdom"],
-  德国: [10, 51, "Germany"],
-  法国: [2, 47, "France"],
-  欧盟: [15, 51, "European Union"],
-  日本: [138, 37, "Japan"],
-  韩国: [128, 36, "South Korea"],
-  瑞典: [16, 62, "Sweden"],
-  芬兰: [26, 64, "Finland"],
-  挪威: [10, 63, "Norway"],
-  津巴布韦: [30, -19, "Zimbabwe"],
-  纳米比亚: [17, -22, "Namibia"],
-  马达加斯加: [47, -19, "Madagascar"],
-  沙特阿拉伯: [45, 24, "Saudi Arabia"],
-  土耳其: [35, 39, "Türkiye"],
-  乌兹别克斯坦: [64, 41, "Uzbekistan"],
-};
 
 export function WorldCoverage({ regions }: { regions?: Facets["regions"] }) {
   const points = (regions ?? []).filter((region) => CENTERS[region.name]);

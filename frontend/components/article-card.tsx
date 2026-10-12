@@ -72,7 +72,11 @@ export function ArticleCard({
     }
   }
   return (
-    <article className="article-card" data-article-id={article.id}>
+    <article
+      className="article-card"
+      data-article-id={article.id}
+      data-mineral={article.minerals[0]}
+    >
       <div className="article-meta">
         <span className="category-tag">{t(...category)}</span>
         <span>

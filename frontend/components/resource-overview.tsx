@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight, Gem, Layers3, Sparkles } from "lucide-react";
 import { usePreferences } from "@/hooks/use-preferences";
 import type { Facets, Price } from "@/types";
+import { MineralCrystal } from "./mineral-crystal";
 
 const ELEMENTS: Record<string, [string, string]> = {
   锂: ["Li", "03"],
@@ -265,10 +266,11 @@ export function ResourceOverview({
         </div>
       </article>
       <article className="observatory-card research-entry">
+        <MineralCrystal />
         <div className="observatory-card-heading">
           <span>
             <Sparkles size={14} />
-            {t("有据可查的 AI 咨询", "Evidence-based research")}
+            矿眸智探
           </span>
           <span className="micro-label">ASK INTELLIGENCE</span>
         </div>

@@ -13,6 +13,36 @@ from app.rag.qa import answer_question
 from app.schemas.api import ChatInput
 
 
+async def test_assistant_identity_is_named_without_model_or_article_retrieval(
+    monkeypatch,
+) -> None:
+    """The configured assistant name must not be inferred from untrusted articles."""
+    import app.rag.qa_chain as module
+
+    retrieval = AsyncMock(
+        side_effect=AssertionError("Identity needs no article search")
+    )
+    generation = AsyncMock(side_effect=AssertionError("Identity needs no model call"))
+    monkeypatch.setattr(module, "HybridRetriever", retrieval)
+    monkeypatch.setattr(module, "complete_json", generation)
+
+    def add(item):
+        item.id = uuid4()
+
+    db = SimpleNamespace(
+        add=add,
+        flush=AsyncMock(),
+        execute=AsyncMock(),
+        scalars=AsyncMock(return_value=SimpleNamespace(all=lambda: [])),
+    )
+    result = await answer_question(db, uuid4(), ChatInput(question="你叫什么名字？"))
+    assert "矿眸智探" in result.answer
+    assert result.mode == "identity"
+    assert result.sources == []
+    generation.assert_not_awaited()
+    retrieval.assert_not_called()
+
+
 @pytest.mark.parametrize("scenario", ["valid", "invented", "outage", "empty"])
 async def test_qa_persists_only_verified_generation(scenario, monkeypatch) -> None:
     import app.rag.qa_chain as module

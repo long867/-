@@ -61,6 +61,7 @@ class Settings(BaseSettings):
     FETCH_DISTRIBUTED_PACING: bool = False
     TRANSLATION_CHUNK_SIZE: int = Field(default=4000, ge=500, le=6000)
     SPACY_MODEL: str = ""
+    ENTITY_MATCHER: Literal["spacy", "dictionary"] = "spacy"
     USER_AGENT: str = "MiningIntel/0.1 (+https://example.com/contact)"
     SECRET_KEY: SecretStr = SecretStr("dev-only-change-this-32-character-secret")
     ACCESS_TOKEN_MINUTES: int = Field(default=60, ge=5, le=1440)

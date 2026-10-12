@@ -309,7 +309,7 @@ export function HomeDashboard({ initial }: { initial: HomeData }) {
               )}
             </p>
             <Link href="/chat" className="source-link">
-              {t("开始 AI 咨询", "Ask MiningIntel")}
+              {t("咨询矿眸智探", "Ask 矿眸智探")}
               <ArrowUpRight size={14} />
             </Link>
           </section>

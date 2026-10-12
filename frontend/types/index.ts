@@ -186,7 +186,7 @@ export interface ChatAnswer {
   message_id: string;
   answer: string;
   sources: Citation[];
-  mode: "grounded" | "extractive" | "insufficient";
+  mode: "grounded" | "extractive" | "insufficient" | "identity";
 }
 export interface ChatMessage {
   id: string;

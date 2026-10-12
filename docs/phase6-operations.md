@@ -45,6 +45,8 @@ docker compose --project-name miningintel --env-file .env --env-file .images.env
 
 小内存服务器可在部署目录写入 `.deploy-mode`，内容为 `small`。发布脚本会追加 `deploy/docker-compose.small.yml`，限制服务内存、固定 Worker 单并发，并停止本项目 Qdrant、Prometheus、Grafana、Alertmanager 与备份容器，保留其数据卷。管理后台仍提供系统指标与任务历史；小内存模式使用数据库关键词检索与云端 LLM。相同镜像在本机的七个核心服务空闲内存合计约 633 MiB，实际采集和问答峰值另需留余量。
 
+小内存模式的 `ENTITY_MATCHER=dictionary` 使用同一双语标准词表和英文词边界规则，避免每个进程常驻 spaCy；标准模式保持 spaCy EntityRuler。调度器使用独立轻量入口，只发送已配置名称的任务，完整任务实现由 Worker 加载。
+
 ```bash
 cd /opt/miningintel
 printf 'small\n' > .deploy-mode

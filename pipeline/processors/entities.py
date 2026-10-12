@@ -1,12 +1,17 @@
 """spaCy EntityRuler plus bilingual mineral-domain dictionaries."""
 
+from __future__ import annotations
+
 import json
 import re
 from functools import lru_cache
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import spacy
-from spacy.language import Language
+from app.core.config import get_settings
+
+if TYPE_CHECKING:
+    from spacy.language import Language
 
 
 @lru_cache
@@ -21,6 +26,8 @@ def lexicon() -> dict[str, dict[str, list[str]]]:
 @lru_cache
 def nlp() -> Language:
     """Load lightweight rule-based NER without a separate model download."""
+    import spacy
+
     model = spacy.blank("xx")
     ruler = model.add_pipe("entity_ruler", config={"phrase_matcher_attr": "LOWER"})
     ruler.add_patterns(
@@ -37,8 +44,9 @@ def nlp() -> Language:
 def extract_entities(text: str) -> dict[str, list[str]]:
     """Extract canonical entities; Chinese matches do not depend on whitespace."""
     result: dict[str, set[str]] = {kind: set() for kind in lexicon()}
-    for entity in nlp()(text[:200000]).ents:
-        result[entity.label_.lower()].add(entity.ent_id_)
+    if get_settings().ENTITY_MATCHER == "spacy":
+        for entity in nlp()(text[:200000]).ents:
+            result[entity.label_.lower()].add(entity.ent_id_)
     for kind, entries in lexicon().items():
         for name, aliases in entries.items():
             for alias in aliases:

@@ -8,7 +8,6 @@ from datetime import UTC, datetime
 from functools import lru_cache
 from typing import Any
 
-import spacy
 from pydantic import BaseModel, Field
 
 from app.core.config import get_settings
@@ -31,7 +30,11 @@ class EntityAnalysis(BaseModel):
 def ner_model() -> Any:
     """Load an explicitly installed spaCy model; dictionary rules need no download."""
     name = get_settings().SPACY_MODEL
-    return spacy.load(name) if name else None
+    if not name:
+        return None
+    import spacy
+
+    return spacy.load(name)
 
 
 def freshness(published_at: datetime | None, now: datetime | None = None) -> float:

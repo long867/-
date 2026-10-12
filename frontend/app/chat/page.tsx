@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { ChatAnswerBody } from "@/components/chat-answer";
 import type { ChatAnswer, ChatMessage, Citation, Session } from "@/types";
+import { AGENT_NAME } from "@/lib/branding";
 
 type Pending = {
   question: string;
@@ -118,10 +119,11 @@ export default function Chat() {
   if (!auth.user)
     return (
       <main className="small-page">
-        <h1>{t("基于证据的 AI 咨询", "Evidence-based AI consultation")}</h1>
+        <div className="eyebrow">MINING INTELLIGENCE AGENT</div>
+        <h1>{AGENT_NAME}</h1>
         <p className="subtitle mb-6">
           {t(
-            "登录后开始咨询，保留多轮会话和原文引用。",
+            "矿产资源研究助手。登录后基于已收录资料咨询，保留多轮会话和原文引用。",
             "Sign in to consult, save conversations and examine original evidence.",
           )}
         </p>
@@ -157,7 +159,7 @@ export default function Chat() {
     <main className="small-page">
       <div className="eyebrow">EVIDENCE-BASED CONSULTATION</div>
       <div className="flex justify-between items-center gap-3">
-        <h1>{t("把问题交给情报。", "Let evidence answer.")}</h1>
+        <h1>{AGENT_NAME}</h1>
         <Button
           variant="outline"
           disabled={busy}
@@ -174,7 +176,7 @@ export default function Chat() {
       </div>
       <p className="subtitle mb-6">
         {t(
-          "点击答案中的来源编号可查看证据，支持继续追问。",
+          "从持续更新的矿产资料库中寻找答案。点击来源编号查看原文证据，支持继续追问。",
           "Click a source number to inspect evidence, then ask follow-up questions.",
         )}
       </p>
@@ -291,7 +293,9 @@ export default function Chat() {
                     "引用片段已校验 · 结论请结合原文判断",
                     "Verified citations · review the original context",
                   )
-                : t("证据不足", "Insufficient evidence")}
+                : item.result.mode === "identity"
+                  ? t("矿眸智探 · 智能体介绍", "矿眸智探 · About the assistant")
+                  : t("证据不足", "Insufficient evidence")}
           </p>
         </article>
       ))}

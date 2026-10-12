@@ -38,7 +38,10 @@ def test_evidence_offsets_are_verbatim(content: str) -> None:
     assert spans[-1].end == len(content.rstrip())
 
 
-def test_bilingual_entity_boundaries() -> None:
+@pytest.mark.parametrize("matcher", ["spacy", "dictionary"])
+def test_bilingual_entity_boundaries(monkeypatch, matcher: str) -> None:
+    """Both matchers preserve canonical names and reject partial English words."""
+    monkeypatch.setenv("ENTITY_MATCHER", matcher)
     entities = extract_entities(
         "BHP expands a copper project in Chile. 铀和稀土政策。 golden opportunity."
     )

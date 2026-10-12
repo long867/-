@@ -246,7 +246,7 @@ class ChatOut(BaseModel):
     message_id: UUID
     answer: str
     sources: list[Citation]
-    mode: Literal["grounded", "extractive", "insufficient"]
+    mode: Literal["grounded", "extractive", "insufficient", "identity"]
 
 
 class ChatMessageOut(ORMModel):

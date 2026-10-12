@@ -517,13 +517,19 @@ async def test_chat_api_sse_history_followups_weather_and_ownership(state, monke
 
     async def generate(_, prompt):
         data = json.loads(prompt)
-        evidence = next(item for item in data["evidence"] if item["quote"] == BODY)
+        evidence, span = next(
+            (item, span)
+            for item in data["evidence"]
+            for span in item["spans"]
+            if span["text"] == BODY
+        )
         return {
-            "claims": [
+            "blocks": [
                 {
+                    "kind": "fact",
                     "text": "测试资料显示锂矿报价涨到110 USD/t。",
-                    "evidence": evidence["index"],
-                    "quote": BODY,
+                    "sources": [evidence["index"]],
+                    "span": span["id"],
                 }
             ]
         }

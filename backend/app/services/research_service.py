@@ -335,6 +335,28 @@ def validate_generation(
     return generation
 
 
+def verified_generation(
+    raw: dict, snapshot: ResearchSnapshot
+) -> tuple[ResearchGeneration, bool]:
+    """Keep grounded implications when a model misquotes an otherwise known fact."""
+    try:
+        return validate_generation(
+            ResearchGeneration.model_validate(raw), snapshot
+        ), False
+    except ValueError:
+        # Facts are replaced, never loosened: titles already passed editorial review
+        # and retain literal original-title spans. Every implication and action still
+        # passes the same complete source, language and forecast validation below.
+        reviewed = evidence_based_research(snapshot)
+        candidate = ResearchGeneration.model_validate(
+            {
+                **raw,
+                "facts": [fact.model_dump() for fact in reviewed.facts],
+            }
+        )
+        return validate_generation(candidate, snapshot), True
+
+
 async def generate_research(
     db: AsyncSession, user_id: UUID, scope: ResearchInput
 ) -> ResearchOut:
@@ -364,12 +386,14 @@ async def generate_research(
                 ),
                 timeout=90,
             )
-            generation = validate_generation(
-                ResearchGeneration.model_validate(raw), snapshot
-            )
+            generation, reviewed_facts = verified_generation(raw, snapshot)
             result = ResearchOut(
                 **snapshot.model_dump(), **generation.model_dump(), mode="llm"
             )
+            if reviewed_facts:
+                result.limitations.append(
+                    "事实部分采用已核对的中文资料标题摘录，可展开来源核对原文。"
+                )
         except Exception as error:
             logger.warning(
                 "research_generation_fallback", error_type=type(error).__name__

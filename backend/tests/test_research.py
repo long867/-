@@ -13,7 +13,11 @@ from app.schemas.research import (
     ResearchSnapshot,
     ResearchSource,
 )
-from app.services.research_service import evidence_based_research, validate_generation
+from app.services.research_service import (
+    evidence_based_research,
+    validate_generation,
+    verified_generation,
+)
 from pipeline.processors.policy_document import general_mineral_policy
 from pipeline.processors.translator import summary_measurements_valid
 from pipeline.schemas import SourceDefinition
@@ -115,6 +119,20 @@ def test_grounded_proper_name_watch_items_get_chinese_context():
     generation.watchlist = ["Invented Company"]
     with pytest.raises(ValueError):
         validate_generation(generation, evidence)
+
+
+def test_bad_model_facts_are_replaced_without_weakening_implication_checks():
+    evidence = snapshot()
+    candidate = ResearchGeneration.model_validate(
+        evidence_based_research(evidence).model_dump()
+    )
+    candidate.facts[0].text = "加拿大锂产量增长20%"
+    result, replaced = verified_generation(candidate.model_dump(), evidence)
+    assert replaced and result.facts[0].text == "加拿大锂产量增长10%"
+    assert result.facts[0].quote == evidence.sources[0].original_title
+    candidate.scenarios[0].impact = "锂价格必然上涨20%，采购方可以保证收益。"
+    with pytest.raises(ValueError):
+        verified_generation(candidate.model_dump(), evidence)
 
 
 @pytest.mark.integration

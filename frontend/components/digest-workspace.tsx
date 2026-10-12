@@ -25,7 +25,9 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
   const { t } = usePreferences();
   const [kind, setKind] = useState<Digest["kind"]>("daily");
   const [reportId, setReportId] = useState<string | null>(null);
-  const [scope, setScope] = useState<"current" | "previous">("previous");
+  const [scope, setScope] = useState<"current" | "previous" | "latest">(
+    "latest",
+  );
   useEffect(() => {
     const sync = () => {
       const k = new URLSearchParams(location.search).get("kind");
@@ -34,7 +36,9 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
       setScope(
         new URLSearchParams(location.search).get("scope") === "current"
           ? "current"
-          : "previous",
+          : new URLSearchParams(location.search).get("scope") === "previous"
+            ? "previous"
+            : "latest",
       );
     };
     sync();
@@ -50,9 +54,7 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
           : `/digest/${kind}?scope=${scope}`,
       ),
     initialData:
-      kind === "daily" && !reportId && scope === "previous"
-        ? initial
-        : undefined,
+      kind === "daily" && !reportId && scope === "latest" ? initial : undefined,
     staleTime: 3600000,
   });
   const d = query.data;
@@ -97,7 +99,7 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
         ))}
       </div>
       <div className="tabs mb-7" aria-label={t("报告范围", "Report scope")}>
-        {(["previous", "current"] as const).map((value) => (
+        {(["latest", "previous", "current"] as const).map((value) => (
           <button
             key={value}
             className={!reportId && scope === value ? "active" : ""}
@@ -111,9 +113,11 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
               );
             }}
           >
-            {value === "previous"
-              ? t("上一完整周期", "Previous complete period")
-              : t("本期实时简报", "Current live digest")}
+            {value === "latest"
+              ? t("最新有资料的周期", "Latest covered period")
+              : value === "previous"
+                ? t("上一完整周期", "Previous complete period")
+                : t("本期实时简报", "Current live digest")}
           </button>
         ))}
       </div>
@@ -125,6 +129,24 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
         d && (
           <>
             <h2 className="text-xl mb-5">{d.title}</h2>
+            <div className="panel mb-5 flex flex-wrap items-center justify-between gap-4">
+              <p className="text-sm text-muted">
+                {t(
+                  "按资料实际发布日期统计，历史资料不会标为今日新闻。",
+                  "Coverage follows actual publication dates.",
+                )}
+              </p>
+              <Link
+                className="btn btn-outline"
+                href="/research"
+                prefetch={false}
+              >
+                {t(
+                  "分析可能影响与应对措施",
+                  "Explore implications and actions",
+                )}
+              </Link>
+            </div>
             <div className="flex flex-wrap justify-between gap-3 text-xs text-muted mb-5">
               <span className="inline-flex gap-2 items-center">
                 <CalendarDays size={14} />

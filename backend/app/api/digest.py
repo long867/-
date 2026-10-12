@@ -9,7 +9,7 @@ from pydantic import TypeAdapter
 from app.api.deps import DB
 from app.core.cache import cached
 from app.schemas.intelligence import DigestOut, ReportPage
-from app.services.digest_service import Kind, get_digest, period_bounds
+from app.services.digest_service import Kind, get_digest, latest_period, period_bounds
 
 router = APIRouter(prefix="/digest", tags=["digest"])
 
@@ -60,12 +60,18 @@ async def brief(
     response: Response,
     db: DB,
     kind: Kind,
-    scope: Literal["current", "previous"] = "current",
+    scope: Literal["current", "previous", "latest"] = "current",
 ) -> DigestOut:
     """Serve cached statistics without waiting for an LLM or unavailable queue."""
     from pipeline.reporters.common import previous_period
 
-    bounds = previous_period(kind) if scope == "previous" else period_bounds(kind)
+    bounds = (
+        (await latest_period(db, kind))
+        if scope == "latest"
+        else previous_period(kind)
+        if scope == "previous"
+        else period_bounds(kind)
+    )
     start, _ = bounds
     return await cached(
         request,
@@ -83,7 +89,7 @@ async def daily(
     request: Request,
     response: Response,
     db: DB,
-    scope: Literal["current", "previous"] = "current",
+    scope: Literal["current", "previous", "latest"] = "current",
 ) -> DigestOut:
     """Today's brief in the configured calendar timezone; cached for one hour."""
     return await brief(request, response, db, "daily", scope)
@@ -94,7 +100,7 @@ async def weekly(
     request: Request,
     response: Response,
     db: DB,
-    scope: Literal["current", "previous"] = "current",
+    scope: Literal["current", "previous", "latest"] = "current",
 ) -> DigestOut:
     return await brief(request, response, db, "weekly", scope)
 
@@ -104,6 +110,6 @@ async def monthly(
     request: Request,
     response: Response,
     db: DB,
-    scope: Literal["current", "previous"] = "current",
+    scope: Literal["current", "previous", "latest"] = "current",
 ) -> DigestOut:
     return await brief(request, response, db, "monthly", scope)

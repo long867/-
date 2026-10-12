@@ -168,6 +168,11 @@ class PolicyOut(ORMModel):
     url: str
     summary_zh: str | None
     impact_score: float
+    published_at: datetime | None = None
+    source_name: str = "未知来源"
+    document_kind: str = "policy"
+    publication_basis: str = "source_publication"
+    themes: list[str] = Field(default_factory=list)
 
 
 class SubscriptionInput(BaseModel):
@@ -227,6 +232,8 @@ class Citation(BaseModel):
     end_char: int
     published_at: datetime | None
     source_name: str = "未知来源"
+    quote_zh: str | None = None
+    summary_zh: str | None = None
 
     @computed_field
     @property

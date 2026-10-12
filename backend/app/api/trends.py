@@ -7,10 +7,30 @@ from pydantic import TypeAdapter
 
 from app.api.deps import DB
 from app.core.cache import cached
-from app.schemas.intelligence import HotMineral, PolicyUpdate, PriceAlert, PriceTrend
+from app.schemas.intelligence import (
+    HotMineral,
+    PolicyUpdate,
+    PriceAlert,
+    PriceTrend,
+    TrendOverview,
+)
 from app.services import trend_service
 
 router = APIRouter(prefix="/trends", tags=["trends"])
+
+
+@router.get("/overview", response_model=TrendOverview)
+async def overview(request: Request, response: Response, db: DB) -> TrendOverview:
+    """Provide a dated reading of the actual coverage and market observations."""
+    return await cached(
+        request,
+        response,
+        "trends:overview",
+        "",
+        300,
+        TypeAdapter(TrendOverview),
+        lambda: trend_service.overview(db),
+    )
 
 
 @router.get("/hot-minerals", response_model=list[HotMineral])
@@ -48,17 +68,30 @@ async def price_alerts(
 
 @router.get("/policy-updates", response_model=list[PolicyUpdate])
 async def policy_updates(
-    request: Request, response: Response, db: DB
+    request: Request,
+    response: Response,
+    db: DB,
+    days: Annotated[int, Query(ge=1, le=1460)] = 7,
 ) -> list[PolicyUpdate]:
     return await cached(
         request,
         response,
         "trends:policy-updates",
-        "",
+        str(days),
         1800,
         TypeAdapter(list[PolicyUpdate]),
-        lambda: trend_service.policy_updates(db),
+        lambda: load_policy_updates(db, days),
     )
+
+
+async def load_policy_updates(db: DB, days: int) -> list[PolicyUpdate]:
+    """Allow explicitly labeled archive windows without calling old policy new."""
+    from datetime import UTC, datetime, timedelta
+
+    from pipeline.analyzers.policy_tracker import track_policies
+
+    end = datetime.now(UTC)
+    return await track_policies(db, end - timedelta(days=days), end)
 
 
 @router.get("/price-trends", response_model=list[PriceTrend])

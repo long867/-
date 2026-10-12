@@ -1,7 +1,7 @@
 """Reviewed policies filtered by mineral, region and explicit effective date."""
 
 from datetime import date as Date
-from typing import Annotated
+from typing import Annotated, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Query
@@ -24,6 +24,7 @@ async def policies(
     date_to: Date | None = None,
     page: Annotated[int, Query(ge=1, le=10000)] = 1,
     page_size: Annotated[int, Query(ge=1, le=100)] = 20,
+    date_basis: Literal["published_at", "effective_date"] = "effective_date",
 ) -> PolicyPage:
     """The date parameter denotes policy effective date, not article publication."""
     return await list_policies(
@@ -35,6 +36,7 @@ async def policies(
         page_size=page_size,
         date_from=date_from,
         date_to=date_to,
+        date_basis=date_basis,
     )
 
 

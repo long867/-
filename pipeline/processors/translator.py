@@ -233,6 +233,12 @@ def measurements(text: str) -> Counter[tuple[str, str, str]]:
 
 def summary_measurements_valid(original: str, summary: str) -> bool:
     """Reject invented unit associations; permit explicit calendar-year labeling."""
+    if re.search(
+        rf"{NUMBER}\s*(?:million|billion|thousand|百万|十亿)\s*(?:亿|万|百万|千万|十亿)",
+        summary,
+        re.I,
+    ):
+        return False
     available = measurements(original)
     for match in re.finditer(
         r"\b(" + "|".join(WORDS_ZH) + r")\s*[-–]?\s*(" + UNIT_PATTERN + r")\b",

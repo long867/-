@@ -141,6 +141,11 @@ export interface Policy {
   url: string;
   summary_zh: string | null;
   impact_score: number;
+  published_at?: string | null;
+  source_name?: string;
+  document_kind?: string;
+  publication_basis?: string;
+  themes?: string[];
 }
 
 export interface ProjectLocation {
@@ -180,6 +185,8 @@ export interface Citation {
   published_at: string | null;
   source_name: string;
   snippet: string;
+  quote_zh?: string | null;
+  summary_zh?: string | null;
 }
 export interface ChatAnswer {
   session_id: string;
@@ -238,6 +245,7 @@ export interface Insights {
     baseline_sufficient: boolean;
     z_score: number | null;
     sparkline: number[];
+    attention_score?: number;
   }[];
   price_alerts: {
     mineral: string;

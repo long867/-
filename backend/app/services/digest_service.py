@@ -166,6 +166,42 @@ async def get_digest(
         report = None
     if report:
         content, mode, generated_at = report.content, report.mode, report.created_at
+    if sources and not report:
+        leaders = sorted(counts["minerals"].items(), key=lambda item: -item[1])[:5]
+        overview = f"本期收录 {total} 篇已发布资料，来自 {source_count} 个信源条目。"
+        if leaders:
+            overview += (
+                "关注矿种："
+                + "、".join(f"{name}（{count}篇）" for name, count in leaders)
+                + "。"
+            )
+        content = "本期概览\n" + overview + "\n\n重点资料\n" + content
+    coverage_day = func.date(
+        func.timezone(get_settings().DIGEST_TIMEZONE, Article.published_at)
+    ).label("coverage_day")
+    coverage = dict(
+        (
+            await db.execute(
+                select(coverage_day, func.count())
+                .where(*filters)
+                .group_by("coverage_day")
+            )
+        ).all()
+    )
+    analysis = report.data_json.get("analysis", {}) if report else {}
+    if not analysis:
+        analysis = {
+            "hot_minerals": [
+                {"mineral": name, "count": count}
+                for name, count in sorted(
+                    counts["minerals"].items(), key=lambda item: -item[1]
+                )[:5]
+            ],
+            "coverage_by_day": [
+                {"date": day.isoformat(), "count": count}
+                for day, count in sorted(coverage.items())
+            ],
+        }
     return DigestOut(
         id=report.id if report else None,
         kind=kind,
@@ -178,10 +214,23 @@ async def get_digest(
         generated_at=generated_at,
         stats=DigestStats(article_count=total, source_count=source_count, **counts),
         sources=sources,
-        analysis=report.data_json.get("analysis", {}) if report else {},
+        analysis=analysis,
         scheduled=report.scheduled if report else False,
         coverage_hash=coverage_hash,
+        latest_published_at=await db.scalar(
+            select(func.max(Article.published_at)).where(*filters)
+        ),
     )
+
+
+async def latest_period(db: AsyncSession, kind: Kind) -> tuple[datetime, datetime]:
+    """Select the latest actual publication period, never relabel historical news."""
+    stamp = await db.scalar(
+        select(func.max(Article.published_at)).where(
+            *public_conditions(), Article.published_at <= datetime.now(UTC)
+        )
+    )
+    return period_bounds(kind, stamp) if stamp else period_bounds(kind)
 
 
 class DigestClaim(BaseModel):

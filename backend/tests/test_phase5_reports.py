@@ -129,9 +129,10 @@ async def test_previous_report_is_idempotent_published_date_based_with_private_r
             assert all(
                 item.article_id != business["ids"][0] for item in changed.sources
             )
-            assert (
-                not changed.analysis
-            )  # Stale structured event/policy evidence is discarded too.
+            # Withdrawn event/policy evidence is discarded; public counts are rebuilt.
+            assert not changed.analysis.get("policy_updates")
+            assert not changed.analysis.get("events")
+            assert sum(day["count"] for day in changed.analysis["coverage_by_day"]) == 2
     finally:
         if report_id:
             async with factory.begin() as db:

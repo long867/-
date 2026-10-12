@@ -285,8 +285,8 @@ export default function Chat() {
           <p className="text-xs text-muted mt-3">
             {item.result.mode === "extractive"
               ? t(
-                  "原文证据摘录 · 生成服务未启用或暂时不可用",
-                  "Evidence excerpts · generation unavailable",
+                  "中文资料摘录 · 可展开来源核对原文",
+                  "Chinese evidence excerpts · inspect the original sources",
                 )
               : item.result.mode === "grounded"
                 ? t(

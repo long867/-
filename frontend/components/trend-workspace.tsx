@@ -45,10 +45,21 @@ export function TrendWorkspace({ initial = {} }: { initial?: TrendData }) {
     staleTime: 60000,
   });
   const policies = useQuery({
-    queryKey: ["policy-updates"],
-    queryFn: () => publicApi<PolicyUpdate[]>("/trends/policy-updates"),
-    initialData: initial.policies,
+    queryKey: ["policy-updates", 1460],
+    queryFn: () =>
+      publicApi<PolicyUpdate[]>("/trends/policy-updates?days=1460"),
     staleTime: 1800000,
+  });
+  const overview = useQuery({
+    queryKey: ["trend-overview"],
+    queryFn: () =>
+      publicApi<{
+        signals: string[];
+        interpretation: string;
+        latest_published_at: string | null;
+        watchlist: string[];
+      }>("/trends/overview"),
+    staleTime: 300000,
   });
   return (
     <main className="workspace">
@@ -59,6 +70,52 @@ export function TrendWorkspace({ initial = {} }: { initial?: TrendData }) {
         description="用历史基线识别资讯热点，追踪真实报价与政策变化。"
         descriptionEn="Historical coverage baselines, comparable prices and policy developments."
       />
+      <div className="panel mb-7 flex flex-wrap justify-between items-center gap-4">
+        <div>
+          <h2>{t("从变化信号到行动建议", "From signals to decisions")}</h2>
+          <p className="text-sm text-muted mt-2">
+            {t(
+              "报道关注度、实际报价和政策资料分别呈现，再结合来源分析可能影响。",
+              "Compare coverage, quoted prices and policy evidence separately.",
+            )}
+          </p>
+        </div>
+        <Link href="/research" className="btn btn-primary" prefetch={false}>
+          {t("进入智能研判", "Decision research")} <ArrowUpRight size={14} />
+        </Link>
+      </div>
+      {overview.data && (
+        <section className="panel mb-7">
+          <div className="section-bar">
+            <h2>{t("当前信号解读", "Current signals")}</h2>
+            <span className="text-xs text-muted">
+              {t("资料截止", "Evidence as of")} ·{" "}
+              {overview.data.latest_published_at
+                ? new Date(
+                    overview.data.latest_published_at,
+                  ).toLocaleDateString("zh-CN")
+                : "—"}
+            </span>
+          </div>
+          <ul className="space-y-3 text-sm">
+            {overview.data.signals.map((text) => (
+              <li className="border-l-2 border-primary pl-3" key={text}>
+                {text}
+              </li>
+            ))}
+          </ul>
+          <p className="text-muted text-sm mt-5">
+            {overview.data.interpretation}
+          </p>
+          <div className="flex flex-wrap gap-2 mt-4">
+            {overview.data.watchlist.map((text) => (
+              <span className="tag" key={text}>
+                {text}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
       <div className="section-bar flex-wrap gap-4">
         <h2>{t("热点矿种", "Trending minerals")}</h2>
         <div
@@ -138,6 +195,18 @@ export function TrendWorkspace({ initial = {} }: { initial?: TrendData }) {
                     ? `${x.heat_score.toFixed(0)}/100`
                     : "—"}
                 </span>
+              </div>
+              <div className="mt-4">
+                <div className="flex justify-between text-xs text-muted mb-2">
+                  <span>{t("报道关注度", "Coverage attention")}</span>
+                  <strong>{(x.attention_score ?? 0).toFixed(0)}/100</strong>
+                </div>
+                <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    className="h-full bg-primary transition-all duration-700"
+                    style={{ width: `${x.attention_score ?? 0}%` }}
+                  />
+                </div>
               </div>
               <p className="text-muted text-xs mt-3">
                 {t("前期报道", "Previous window")}: {x.previous_count} ·{" "}
@@ -223,6 +292,12 @@ export function TrendWorkspace({ initial = {} }: { initial?: TrendData }) {
               <ArrowUpRight size={12} />
             </Link>
           </div>
+          <p className="text-xs text-muted mb-4">
+            {t(
+              "展示最近收录的政策档案，日期为原始发布日期；历史规划与新公告可在政策库中筛选。",
+              "Dated policy archives, with publication and effective dates kept separate.",
+            )}
+          </p>
           {policies.isError ? (
             <ErrorState
               error={policies.error}

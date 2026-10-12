@@ -95,6 +95,7 @@ class HotMineral(BaseModel):
     baseline_sufficient: bool = False
     z_score: float | None = None
     sparkline: list[int] = Field(default_factory=list)
+    attention_score: float = 0
 
 
 class PriceAlert(PriceOut):
@@ -108,6 +109,16 @@ class PriceTrend(PriceOut):
     direction: Literal["up", "down", "flat"] = "flat"
     consecutive_moves: int = 0
     observations: list[dict[str, str]] = Field(default_factory=list)
+
+
+class TrendOverview(BaseModel):
+    article_count: int
+    policy_count: int
+    latest_published_at: datetime | None
+    generated_at: datetime
+    signals: list[str]
+    interpretation: str
+    watchlist: list[str]
 
 
 class PolicyUpdate(PolicyOut):
@@ -147,6 +158,7 @@ class DigestOut(BaseModel):
     analysis: dict = Field(default_factory=dict)
     scheduled: bool = False
     coverage_hash: str = ""
+    latest_published_at: datetime | None = None
 
 
 class ReportPage(BaseModel):

@@ -22,6 +22,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import get_settings
 from app.core.time import display_date
 from app.models import ChatMessage, ChatSession
+from app.rag.localization import (
+    chinese_excerpt_answer,
+    chinese_prose,
+    localize_citations,
+)
 from app.rag.retriever import HybridRetriever
 from app.schemas.api import ChatInput, ChatOut, Citation
 from app.services.llm import complete_json
@@ -85,7 +90,7 @@ def validate_claims(
         offset = source.quote.find(claim.quote)
         if offset < 0:
             raise ValueError("Quotation does not exist in source evidence")
-        if not re.search(r"[\u4e00-\u9fff]", claim.text):
+        if not chinese_prose(claim.text):
             raise ValueError("The generated claim must be in Chinese")
         if re.search(r"\[\d+\]|https?://", claim.text):
             raise ValueError("Source markers and links are inserted by the system")
@@ -103,6 +108,7 @@ def validate_claims(
         narrowed = source.model_copy(
             update={
                 "quote": claim.quote,
+                "quote_zh": None,
                 "start_char": source.start_char + offset,
                 "end_char": source.start_char + offset + len(claim.quote),
             }
@@ -114,6 +120,7 @@ def validate_claims(
             narrowed = source.model_copy(
                 update={
                     "quote": source.quote[start:end],
+                    "quote_zh": None,
                     "start_char": source.start_char + start,
                     "end_char": source.start_char + end,
                 }
@@ -260,6 +267,7 @@ class GroundedSynthesizer(BaseSynthesizer):
                 end_char=node.node.metadata["end_char"],
                 published_at=node.node.metadata["published_at"],
                 source_name=node.node.metadata["source_name"],
+                summary_zh=node.node.metadata.get("summary_zh"),
             )
             for index, node in enumerate(nodes, start=1)
         ]
@@ -267,9 +275,6 @@ class GroundedSynthesizer(BaseSynthesizer):
         answer = INSUFFICIENT
         if citations:
             mode = "extractive"
-            answer = "已找到以下原文证据（当前为证据摘录模式）：\n\n" + "\n\n".join(
-                f"{item.quote} [{item.index}]" for item in citations
-            )
             if get_settings().LLM_API_KEY.get_secret_value():
                 try:
                     result = GroundedAnswer.model_validate(
@@ -283,7 +288,16 @@ class GroundedSynthesizer(BaseSynthesizer):
                                         for row in self.history
                                     ],
                                     "evidence": [
-                                        item.model_dump(mode="json")
+                                        item.model_dump(
+                                            mode="json",
+                                            include={
+                                                "index",
+                                                "title",
+                                                "quote",
+                                                "source_name",
+                                                "published_at",
+                                            },
+                                        )
                                         for item in citations
                                     ],
                                 },
@@ -300,6 +314,9 @@ class GroundedSynthesizer(BaseSynthesizer):
                     structlog.get_logger().warning(
                         "rag_generation_fallback", error_type=type(exc).__name__
                     )
+            citations = await localize_citations(citations)
+            if mode == "extractive":
+                answer = chinese_excerpt_answer(citations)
         answer += reference_list(citations)
         return Response(
             response=answer,

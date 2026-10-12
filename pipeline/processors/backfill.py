@@ -8,6 +8,10 @@ from typing import Any
 from app.services.llm import complete_json
 from pipeline.processors.entities import extract_entities
 from pipeline.processors.extractor import grounded_name, quality_score
+from pipeline.processors.policy_document import (
+    general_mineral_policy,
+    verified_policy_source,
+)
 from pipeline.processors.translator import (
     EditorialSummary,
     bounded_summary,
@@ -74,6 +78,8 @@ def validate_editorial(
             )[:30]
     # A publisher's configured region is provenance, not article geography.
     category = candidate.get("category", row.category)
+    if verified_policy_source(document.source):
+        category = "policy"
     if category not in {"news", "price", "policy", "report", "company"}:
         raise ValueError("Invalid article category")
     return editorial.model_dump() | {
@@ -89,9 +95,9 @@ def validate_editorial(
         "quality_score": quality_score(
             document.source.authority_score, row.content, row.published_at
         ),
-        "relevance_score": min(
-            100, len(entities["minerals"]) * 30 + len(entities["companies"]) * 15
-        ),
+        "relevance_score": 100
+        if general_mineral_policy(document.source, row.title, row.content)
+        else min(100, len(entities["minerals"]) * 30 + len(entities["companies"]) * 15),
     }
 
 

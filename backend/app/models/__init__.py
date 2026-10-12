@@ -21,6 +21,7 @@ from app.models.entities import (
     User,
     VectorSyncJob,
 )
+from app.models.research import ResearchReport
 
 __all__ = [
     "APIKey",
@@ -38,6 +39,7 @@ __all__ = [
     "Policy",
     "PriceRecord",
     "Report",
+    "ResearchReport",
     "Source",
     "Subscription",
     "User",

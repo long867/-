@@ -13,6 +13,7 @@ from sqlalchemy import select, text
 from app.api.deps import DB, CurrentUser
 from app.core.observability import consultation
 from app.models import ChatMessage, ChatSession
+from app.rag.localization import localized_history
 from app.rag.qa_chain import answer_question
 from app.schemas.api import ChatInput, ChatMessageOut, ChatOut, ChatSessionOut
 
@@ -56,7 +57,7 @@ async def sessions(db: DB, user: CurrentUser) -> list[ChatSession]:
     response_model=list[ChatMessageOut],
     include_in_schema=False,
 )
-async def history(session_id: UUID, db: DB, user: CurrentUser) -> list[ChatMessage]:
+async def history(session_id: UUID, db: DB, user: CurrentUser) -> list[ChatMessageOut]:
     """Return the latest 200 turns in chronological order."""
     await owned_session(session_id, db, user)
     rows = list(
@@ -69,7 +70,7 @@ async def history(session_id: UUID, db: DB, user: CurrentUser) -> list[ChatMessa
             )
         ).all()
     )
-    return rows[::-1]
+    return await localized_history(db, rows[::-1])
 
 
 @router.delete("/session/{session_id}", status_code=204)

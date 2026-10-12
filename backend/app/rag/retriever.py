@@ -299,6 +299,7 @@ class HybridRetriever(BaseRetriever):
                             "article_id": str(article.id),
                             "title": article.title_zh or article.title,
                             "title_zh": article.title_zh,
+                            "summary_zh": article.summary_zh,
                             "url": article.url,
                             "source_name": source_name,
                             "published_at": article.published_at.isoformat()

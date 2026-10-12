@@ -141,7 +141,9 @@ async def test_qa_persists_only_verified_generation(scenario, monkeypatch) -> No
         item.model_dump(mode="json") for item in result.sources
     ]
     if scenario in {"invented", "outage"}:
-        assert original in result.answer
+        assert original not in result.answer
+        assert result.sources[0].quote == original
+        assert "中文" in result.answer
         assert "fabricated" not in result.answer
     if scenario == "empty":
         assert not result.sources

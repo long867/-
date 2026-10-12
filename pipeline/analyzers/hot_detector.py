@@ -83,6 +83,10 @@ def detect_hotspots(
                 sparkline=sparkline,
             )
         )
+    largest = max((row.count for row in result), default=1)
+    for row in result:
+        # Cross-sectional attention is distinct from a historical anomaly score.
+        row.attention_score = round(row.count / largest * 100, 1)
     return sorted(result, key=lambda x: (-x.is_hot, -x.heat_score, -x.count, x.mineral))
 
 

@@ -13,9 +13,11 @@ from sqlalchemy.dialects.postgresql import insert
 
 from app.core.cache import invalidate_public_cache
 from app.core.db import SessionFactory
-from app.models import Article, ArticleChunk, Source
+from app.models import Article, ArticleChunk, Policy, Source
+from pipeline.fetchers.base import timestamp
 from pipeline.processors.dedup import normalize_title, normalize_url, simhash
 from pipeline.processors.entities import extract_entities
+from pipeline.processors.policy_document import general_mineral_policy
 from pipeline.processors.translator import (
     number_words,
     numbers,
@@ -56,7 +58,9 @@ def validate_record(value: dict[str, Any]) -> tuple[SourceDefinition, RawArticle
     summary = enriched.get("summary_zh", "")
     if not 100 <= len(summary) <= 200 or not re.search(r"[\u3400-\u9fff]", summary):
         raise ValueError("Reviewed Chinese summary required")
-    if not enriched.get("minerals"):
+    if not enriched.get("minerals") and not general_mineral_policy(
+        source, article.title, article.content
+    ):
         raise ValueError("At least one grounded mineral is required")
     if any("{{MI_NUM_" in str(item) for item in enriched.values()):
         raise ValueError("Unresolved evidence placeholder")
@@ -146,6 +150,23 @@ async def import_record(value: dict[str, Any], *, publish: bool) -> str:
         )
         if article_id is None:
             return "duplicate"
+        if enriched["category"] == "policy":
+            effective = timestamp(raw.raw_json.get("effective_date"))
+            db.add(
+                Policy(
+                    title=raw.title,
+                    title_zh=enriched["title_zh"],
+                    url=url,
+                    summary_zh=enriched["summary_zh"],
+                    minerals=enriched["minerals"],
+                    country=raw.raw_json.get("policy_country")
+                    or definition.region
+                    or "未知",
+                    region=definition.region,
+                    effective_date=effective.date() if effective else None,
+                    impact_score=0,
+                )
+            )
         original = raw.content[:100000]
         search_header = (
             raw.title

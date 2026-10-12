@@ -28,6 +28,7 @@ export function Header() {
     ["/policies", "政策", "Policy"],
     ["/trends", "趋势", "Trends"],
     ["/digest", "简报", "Briefs"],
+    ["/research", "研判", "Research"],
     ["/chat", AGENT_NAME, AGENT_NAME],
     ...(auth.user?.is_admin ? [["/admin", "管理", "Admin"]] : []),
   ];

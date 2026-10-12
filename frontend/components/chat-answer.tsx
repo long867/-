@@ -63,7 +63,36 @@ export function ChatAnswerBody({
                 )
               : t("日期未提供", "Date not available")}
           </p>
-          <blockquote>{source.snippet || source.quote}</blockquote>
+          {source.quote_zh ? (
+            <>
+              <p className="text-xs text-muted my-2">
+                {t("证据片段 · 中文", "Evidence excerpt · Chinese")}
+              </p>
+              <blockquote>{source.quote_zh}</blockquote>
+            </>
+          ) : source.summary_zh ? (
+            <>
+              <p className="text-xs text-muted my-2">
+                {t("来源文章中文摘要", "Chinese article summary")}
+              </p>
+              <blockquote>{source.summary_zh}</blockquote>
+            </>
+          ) : (
+            <p className="text-muted my-2">
+              {t(
+                "中文片段暂时不可用，可展开查看原文。",
+                "The Chinese excerpt is unavailable. Expand the original below.",
+              )}
+            </p>
+          )}
+          <details className="mt-3">
+            <summary className="source-link cursor-pointer">
+              {t("展开外文原文 / 核对证据", "Show original evidence")}
+            </summary>
+            <blockquote className="mt-2">
+              {source.snippet || source.quote}
+            </blockquote>
+          </details>
           {/^https?:\/\//i.test(source.url) && (
             <a
               className="source-link mt-3"

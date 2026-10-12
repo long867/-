@@ -281,6 +281,16 @@ async def process_one(article_id: UUID) -> dict:
         if article is None or article.status != "pending":
             return {"status": "skipped"}
         source = await db.get(Source, article.source_id)
+    definition = SourceDefinition(
+        name=source.name,
+        url=source.url,
+        type=source.type,
+        category=source.category,
+        region=source.region,
+        language=source.language,
+        authority_score=source.authority_score,
+        parser_config=source.config_json,
+    )
     if source.config_json.get("adapter") == "ppi_lithium_spot":
         from pipeline.processors.price_processor import process_price
 
@@ -300,16 +310,7 @@ async def process_one(article_id: UUID) -> dict:
             source.authority_score,
             published_at=article.published_at,
             category=article.category,
-            source=SourceDefinition(
-                name=source.name,
-                url=source.url,
-                type=source.type,
-                category=source.category,
-                region=source.region,
-                language=source.language,
-                authority_score=source.authority_score,
-                parser_config=source.config_json,
-            ),
+            source=definition,
             url=article.url,
         )
     spans = await asyncio.to_thread(split_evidence, article.content)
@@ -366,7 +367,8 @@ async def process_one(article_id: UUID) -> dict:
                     title=current.title,
                     title_zh=current.title_zh,
                     url=current.url,
-                    country=current.regions[0] if current.regions else "未知",
+                    country=current.raw_json.get("policy_country")
+                    or (current.regions[0] if current.regions else "未知"),
                     region=source.region,
                     minerals=current.minerals,
                     summary_zh=current.summary_zh,
@@ -374,6 +376,8 @@ async def process_one(article_id: UUID) -> dict:
                 )
             )
         settings = get_settings()
+        from pipeline.processors.policy_document import general_mineral_policy
+
         editorial_ready = (
             settings.ENRICHMENT_MODE == "editorial"
             and bool(current.title_zh)
@@ -395,7 +399,16 @@ async def process_one(article_id: UUID) -> dict:
                 or current.is_translated
                 or editorial_ready
             )
-            and bool(current.minerals)
+            and (
+                bool(current.minerals)
+                or (
+                    current.category == "policy"
+                    and general_mineral_policy(
+                        definition, current.title, current.content
+                    )
+                    and current.relevance_score > 0
+                )
+            )
             and current.quality_score >= threshold
             and current.relevance_score > 0
             else "processed"

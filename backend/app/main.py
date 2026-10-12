@@ -27,6 +27,7 @@ from app.api.business import router as business_router
 from app.api.chat import router as chat_router
 from app.api.notifications import router as notifications_router
 from app.api.operations import router as operations_router
+from app.api.research import router as research_router
 from app.api.routes import router
 from app.api.subscriptions import router as subscriptions_router
 from app.core.config import get_settings
@@ -106,6 +107,7 @@ app.include_router(api_keys_router)
 app.include_router(subscriptions_router)
 app.include_router(notifications_router)
 app.include_router(operations_router)
+app.include_router(research_router)
 app.include_router(chat_router, prefix="/api/chat")
 app.include_router(chat_router, prefix="/api/v1/chat")
 
@@ -159,11 +161,19 @@ async def limited(request: Request) -> bool:
     if request.method != "POST" or not (
         path.startswith("/api/v1/auth/")
         or path
-        in {"/api/chat", "/api/chat/stream", "/api/v1/chat", "/api/v1/chat/stream"}
+        in {
+            "/api/chat",
+            "/api/chat/stream",
+            "/api/v1/chat",
+            "/api/v1/chat/stream",
+            "/api/research",
+        }
     ):
         return False
     client_ip = request.client.host if request.client else "unknown"
-    group = "chat" if "/chat" in path else "auth"
+    group = (
+        "research" if path == "/api/research" else "chat" if "/chat" in path else "auth"
+    )
     if settings.RATE_LIMIT_BACKEND == "memory":
         return memory_limited(client_ip, group, time.time())
     key = f"rate:{client_ip}:{group}:{int(time.time() // 60)}"

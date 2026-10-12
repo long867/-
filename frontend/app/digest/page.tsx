@@ -5,7 +5,7 @@ export const revalidate = 300;
 export default async function Digests() {
   return (
     <DigestWorkspace
-      initial={await serverApi<Digest>("/digest/daily?scope=previous")}
+      initial={await serverApi<Digest>("/digest/daily?scope=latest")}
     />
   );
 }

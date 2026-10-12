@@ -737,3 +737,63 @@ sources:
       verification: live_public_feed_2026-10-12
       access_note: 仅保存公开RSS/Atom提供的资料，保留原文出处与发布日期。
       documentation: https://natural-resources.canada.ca/corporate/rss-feeds
+  verified_policy_documents:
+  - name: 英国商业与贸易部
+    url: https://www.gov.uk/government/publications/uk-critical-minerals-strategy/vision-2035-critical-minerals-strategy
+    type: web
+    category: policy
+    region: 英国
+    language: en
+    authority_score: 10
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      document_kind: strategy
+      max_items: 1
+      verification: cloud_public_document_2026-10-12
+  - name: 加拿大政府
+    url: https://www.canada.ca/en/campaign/critical-minerals-in-canada/canadian-critical-minerals-strategy.html
+    type: web
+    category: policy
+    region: 加拿大
+    language: en
+    authority_score: 10
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      document_kind: strategy
+      max_items: 1
+      verification: cloud_public_document_2026-10-12
+  - name: 中国地质调查局
+    url: https://www.cgs.gov.cn/zcwj/202407/t20240701_820789.html
+    type: web
+    category: policy
+    region: 中国
+    language: zh
+    authority_score: 10
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      document_kind: regulation
+      effective_date: '2024-10-01'
+      effective_date_evidence: 本条例自2024年10月1日起施行
+      max_items: 1
+      verification: cloud_public_document_2026-10-12
+  - name: 北京市规划和自然资源委员会
+    url: https://ghzrzyw.beijing.gov.cn/zhengwuxinxi/zcfg/fl/202607/t20260722_4777373.html
+    type: web
+    category: policy
+    region: 中国
+    language: zh
+    authority_score: 10
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      document_kind: regulation
+      mineral_scope_all: true
+      publication_date: '2024-11-08'
+      publication_date_evidence: 2024年11月8日修订通过
+      effective_date: '2025-07-01'
+      effective_date_evidence: 本法自2025年7月1日起施行
+      max_items: 1
+      verification: cloud_public_document_2026-10-12

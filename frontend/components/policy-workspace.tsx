@@ -20,6 +20,7 @@ export function PolicyWorkspace({ initial }: { initial?: PolicyPage }) {
     staleTime: 300000,
   });
   const params = new URLSearchParams({ page: String(page), page_size: "12" });
+  params.set("date_basis", "published_at");
   if (filters.regions[0]) params.set("region", filters.regions[0]);
   if (filters.minerals[0]) params.set("mineral", filters.minerals[0]);
   for (const k of ["date_from", "date_to"] as const)
@@ -77,7 +78,7 @@ export function PolicyWorkspace({ initial }: { initial?: PolicyPage }) {
             ))}
           </select>
           <label className="date-filter">
-            {t("生效日期起", "Effective from")}
+            {t("发布日期起", "Published from")}
             <input
               type="date"
               value={filters.date_from}
@@ -85,7 +86,7 @@ export function PolicyWorkspace({ initial }: { initial?: PolicyPage }) {
             />
           </label>
           <label className="date-filter">
-            {t("生效日期止", "Effective to")}
+            {t("发布日期止", "Published to")}
             <input
               type="date"
               value={filters.date_to}
@@ -120,8 +121,11 @@ export function PolicyWorkspace({ initial }: { initial?: PolicyPage }) {
             <div key={p.id} className={timeline ? "timeline-group" : ""}>
               {timeline && (
                 <div className="timeline-date">
-                  {p.effective_date ||
-                    t("生效日期未披露", "Effective date not specified")}
+                  {p.published_at
+                    ? new Date(p.published_at).toLocaleDateString("zh-CN", {
+                        timeZone: "Asia/Shanghai",
+                      })
+                    : t("发布日期未披露", "Publication date not specified")}
                 </div>
               )}
               <PolicyCard policy={p} />

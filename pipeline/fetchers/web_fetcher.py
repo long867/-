@@ -97,12 +97,37 @@ class WebFetcher(BaseFetcher):
         metadata = await asyncio.to_thread(trafilatura.extract_metadata, html)
         if not body:
             raise ValueError("No readable article body")
+        policy_metadata = {}
+        published_at = timestamp(metadata.date if metadata else None)
+        if self.config.get("document_kind"):
+            policy_metadata = {
+                "document_kind": self.config["document_kind"],
+                "policy_country": self.source.region,
+                "mineral_scope_all": self.config.get("mineral_scope_all", False),
+            }
+            hint = self.config.get("effective_date_evidence")
+            if hint and re.sub(r"\s+", "", hint) in re.sub(r"\s+", "", body):
+                policy_metadata["effective_date"] = self.config.get("effective_date")
+            publication_hint = self.config.get("publication_date_evidence")
+            if publication_hint and re.sub(r"\s+", "", publication_hint) in re.sub(
+                r"\s+", "", body
+            ):
+                verified_date = timestamp(self.config.get("publication_date"))
+                if verified_date:
+                    policy_metadata["source_metadata_published_at"] = (
+                        published_at.isoformat() if published_at else None
+                    )
+                    policy_metadata["publication_basis"] = "document_issue_date"
+                    published_at = verified_date
         return await self.article(
             url=canonical_url(url),
             title=metadata.title if metadata and metadata.title else self.source.name,
             content=body,
-            published_at=timestamp(metadata.date if metadata else None),
-            raw_json={"publisher": metadata.sitename if metadata else None},
+            published_at=published_at,
+            raw_json={
+                "publisher": metadata.sitename if metadata else None,
+                **policy_metadata,
+            },
         )
 
     async def fetch(self) -> list[RawArticle]:

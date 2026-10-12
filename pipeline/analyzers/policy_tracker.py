@@ -5,7 +5,7 @@ from datetime import UTC, datetime, timedelta
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models import Article, Policy
+from app.models import Article, Policy, Source
 from app.schemas.intelligence import PolicyUpdate
 from app.services.article_service import public_conditions
 
@@ -35,8 +35,9 @@ async def track_policies(
     start = start or end - timedelta(days=7)
     rows = (
         await db.execute(
-            select(Policy, Article.published_at)
+            select(Policy, Article, Source.name)
             .join(Article, Article.url == Policy.url)
+            .join(Source, Source.id == Article.source_id)
             .where(
                 *public_conditions(),
                 Article.published_at >= start,
@@ -50,11 +51,16 @@ async def track_policies(
         PolicyUpdate(
             **{
                 **PolicyUpdate.model_validate(row).model_dump(),
-                "published_at": stamp,
+                "published_at": article.published_at,
+                "source_name": name,
+                "document_kind": article.raw_json.get("document_kind", "policy"),
+                "publication_basis": article.raw_json.get(
+                    "publication_basis", "source_publication"
+                ),
                 "themes": policy_themes(
                     f"{row.title} {row.title_zh or ''} {row.summary_zh or ''}"
                 ),
             },
         )
-        for row, stamp in rows
+        for row, article, name in rows
     ]

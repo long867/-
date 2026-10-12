@@ -156,9 +156,9 @@ export default function Chat() {
   ];
   const busy = mutation.isPending || deletion.isPending;
   return (
-    <main className="small-page">
+    <main className="small-page chat-workspace">
       <div className="eyebrow">EVIDENCE-BASED CONSULTATION</div>
-      <div className="flex justify-between items-center gap-3">
+      <div className="chat-heading flex justify-between items-center gap-3">
         <h1>{AGENT_NAME}</h1>
         <Button
           variant="outline"
@@ -325,7 +325,7 @@ export default function Chat() {
         </article>
       )}
       <form
-        className="form-card mt-6"
+        className="form-card chat-composer mt-6"
         onSubmit={(event) => {
           event.preventDefault();
           if (!busy && question.trim().length >= 2)

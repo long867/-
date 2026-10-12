@@ -47,7 +47,10 @@ export function PriceChart({ prices }: { prices: Price[] }) {
     price: Number(item.price),
   }));
   return (
-    <section className="panel" aria-label={t("价格走势图", "Price chart")}>
+    <section
+      className="panel price-panel"
+      aria-label={t("价格走势图", "Price chart")}
+    >
       <div className="flex justify-between items-start gap-4">
         <div>
           <div className="eyebrow">{t("价格观察", "PRICE OBSERVATORY")}</div>

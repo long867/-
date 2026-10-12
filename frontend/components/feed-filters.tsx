@@ -1,5 +1,6 @@
 "use client";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { usePreferences } from "@/hooks/use-preferences";
 import { publicApi } from "@/lib/api";
@@ -17,6 +18,8 @@ export function FeedFiltersBar({
   compact?: boolean;
 }) {
   const { t } = usePreferences();
+  const [expanded, setExpanded] = useState(false);
+  const filterId = useId();
   const facets = useQuery({
     queryKey: ["facets"],
     queryFn: () => publicApi<Facets>("/facets"),
@@ -33,7 +36,48 @@ export function FeedFiltersBar({
     (filters.date_from ? 1 : 0) +
     (filters.date_to ? 1 : 0);
   return (
-    <div className="filter-panel">
+    <div
+      className={`filter-panel feed-filter-panel ${expanded ? "filters-expanded" : ""}`}
+    >
+      <div className="mobile-filter-heading">
+        <span>{t("筛选情报", "Filter coverage")}</span>
+        <button
+          type="button"
+          className="mobile-filter-toggle"
+          aria-expanded={expanded}
+          aria-controls={
+            compact
+              ? `${filterId}-dates`
+              : `${filterId}-regions ${filterId}-tags ${filterId}-dates`
+          }
+          onClick={() => setExpanded((value) => !value)}
+        >
+          <SlidersHorizontal size={15} />
+          {t(
+            expanded ? "收起筛选" : "更多筛选",
+            expanded ? "Less" : "More filters",
+          )}
+          {active > 0 && <span className="filter-active-count">{active}</span>}
+          <ChevronDown size={14} className={expanded ? "rotate-180" : ""} />
+        </button>
+      </div>
+      {active > 0 && (
+        <p className="mobile-filter-selection">
+          {t("已选", "Selected")}:{" "}
+          {[
+            ...filters.minerals,
+            ...filters.regions,
+            ...filters.tags,
+            filters.company,
+            filters.search,
+            filters.category,
+            filters.date_from,
+            filters.date_to,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+      )}
       {!compact &&
         (
           [
@@ -42,7 +86,11 @@ export function FeedFiltersBar({
             ["tags", t("主题", "Topic")],
           ] as const
         ).map(([key, label]) => (
-          <div className="filter-row" key={key}>
+          <div
+            className={`filter-row filter-row-${key}`}
+            id={`${filterId}-${key}`}
+            key={key}
+          >
             <span className="filter-caption">{label}</span>
             <div className="chips">
               <button
@@ -75,7 +123,7 @@ export function FeedFiltersBar({
           </div>
         ))}
       {filters.company && (
-        <div className="filter-row">
+        <div className="filter-row filter-row-company">
           <span className="filter-caption">{t("公司", "Company")}</span>
           <button
             className="chip selected"
@@ -128,24 +176,26 @@ export function FeedFiltersBar({
             {t("质量优先", "Highest quality")}
           </option>
         </select>
-        <label className="text-[10px] text-muted">
-          {t("从", "From")}{" "}
-          <input
-            type="date"
-            aria-label={t("开始日期（UTC）", "Start date (UTC)")}
-            value={filters.date_from}
-            onChange={(e) => update({ date_from: e.target.value })}
-          />
-        </label>
-        <label className="text-[10px] text-muted">
-          {t("至", "To")}{" "}
-          <input
-            type="date"
-            aria-label={t("结束日期（UTC）", "End date (UTC)")}
-            value={filters.date_to}
-            onChange={(e) => update({ date_to: e.target.value })}
-          />
-        </label>
+        <div className="filter-date-fields" id={`${filterId}-dates`}>
+          <label className="text-[10px] text-muted">
+            {t("从", "From")}{" "}
+            <input
+              type="date"
+              aria-label={t("开始日期（UTC）", "Start date (UTC)")}
+              value={filters.date_from}
+              onChange={(e) => update({ date_from: e.target.value })}
+            />
+          </label>
+          <label className="text-[10px] text-muted">
+            {t("至", "To")}{" "}
+            <input
+              type="date"
+              aria-label={t("结束日期（UTC）", "End date (UTC)")}
+              value={filters.date_to}
+              onChange={(e) => update({ date_to: e.target.value })}
+            />
+          </label>
+        </div>
         {active > 0 ? (
           <button
             className="icon-button"

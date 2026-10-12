@@ -62,7 +62,7 @@ export function TrendWorkspace({ initial = {} }: { initial?: TrendData }) {
     staleTime: 300000,
   });
   return (
-    <main className="workspace">
+    <main className="workspace trend-workspace">
       <SectionHeading
         eyebrow="MARKET SIGNALS"
         zh="发现变化，读懂趋势。"

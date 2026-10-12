@@ -9,6 +9,7 @@ import "./globals.css";
 import "./mineral-design.css";
 import "./mineral-luxe.css";
 import "./readability.css";
+import "./mobile.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",
@@ -25,6 +26,7 @@ export const viewport: Viewport = {
   themeColor: "#0b111c",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 const preferencesScript =
   "try{document.documentElement.dataset.theme=localStorage.getItem('mi-theme')==='light'?'light':'dark';document.documentElement.lang=localStorage.getItem('mi-language')==='en'?'en':'zh-CN';document.documentElement.dataset.motion=localStorage.getItem('mi-motion')==='paused'?'paused':'running'}catch(e){}";

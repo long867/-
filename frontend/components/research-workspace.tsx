@@ -135,7 +135,7 @@ export function ResearchWorkspace({
         descriptionEn="Facts, conditional scenarios and actions grounded in published evidence."
       />
       <section className="panel mb-7 research-controls">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
           <label className="text-sm">
             {t("关注矿种", "Mineral")}
             <select

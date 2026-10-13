@@ -3,16 +3,34 @@
 from datetime import date
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Request, Response
+from pydantic import TypeAdapter
 
 from app.api.deps import DB
+from app.core.cache import cached
 from app.schemas.api import PriceOut
 from app.schemas.intelligence import ArticleQuery, FacetOut, PolicyPage, TimelineOut
+from app.schemas.market import MineralMarket
 from app.services.article_service import timeline
+from app.services.mineral_market import market_directory
 from app.services.trend_service import facets, list_policies, mineral_prices
 from pipeline.processors.entities import lexicon
 
 router = APIRouter(tags=["minerals"])
+
+
+@router.get("/minerals/market", response_model=MineralMarket)
+async def mineral_market(request: Request, response: Response, db: DB) -> MineralMarket:
+    """Return the complete catalog with real latest prices, cached for five minutes."""
+    return await cached(
+        request,
+        response,
+        "mineral-market",
+        "all",
+        300,
+        TypeAdapter(MineralMarket),
+        lambda: market_directory(db),
+    )
 
 
 @router.get("/minerals", response_model=list[FacetOut])

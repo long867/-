@@ -14,6 +14,7 @@ export default async function Page() {
     "/trends/policy-updates",
     "/minerals/%E9%94%82/prices",
     "/articles?page_size=3&sort_by=quality_score",
+    "/minerals/market",
   ];
   const keys = [
     "articles",
@@ -25,6 +26,7 @@ export default async function Page() {
     "policies",
     "prices",
     "featured",
+    "market",
   ] as const;
   const values = await Promise.all(paths.map((path) => serverApi(path)));
   const initial = Object.fromEntries(

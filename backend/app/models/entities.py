@@ -268,6 +268,8 @@ class PriceRecord(Identity, Base):
         String(20), default="spot", server_default="spot"
     )
     source_url: Mapped[str | None] = mapped_column(Text)
+    fetched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    source_name: Mapped[str | None] = mapped_column(String(200))
 
 
 class Policy(Identity, Base):

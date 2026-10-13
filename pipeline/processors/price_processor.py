@@ -20,17 +20,19 @@ def process_price(
     literal = str(raw_json["price_observation"]["price"])
     if (
         literal not in content
-        or quote.mineral != "锂"
-        or quote.price_type != "spot"
+        or quote.price_type not in {"spot", "benchmark"}
         or quote.currency != "CNY"
-        or quote.unit != "吨"
+        or "元/" + quote.unit not in content
     ):
-        raise ValueError("Price metadata does not match verified lithium spot evidence")
+        raise ValueError("Price metadata does not match verified public evidence")
+    kind = "现货价格" if quote.price_type == "spot" else "公开参考价"
+    product = quote.product or quote.mineral
     summary = (
-        f"生意社{quote.date}公开现期表显示，碳酸锂现货价格为{literal}元/吨，币种为人民币。"
-        "这一记录取自表中的现货价格列，期货合约、结算价及现期差属于另外的指标，不混作现货报价。"
-        "原表没有明确标注碳酸锂品级，因此该数据不能直接当作电池级碳酸锂或锂矿石报价，"
-        "也不能凭单日记录判断全年趋势。"
+        f"{quote.source_name or '生意社'}{quote.date}公开资料显示，{product}的{kind}为"
+        f"{literal}元/{quote.unit}，币种为人民币。该记录保留原始报价日期，"
+        "与最近采集时间分别展示；休市或信源未发布新价时保留最近报价。"
+        "不同品级、加工产品、现货与期货价格不能混用，涨跌幅仅与同一来源、"
+        "相同单位的前一观测比较，不能凭单次报价推断全年趋势。"
     )
     return {
         "title_zh": title,
@@ -38,12 +40,12 @@ def process_price(
         "summary_zh": summary,
         "content_zh": content,
         "is_translated": False,
-        "minerals": ["锂"],
+        "minerals": [quote.mineral],
         "regions": [region] if region and region != "全球" else [],
         "companies": [],
         "projects": [],
         "policy_names": [],
-        "tags": ["碳酸锂", "现货价格"],
+        "tags": [product.split("（")[0], kind],
         "category": "price",
         "quality_score": quality_score(authority, content, published_at),
         "relevance_score": 100.0,

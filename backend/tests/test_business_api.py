@@ -33,6 +33,33 @@ from app.services.prices import store_price
 pytestmark = pytest.mark.integration
 
 
+async def test_public_mineral_market_has_real_latest_series_and_coverage(business):
+    response = await business["client"].get("/api/minerals/market")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total"] >= 100
+    lithium = next(item for item in data["items"] if item["name"] == "锂")
+    observation = next(
+        price
+        for price in lithium["prices"]
+        if price["source"] == business["root"] + "/prices"
+    )
+    assert Decimal(observation["price"]) == 110
+    assert observation["fetched_at"] is not None
+    assert observation["date"] == datetime.now(UTC).date().isoformat()
+    assert (
+        len(
+            [
+                price
+                for price in lithium["prices"]
+                if price["source"] == business["root"] + "/prices"
+            ]
+        )
+        == 1
+    )
+    assert data["quoted_products"] >= 1
+
+
 @pytest_asyncio.fixture
 async def business():
     """Isolate evidence and accounts, retaining every pre-existing real article."""

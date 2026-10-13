@@ -1,5 +1,6 @@
 """Idempotent price observations with unit- and source-consistent changes."""
 
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from sqlalchemy import select, text
@@ -26,15 +27,18 @@ async def store_price(db: AsyncSession, payload: PriceInput) -> None:
             **(
                 payload.model_dump()
                 | {
+                    "fetched_at": datetime.now(UTC),
                     "source_url": str(payload.source_url)
                     if payload.source_url
-                    else None
+                    else None,
                 }
             )
         )
         .on_conflict_do_update(
             constraint="uq_price_observation",
             set_={
+                "fetched_at": datetime.now(UTC),
+                "source_name": payload.source_name,
                 "price": payload.price,
                 "product": payload.product,
                 "price_type": payload.price_type,

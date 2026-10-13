@@ -1,0 +1,602 @@
+[
+  {
+    "name": "金",
+    "symbol": "Au",
+    "english_name": "gold",
+    "group": "贵金属"
+  },
+  {
+    "name": "银",
+    "symbol": "Ag",
+    "english_name": "silver",
+    "group": "贵金属"
+  },
+  {
+    "name": "铂",
+    "symbol": "Pt",
+    "english_name": "platinum",
+    "group": "贵金属"
+  },
+  {
+    "name": "钯",
+    "symbol": "Pd",
+    "english_name": "palladium",
+    "group": "贵金属"
+  },
+  {
+    "name": "铑",
+    "symbol": "Rh",
+    "english_name": "rhodium",
+    "group": "贵金属"
+  },
+  {
+    "name": "铱",
+    "symbol": "Ir",
+    "english_name": "iridium",
+    "group": "贵金属"
+  },
+  {
+    "name": "钌",
+    "symbol": "Ru",
+    "english_name": "ruthenium",
+    "group": "贵金属"
+  },
+  {
+    "name": "锇",
+    "symbol": "Os",
+    "english_name": "osmium",
+    "group": "贵金属"
+  },
+  {
+    "name": "铜",
+    "symbol": "Cu",
+    "english_name": "copper",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "铝",
+    "symbol": "Al",
+    "english_name": "aluminium",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "铅",
+    "symbol": "Pb",
+    "english_name": "lead",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "锌",
+    "symbol": "Zn",
+    "english_name": "zinc",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "锡",
+    "symbol": "Sn",
+    "english_name": "tin",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "镍",
+    "symbol": "Ni",
+    "english_name": "nickel",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "铁矿石",
+    "symbol": "Fe",
+    "english_name": "iron ore",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "锰",
+    "symbol": "Mn",
+    "english_name": "manganese",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "铬",
+    "symbol": "Cr",
+    "english_name": "chromium",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "镁",
+    "symbol": "Mg",
+    "english_name": "magnesium",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "钛",
+    "symbol": "Ti",
+    "english_name": "titanium",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "钒",
+    "symbol": "V",
+    "english_name": "vanadium",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "钼",
+    "symbol": "Mo",
+    "english_name": "molybdenum",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "钨",
+    "symbol": "W",
+    "english_name": "tungsten",
+    "group": "有色与黑色金属"
+  },
+  {
+    "name": "锂",
+    "symbol": "Li",
+    "english_name": "lithium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "钴",
+    "symbol": "Co",
+    "english_name": "cobalt",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "石墨",
+    "symbol": "C",
+    "english_name": "graphite",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "硅",
+    "symbol": "Si",
+    "english_name": "silicon",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "锑",
+    "symbol": "Sb",
+    "english_name": "antimony",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "铋",
+    "symbol": "Bi",
+    "english_name": "bismuth",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "锗",
+    "symbol": "Ge",
+    "english_name": "germanium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "镓",
+    "symbol": "Ga",
+    "english_name": "gallium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "铟",
+    "symbol": "In",
+    "english_name": "indium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "碲",
+    "symbol": "Te",
+    "english_name": "tellurium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "硒",
+    "symbol": "Se",
+    "english_name": "selenium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "铍",
+    "symbol": "Be",
+    "english_name": "beryllium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "铌",
+    "symbol": "Nb",
+    "english_name": "niobium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "钽",
+    "symbol": "Ta",
+    "english_name": "tantalum",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "锆",
+    "symbol": "Zr",
+    "english_name": "zirconium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "铪",
+    "symbol": "Hf",
+    "english_name": "hafnium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "铼",
+    "symbol": "Re",
+    "english_name": "rhenium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "铷",
+    "symbol": "Rb",
+    "english_name": "rubidium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "铯",
+    "symbol": "Cs",
+    "english_name": "caesium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "锶",
+    "symbol": "Sr",
+    "english_name": "strontium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "钡",
+    "symbol": "Ba",
+    "english_name": "barium",
+    "group": "新能源与稀有金属"
+  },
+  {
+    "name": "稀土",
+    "symbol": "REE",
+    "english_name": "rare earth",
+    "group": "稀土"
+  },
+  {
+    "name": "镧",
+    "symbol": "La",
+    "english_name": "lanthanum",
+    "group": "稀土"
+  },
+  {
+    "name": "铈",
+    "symbol": "Ce",
+    "english_name": "cerium",
+    "group": "稀土"
+  },
+  {
+    "name": "镨",
+    "symbol": "Pr",
+    "english_name": "praseodymium",
+    "group": "稀土"
+  },
+  {
+    "name": "钕",
+    "symbol": "Nd",
+    "english_name": "neodymium",
+    "group": "稀土"
+  },
+  {
+    "name": "钐",
+    "symbol": "Sm",
+    "english_name": "samarium",
+    "group": "稀土"
+  },
+  {
+    "name": "铕",
+    "symbol": "Eu",
+    "english_name": "europium",
+    "group": "稀土"
+  },
+  {
+    "name": "钆",
+    "symbol": "Gd",
+    "english_name": "gadolinium",
+    "group": "稀土"
+  },
+  {
+    "name": "铽",
+    "symbol": "Tb",
+    "english_name": "terbium",
+    "group": "稀土"
+  },
+  {
+    "name": "镝",
+    "symbol": "Dy",
+    "english_name": "dysprosium",
+    "group": "稀土"
+  },
+  {
+    "name": "钬",
+    "symbol": "Ho",
+    "english_name": "holmium",
+    "group": "稀土"
+  },
+  {
+    "name": "铒",
+    "symbol": "Er",
+    "english_name": "erbium",
+    "group": "稀土"
+  },
+  {
+    "name": "铥",
+    "symbol": "Tm",
+    "english_name": "thulium",
+    "group": "稀土"
+  },
+  {
+    "name": "镱",
+    "symbol": "Yb",
+    "english_name": "ytterbium",
+    "group": "稀土"
+  },
+  {
+    "name": "镥",
+    "symbol": "Lu",
+    "english_name": "lutetium",
+    "group": "稀土"
+  },
+  {
+    "name": "钇",
+    "symbol": "Y",
+    "english_name": "yttrium",
+    "group": "稀土"
+  },
+  {
+    "name": "钪",
+    "symbol": "Sc",
+    "english_name": "scandium",
+    "group": "稀土"
+  },
+  {
+    "name": "煤",
+    "symbol": "COAL",
+    "english_name": "coal",
+    "group": "能源矿产"
+  },
+  {
+    "name": "铀",
+    "symbol": "U",
+    "english_name": "uranium",
+    "group": "能源矿产"
+  },
+  {
+    "name": "钍",
+    "symbol": "Th",
+    "english_name": "thorium",
+    "group": "能源矿产"
+  },
+  {
+    "name": "石油",
+    "symbol": "OIL",
+    "english_name": "petroleum",
+    "group": "能源矿产"
+  },
+  {
+    "name": "天然气",
+    "symbol": "GAS",
+    "english_name": "natural gas",
+    "group": "能源矿产"
+  },
+  {
+    "name": "油页岩",
+    "symbol": "SHALE",
+    "english_name": "oil shale",
+    "group": "能源矿产"
+  },
+  {
+    "name": "磷",
+    "symbol": "P",
+    "english_name": "phosphate",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "钾",
+    "symbol": "K",
+    "english_name": "potash",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "硫",
+    "symbol": "S",
+    "english_name": "sulphur",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "萤石",
+    "symbol": "CaF₂",
+    "english_name": "fluorite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "硼",
+    "symbol": "B",
+    "english_name": "boron",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "溴",
+    "symbol": "Br",
+    "english_name": "bromine",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "碘",
+    "symbol": "I",
+    "english_name": "iodine",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "盐",
+    "symbol": "NaCl",
+    "english_name": "salt",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "石英",
+    "symbol": "SiO₂",
+    "english_name": "quartz",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "高岭土",
+    "symbol": "KAOLIN",
+    "english_name": "kaolin",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "膨润土",
+    "symbol": "BENT",
+    "english_name": "bentonite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "重晶石",
+    "symbol": "BaSO₄",
+    "english_name": "barite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "石膏",
+    "symbol": "GYPSUM",
+    "english_name": "gypsum",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "滑石",
+    "symbol": "TALC",
+    "english_name": "talc",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "菱镁矿",
+    "symbol": "MgCO₃",
+    "english_name": "magnesite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "石灰石",
+    "symbol": "CaCO₃",
+    "english_name": "limestone",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "白云石",
+    "symbol": "DOLO",
+    "english_name": "dolomite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "长石",
+    "symbol": "FELD",
+    "english_name": "feldspar",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "云母",
+    "symbol": "MICA",
+    "english_name": "mica",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "硅藻土",
+    "symbol": "DIATOM",
+    "english_name": "diatomite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "金刚石",
+    "symbol": "DIAMOND",
+    "english_name": "diamond",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "刚玉",
+    "symbol": "Al₂O₃",
+    "english_name": "corundum",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "珍珠岩",
+    "symbol": "PERLITE",
+    "english_name": "perlite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "蛭石",
+    "symbol": "VERM",
+    "english_name": "vermiculite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "沸石",
+    "symbol": "ZEOLITE",
+    "english_name": "zeolite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "石棉",
+    "symbol": "ASBESTOS",
+    "english_name": "asbestos",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "硅灰石",
+    "symbol": "WOLL",
+    "english_name": "wollastonite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "红柱石",
+    "symbol": "ANDAL",
+    "english_name": "andalusite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "蓝晶石",
+    "symbol": "KYAN",
+    "english_name": "kyanite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "硅线石",
+    "symbol": "SILL",
+    "english_name": "sillimanite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "硅砂",
+    "symbol": "SAND",
+    "english_name": "silica sand",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "大理石",
+    "symbol": "MARBLE",
+    "english_name": "marble",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "花岗岩",
+    "symbol": "GRANITE",
+    "english_name": "granite",
+    "group": "非金属与化工矿产"
+  },
+  {
+    "name": "玄武岩",
+    "symbol": "BASALT",
+    "english_name": "basalt",
+    "group": "非金属与化工矿产"
+  }
+]

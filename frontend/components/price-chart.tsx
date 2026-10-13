@@ -59,7 +59,9 @@ export function PriceChart({ prices }: { prices: Price[] }) {
         <span className="chip">
           {last.price_type === "futures"
             ? t("期货", "Futures")
-            : t("现货", "Spot")}
+            : last.price_type === "benchmark"
+              ? t("参考价", "Benchmark")
+              : t("现货", "Spot")}
         </span>
       </div>
       {groups.size > 1 && (
@@ -84,7 +86,15 @@ export function PriceChart({ prices }: { prices: Price[] }) {
           <small>{unit}</small>
         </div>
         {last.change_pct !== null && (
-          <span className={Number(last.change_pct) > 0 ? "up" : "down"}>
+          <span
+            className={
+              Number(last.change_pct) > 0
+                ? "up"
+                : Number(last.change_pct) < 0
+                  ? "down"
+                  : "text-muted"
+            }
+          >
             {Number(last.change_pct) > 0 ? "+" : ""}
             {Number(last.change_pct).toFixed(2)}%
           </span>
@@ -97,6 +107,15 @@ export function PriceChart({ prices }: { prices: Price[] }) {
           "Compared with the preceding observation; not a live quote",
         )}
       </p>
+      {last.fetched_at && (
+        <p className="text-xs text-muted mt-2">
+          {t("最近采集", "Collected")}{" "}
+          {new Date(last.fetched_at).toLocaleString("zh-CN", {
+            timeZone: "Asia/Shanghai",
+          })}{" "}
+          · {last.source_name || t("公开来源", "Public source")}
+        </p>
+      )}
       <div className="chart-frame">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
@@ -119,7 +138,12 @@ export function PriceChart({ prices }: { prices: Price[] }) {
             <YAxis
               domain={["auto", "auto"]}
               tick={{ fontSize: 10, fill: "var(--muted)" }}
-              tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+              tickFormatter={(value) =>
+                Number(value).toLocaleString("zh-CN", {
+                  notation: Math.abs(value) >= 10000 ? "compact" : "standard",
+                  maximumFractionDigits: 1,
+                })
+              }
               axisLine={false}
               tickLine={false}
               width={48}

@@ -20,6 +20,7 @@ celery_app = Celery(
         "app.tasks.business",
         "app.tasks.insights",
         "app.tasks.fetch_task",
+        "app.tasks.price_task",
         "app.tasks.process_task",
         "app.tasks.cluster_task",
         "app.tasks.trend_task",
@@ -57,6 +58,10 @@ celery_app.conf.update(
         "miningintel.cleanup": {"queue": "insights"},
     },
     beat_schedule={
+        "daily-public-prices": {
+            "task": "miningintel.refresh_daily_prices",
+            "schedule": crontab(hour="8,17,20", minute=30),
+        },
         **{
             f"current-{kind}-digest": {
                 "task": "miningintel.generate_brief",

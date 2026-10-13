@@ -67,6 +67,8 @@ export interface Price {
   product?: string | null;
   price_type?: "spot" | "futures" | "benchmark";
   source_url?: string | null;
+  fetched_at?: string | null;
+  source_name?: string | null;
 }
 
 export interface EventPage {
@@ -87,6 +89,24 @@ export interface MineralFacet {
   recent_count: number;
   previous_count: number;
   trend: "up" | "down" | "flat";
+}
+
+export interface MineralMarketItem extends MineralFacet {
+  symbol: string;
+  english_name: string;
+  group: string;
+  prices: Price[];
+  price_status: "available" | "stale" | "unavailable";
+}
+export interface MineralMarket {
+  items: MineralMarketItem[];
+  total: number;
+  quoted_minerals: number;
+  quoted_products: number;
+  latest_checked_at: string | null;
+  generated_at: string;
+  refresh_schedule: string;
+  quotation_note: string;
 }
 export interface Digest {
   id?: string | null;

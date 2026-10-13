@@ -22,11 +22,13 @@ import type {
   Policy,
   Price,
   Source,
+  MineralMarket,
 } from "@/types";
 import { SubscriptionDialog } from "./subscription-dialog";
 import { ErrorState, SkeletonCards } from "./ui/states";
 import { ResourceOverview } from "./resource-overview";
 import { IntelligenceTicker } from "./intelligence-ticker";
+import { MineralMarketStrip } from "./mineral-market";
 export interface HomeData {
   articles?: ArticlePage;
   hot?: Article[];
@@ -37,6 +39,7 @@ export interface HomeData {
   policies?: Policy[];
   prices?: Price[];
   featured?: ArticlePage;
+  market?: MineralMarket;
 }
 export function HomeDashboard({ initial }: { initial: HomeData }) {
   const surface = useRef<HTMLDivElement>(null);
@@ -109,6 +112,7 @@ export function HomeDashboard({ initial }: { initial: HomeData }) {
   return (
     <div className="home-content" ref={surface} onPointerMove={illuminate}>
       <IntelligenceTicker articles={initial.featured?.items || []} />
+      <MineralMarketStrip initial={initial.market} />
       <ResourceOverview
         prices={prices.data}
         facets={initial.facets}

@@ -291,7 +291,11 @@ async def process_one(article_id: UUID) -> dict:
         authority_score=source.authority_score,
         parser_config=source.config_json,
     )
-    if source.config_json.get("adapter") == "ppi_lithium_spot":
+    if source.config_json.get("adapter") in {
+        "ppi_lithium_spot",
+        "ppi_spot_market",
+        "sunsirs_mineral_daily",
+    }:
         from pipeline.processors.price_processor import process_price
 
         values = process_price(

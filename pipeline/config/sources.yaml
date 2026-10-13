@@ -376,7 +376,7 @@ sources:
       link_selector: a[href$=".html"]
       proxy_env: FETCH_PROXY
   prices:
-  - name: 生意社碳酸锂公开现货价格
+  - name: 生意社矿产公开现货日报
     url: https://www.100ppi.com/sf/
     type: web
     category: price
@@ -386,14 +386,14 @@ sources:
     fetch_interval: 86400
     active: true
     parser_config:
-      adapter: ppi_lithium_spot
-      max_items: 10
+      adapter: ppi_spot_market
+      max_items: 3
       dynamic: true
       wait_for_selector: table
       verification: live_table_probe_2026_10_11
       documentation: https://www.100ppi.com/sf/1162.html
       access_note: 公开现期表现货列；遵守 robots；商业分发权限需向数据商核实
-      contract_note: 碳酸锂现货，CNY/吨，原表未注明品级；不等同于锂矿石、期货结算价或SMM电池级报价
+      contract_note: 公开现货列；黄金元/克、白银元/千克、铁矿石湿吨，其余元/吨；产品口径与期货严格分开
       proxy_env: FETCH_PROXY
   - name: LME 公开数据
     url: https://www.lme.com/en/Metals/Non-ferrous/LME-Copper
@@ -485,6 +485,146 @@ sources:
         header: Authorization
         prefix: 'Bearer '
       proxy_env: FETCH_PROXY
+  - name: SunSirs 矿产公开每日报价
+    url: https://www.sunsirs.com/uk/sdetail.html
+    type: web
+    category: price
+    region: 中国
+    language: zh
+    authority_score: 8
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      adapter: sunsirs_mineral_daily
+      dynamic: true
+      max_items: 62
+      min_interval: 2
+      access_note: 公开日表；逐产品交叉核验原始日期、价格与中文基准页单位；遵守 robots
+      products:
+      - id: '602'
+        mineral: 钴
+        name: 钴
+        verify_name: 钴
+      - id: '909'
+        mineral: 锑
+        name: 锑锭（1#）
+        verify_name: 锑
+      - id: '1771'
+        mineral: 锗
+        name: 金属锗
+        verify_name: 锗
+      - id: '1770'
+        mineral: 镓
+        name: 金属镓
+        verify_name: 镓
+      - id: '1768'
+        mineral: 钨
+        name: 白钨精矿
+        verify_name: 钨精矿
+      - id: '1769'
+        mineral: 钨
+        name: 黑钨精矿
+        verify_name: 钨精矿
+      - id: '1767'
+        mineral: 钨
+        name: 仲钨酸铵
+        verify_name: 仲钨酸铵
+      - id: '1772'
+        mineral: 钒
+        name: 五氧化二钒
+        verify_name: 五氧化二钒
+      - id: '1774'
+        mineral: 锰
+        name: 电解锰
+        verify_name: 电解锰
+      - id: '766'
+        mineral: 镁
+        name: 金属镁
+        verify_name: 镁
+      - id: '231'
+        mineral: 萤石
+        name: 萤石
+        verify_name: 萤石
+      - id: '762'
+        mineral: 钾
+        name: 硫酸钾
+        verify_name: 硫酸钾
+      - id: '759'
+        mineral: 钾
+        name: 氯化钾
+        verify_name: 氯化钾
+      - id: '708'
+        mineral: 磷
+        name: 黄磷
+        verify_name: 黄磷
+      - id: '427'
+        mineral: 硫
+        name: 硫磺
+        verify_name: 硫磺
+      - id: '643'
+        mineral: 溴
+        name: 溴素
+        verify_name: 溴素
+      - id: '1385'
+        mineral: 硼
+        name: 硼酸
+        verify_name: 硼酸
+      - id: '1521'
+        mineral: 硼
+        name: 硼砂
+        verify_name: 硼砂
+      - id: '369'
+        mineral: 煤
+        name: 动力煤
+        verify_name: 动力煤
+      - id: '897'
+        mineral: 天然气
+        name: 液化天然气
+        verify_name: 液化天然气
+      - id: '645'
+        mineral: 钛
+        name: 钛白粉（加工产品）
+        verify_name: 钛白粉
+      - id: '311'
+        mineral: 稀土
+        name: 镝铁合金
+        verify_name: 镝铁合金
+      - id: '113'
+        mineral: 镝
+        name: 金属镝
+        verify_name: 金属镝
+      - id: '97'
+        mineral: 钕
+        name: 金属钕
+        verify_name: 金属钕
+      - id: '108'
+        mineral: 镨
+        name: 金属镨
+        verify_name: 金属镨
+      - id: '310'
+        mineral: 稀土
+        name: 镨钕合金
+        verify_name: 镨钕合金
+      - id: '711'
+        mineral: 稀土
+        name: 镨钕氧化物
+        verify_name: 镨钕氧化物
+      - id: '309'
+        mineral: 镝
+        name: 氧化镝
+        verify_name: 氧化镝
+      - id: '263'
+        mineral: 钕
+        name: 氧化钕
+        verify_name: 氧化钕
+      - id: '308'
+        mineral: 镨
+        name: 氧化镨
+        verify_name: 氧化镨
+      - id: '1239'
+        mineral: 锂
+        name: 氢氧化锂（公开参考口径）
+        verify_name: 氢氧化锂
   chinese_news:
   - name: 上海有色网
     url: https://news.smm.cn/

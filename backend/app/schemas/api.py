@@ -143,6 +143,8 @@ class PriceOut(ORMModel):
     product: str | None = None
     price_type: Literal["spot", "futures", "benchmark"] = "spot"
     source_url: str | None = None
+    fetched_at: datetime | None = None
+    source_name: str | None = None
 
 
 class PriceInput(BaseModel):
@@ -155,6 +157,7 @@ class PriceInput(BaseModel):
     product: str | None = Field(default=None, max_length=200)
     price_type: Literal["spot", "futures", "benchmark"] = "spot"
     source_url: HttpUrl | None = None
+    source_name: str | None = Field(default=None, max_length=200)
 
 
 class PolicyOut(ORMModel):

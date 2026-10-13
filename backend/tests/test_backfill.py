@@ -15,7 +15,37 @@ from app.rag.retriever import HybridRetriever
 from pipeline.fetchers.rss_fetcher import RSSFetcher
 from pipeline.import_backfill import validate_record
 from pipeline.processors.backfill import EditorialDocument, validate_editorial
+from pipeline.processors.translator import (
+    number_words,
+    numeric_translation_valid,
+    summary_measurements_valid,
+)
 from pipeline.schemas import RawArticle, SourceDefinition
+
+
+def test_spanish_evidence_preserves_counts_units_magnitudes_and_currency():
+    """Regional sources must pass faithful translations, never changed quantities."""
+    assert numeric_translation_valid(
+        "Cuatro nuevas plantas de litio", "4座新锂工厂", "es"
+    )
+    assert not numeric_translation_valid(
+        "Cuatro nuevas plantas de litio", "5座新锂工厂", "es"
+    )
+    assert not number_words("un proyecto y una compañía", "es")
+    assert not number_words("Once again, mining resumed", "en")
+    assert numeric_translation_valid("Once plantas", "11座工厂", "es-MX")
+    assert not numeric_translation_valid(
+        "Once again mining resumed", "矿山再次运营11次", "en"
+    )
+    assert summary_measurements_valid("rampa de 267 metros", "矿山连接巷道长267米")
+    assert summary_measurements_valid("3.4 millones de onzas", "3.4百万盎司")
+    assert summary_measurements_valid("dos toneladas", "2吨", "es")
+    assert not summary_measurements_valid("3.4 millones de onzas", "3.4十亿盎司")
+    assert not summary_measurements_valid("267 metros", "267千米")
+    assert summary_measurements_valid("7 dólares canadienses", "7加元")
+    assert not summary_measurements_valid("7 dólares canadienses", "7美元")
+    assert not summary_measurements_valid("7 dólares", "7美元")
+    assert not summary_measurements_valid("267 Metropolitan shares", "267米")
 
 
 def feed_response(url: str, links: list[str]) -> httpx.Response:

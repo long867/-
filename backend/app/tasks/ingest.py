@@ -8,10 +8,12 @@ from uuid import UUID, uuid4
 import redis
 import structlog
 from celery import Task
+from celery.result import AsyncResult
 from redis.lock import Lock
 from sqlalchemy import delete, func, or_, select, text
 from sqlalchemy.dialects.postgresql import insert
 
+from app.core import processing_queue
 from app.core.config import get_settings
 from app.core.db import SessionFactory
 from app.models import Article, ArticleChunk, PipelineRun, Policy, Source
@@ -190,7 +192,7 @@ async def ingest_source(
         if enqueue:
             for article_id in ids + upgraded_ids:
                 try:
-                    process_article.delay(str(article_id))
+                    enqueue_article(str(article_id))
                 except Exception as exc:
                     logger.warning(
                         "nlp_dispatch_deferred",
@@ -488,6 +490,19 @@ def process_article(self: Task, article_id: str) -> dict:
             logger.warning("processing_lock_expired", article_id=article_id)
 
 
+def enqueue_article(article_id: str) -> AsyncResult | None:
+    """Publish once while queued/retrying; roll back the lease on broker failure."""
+    article_id = str(UUID(article_id))
+    task_id = str(uuid4())
+    if not processing_queue.claim(article_id, task_id):
+        return None
+    try:
+        return process_article.apply_async(args=[article_id], task_id=task_id)
+    except Exception:
+        processing_queue.release(article_id, task_id)
+        raise
+
+
 @celery_app.task(name="miningintel.dispatch_sources")
 def dispatch_sources() -> int:
     """Respect each source's interval instead of fetching every source each minute."""
@@ -542,15 +557,17 @@ def recover_pending() -> int:
                             Article.status == "pending",
                             Article.processing_error.is_(None),
                         )
-                        .order_by(Article.fetched_at)
-                        .limit(100)
+                        .order_by(Article.fetched_at.desc(), Article.id)
+                        .limit(1000)
                     )
                 ).all()
             ]
 
     ids = asyncio.run(pending())
-    client = redis.Redis.from_url(get_settings().REDIS_URL)
+    queued = 0
     for article_id in ids:
-        if not client.exists(f"process:{article_id}"):
-            process_article.delay(article_id)
-    return len(ids)
+        if enqueue_article(article_id) is not None:
+            queued += 1
+            if queued >= 100:
+                break
+    return queued

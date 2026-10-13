@@ -51,18 +51,18 @@ def validate_editorial(
     if "{{MI_NUM_" in title + editorial.summary_zh:
         raise ValueError("Unresolved source evidence anchor")
     evidence = row.title + "\n" + row.content
-    if not numeric_translation_valid(row.title, title):
+    if not numeric_translation_valid(row.title, title, row.language):
         raise ValueError(
             "Translated title changed numeric evidence: "
             f"expected {dict(numbers(row.title))}, actual {dict(numbers(title))}"
         )
-    if not summary_measurements_valid(row.title, title):
+    if not summary_measurements_valid(row.title, title, row.language):
         raise ValueError("Translated title changed units")
     if set(numbers(editorial.summary_zh)) - set(
-        numbers(evidence) + number_words(evidence)
+        numbers(evidence) + number_words(evidence, row.language)
     ):
         raise ValueError("Summary contains unsupported numeric facts")
-    if not summary_measurements_valid(evidence, editorial.summary_zh):
+    if not summary_measurements_valid(evidence, editorial.summary_zh, row.language):
         raise ValueError("Summary changed units or currency")
     entities = extract_entities(evidence)
     for field in ("companies", "projects", "policies"):
@@ -118,9 +118,13 @@ async def enrich_editorial_batch(
     anchor_offset = 0
     for document in documents:
         row = document.article
-        title, title_anchors = mask_evidence(row.title, offset=anchor_offset)
+        title, title_anchors = mask_evidence(
+            row.title, offset=anchor_offset, language=row.language
+        )
         body, body_anchors = mask_evidence(
-            row.content[:5000], offset=anchor_offset + len(title_anchors)
+            row.content[:5000],
+            offset=anchor_offset + len(title_anchors),
+            language=row.language,
         )
         anchors = title_anchors | body_anchors
         anchor_offset += len(anchors)

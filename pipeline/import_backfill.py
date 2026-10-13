@@ -72,13 +72,15 @@ def validate_record(value: dict[str, Any]) -> tuple[SourceDefinition, RawArticle
         raise ValueError("Invalid category")
     title = enriched["title_zh"]
     evidence = article.title + "\n" + article.content
-    if not numeric_translation_valid(article.title, title):
+    if not numeric_translation_valid(article.title, title, article.language):
         raise ValueError("Reviewed title changed source numbers")
-    if not summary_measurements_valid(article.title, title):
+    if not summary_measurements_valid(article.title, title, article.language):
         raise ValueError("Reviewed title changed source units")
-    if set(numbers(summary)) - set(numbers(evidence) + number_words(evidence)):
+    if set(numbers(summary)) - set(
+        numbers(evidence) + number_words(evidence, article.language)
+    ):
         raise ValueError("Reviewed summary contains unsupported numbers")
-    if not summary_measurements_valid(evidence, summary):
+    if not summary_measurements_valid(evidence, summary, article.language):
         raise ValueError("Reviewed summary changed source units")
     extracted = extract_entities(evidence)
     for field in ("minerals", "regions"):

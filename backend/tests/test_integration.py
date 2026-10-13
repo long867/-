@@ -311,12 +311,12 @@ async def test_admin_can_reprocess_reviewed_article_but_must_withdraw_published(
     from fastapi import HTTPException
 
     from app.api.routes import retry_article
-    from app.tasks.ingest import process_article
+    from app.tasks import ingest
 
     article = await make_article(db, "processed")
     monkeypatch.setattr(db, "commit", AsyncMock())
     monkeypatch.setattr(
-        process_article, "delay", lambda *_: SimpleNamespace(id="fixture-job")
+        ingest, "enqueue_article", lambda *_: SimpleNamespace(id="fixture-job")
     )
     result = await retry_article(article.id, db, SimpleNamespace(is_admin=True))
     assert article.status == "pending" and result["task_id"] == "fixture-job"
@@ -355,7 +355,7 @@ async def test_source_replay_does_not_duplicate_articles(monkeypatch) -> None:
         etag='"v2"',
     )
     monkeypatch.setattr(module, "collect", AsyncMock(return_value=batch))
-    monkeypatch.setattr(module.process_article, "delay", lambda *_: None)
+    monkeypatch.setattr(module, "enqueue_article", lambda *_: None)
     try:
         first = await module.ingest_source(source_id, "job1")
         second = await module.ingest_source(source_id, "job2")

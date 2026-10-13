@@ -57,26 +57,44 @@ def numbers(text: str) -> Counter[str]:
     return result
 
 
-def number_words(text: str) -> Counter[str]:
-    """Recognize explicit English counts without interpreting dates or arithmetic."""
-    vocabulary = (
-        "zero one two three four five six seven eight nine ten eleven twelve "
-        "thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty"
-    ).split()
-    values = {
-        word: str(Decimal(index).normalize()) for index, word in enumerate(vocabulary)
+NUMBER_WORD_VALUES = {
+    language: {
+        word: str(Decimal(index).normalize())
+        for index, word in enumerate(vocabulary.split())
     }
+    for language, vocabulary in {
+        "en": "zero one two three four five six seven eight nine ten eleven twelve "
+        "thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty",
+        "es": "cero uno dos tres cuatro cinco seis siete ocho nueve diez once doce "
+        "trece catorce quince dieciséis diecisiete dieciocho diecinueve veinte",
+    }.items()
+}
+NUMBER_WORD_VALUES["es"]["dieciseis"] = NUMBER_WORD_VALUES["es"]["dieciséis"]
+
+
+def number_word_values(language: str) -> dict[str, str]:
+    """Keep languages separate: English 'once' does not mean Spanish eleven."""
+    return NUMBER_WORD_VALUES.get(language.lower().replace("_", "-").split("-")[0], {})
+
+
+def number_words(text: str, language: str = "en") -> Counter[str]:
+    """Recognize explicit English/Spanish counts, excluding indefinite un/una."""
+    values = number_word_values(language)
+    if not values:
+        return Counter()
     return Counter(
         values[match.group().lower()]
-        for match in re.finditer(r"\b(?:" + "|".join(vocabulary) + r")\b", text, re.I)
+        for match in re.finditer(r"\b(?:" + "|".join(values) + r")\b", text, re.I)
     )
 
 
-def numeric_translation_valid(original: str, translated: str) -> bool:
+def numeric_translation_valid(
+    original: str, translated: str, language: str = "en"
+) -> bool:
     """Keep all numeric literals; permit exact source word counts such as five→5."""
     expected, actual = numbers(original), numbers(translated)
     return not (expected - actual) and not (
-        (actual - expected) - number_words(original)
+        (actual - expected) - number_words(original, language)
     )
 
 
@@ -173,28 +191,43 @@ UNIT_ALIASES = {
     "美元/吨": "USD/吨",
     "人民币/吨": "CNY/吨",
     "加元/吨": "CAD/吨",
+    "por ciento": "%",
+    "metros": "米",
+    "metro": "米",
+    "kilómetros": "千米",
+    "kilometros": "千米",
+    "toneladas": "吨",
+    "tonelada": "吨",
+    "onzas": "盎司",
+    "onza": "盎司",
+    "libras": "磅",
+    "gramos por tonelada": "g/t",
+    "hectáreas": "公顷",
+    "hectareas": "公顷",
+    "millones": "million",
+    "millón": "million",
+    "millon": "million",
+    "dólares estadounidenses": "USD",
+    "dólares canadienses": "CAD",
+    "dólares australianos": "AUD",
+    "dólares": "dollars",
+    "dolares": "dollars",
+    "euros": "EUR",
+    "años": "年",
+    "año": "年",
+    "semanas": "周",
+    "semana": "周",
 }
 UNIT_PATTERN = "|".join(
-    re.escape(unit) for unit in sorted(UNIT_ALIASES, key=len, reverse=True)
+    re.escape(unit)
+    + (r"(?![A-Za-zÀ-ÖØ-öø-ÿ])" if re.search(r"[A-Za-zÀ-ÖØ-öø-ÿ]$", unit) else "")
+    for unit in sorted(UNIT_ALIASES, key=len, reverse=True)
 )
 MEASUREMENT = re.compile(
     rf"(?P<currency>US\$|C\$|A\$|USD\s*|CAD\s*|AUD\s*|CNY\s*|GBP\s*|EUR\s*|[$€£¥￥])?"
     rf"(?P<number>{NUMBER})(?P<unit>\s*[-–]?\s*(?:{UNIT_PATTERN}))?"
     r"(?P<suffix>\s*(?:美元|加元|澳元|人民币|英镑|欧元|USD\b|CAD\b|AUD\b|CNY\b|GBP\b|EUR\b))?",
     re.I,
-)
-WORDS_ZH = dict(
-    zip(
-        (
-            "zero one two three four five six seven eight nine ten eleven twelve "
-            "thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty"
-        ).split(),
-        (
-            "零 一 二 三 四 五 六 七 八 九 十 十一 十二 十三 十四 十五 十六 "
-            "十七 十八 十九 二十"
-        ).split(),
-        strict=True,
-    )
 )
 
 
@@ -231,7 +264,9 @@ def measurements(text: str) -> Counter[tuple[str, str, str]]:
     return result
 
 
-def summary_measurements_valid(original: str, summary: str) -> bool:
+def summary_measurements_valid(
+    original: str, summary: str, language: str = "en"
+) -> bool:
     """Reject invented unit associations; permit explicit calendar-year labeling."""
     if re.search(
         rf"{NUMBER}\s*(?:million|billion|thousand|百万|十亿)\s*(?:亿|万|百万|千万|十亿)",
@@ -241,12 +276,17 @@ def summary_measurements_valid(original: str, summary: str) -> bool:
         return False
     available = measurements(original)
     for match in re.finditer(
-        r"\b(" + "|".join(WORDS_ZH) + r")\s*[-–]?\s*(" + UNIT_PATTERN + r")\b",
+        r"\b("
+        + ("|".join(number_word_values(language)) or r"(?!)")
+        + r")\s*[-–]?\s*("
+        + UNIT_PATTERN
+        + r")\b",
         original,
         re.I,
     ):
-        value = next(iter(number_words(match.group(1))))
-        available.update(measurements(value + " " + match.group(2)))
+        values = number_words(match.group(1), language)
+        if values:
+            available.update(measurements(next(iter(values)) + " " + match.group(2)))
     actual = measurements(summary)
     for value, currency, unit in actual:
         if unit == "年" and not currency and 1900 <= Decimal(value) <= 2100:
@@ -257,7 +297,9 @@ def summary_measurements_valid(original: str, summary: str) -> bool:
     return True
 
 
-def mask_evidence(text: str, *, offset: int = 0) -> tuple[str, dict[str, str]]:
+def mask_evidence(
+    text: str, *, offset: int = 0, language: str = "en"
+) -> tuple[str, dict[str, str]]:
     """Protect measurements and calendar dates as atomic anchors."""
     if "{{MI_NUM_" in text:
         raise ValueError("Reserved numeric placeholder in original evidence")
@@ -280,7 +322,11 @@ def mask_evidence(text: str, *, offset: int = 0) -> tuple[str, dict[str, str]]:
     masked = re.sub(date_pattern, lambda match: anchor(match.group()), text, flags=re.I)
     masked = MEASUREMENT.sub(lambda match: anchor(match.group()), masked)
     masked = re.sub(
-        r"\b(?:" + "|".join(WORDS_ZH) + r")\s*[-–]?\s*(?:" + UNIT_PATTERN + r")\b",
+        r"\b(?:"
+        + ("|".join(number_word_values(language)) or r"(?!)")
+        + r")\s*[-–]?\s*(?:"
+        + UNIT_PATTERN
+        + r")\b",
         lambda match: anchor(match.group()),
         masked,
         flags=re.I,
@@ -290,9 +336,11 @@ def mask_evidence(text: str, *, offset: int = 0) -> tuple[str, dict[str, str]]:
     return masked, literals
 
 
-async def translate_fragment(part: str, terms: str, *, subdivide: bool = True) -> str:
+async def translate_fragment(
+    part: str, terms: str, *, subdivide: bool = True, language: str = "en"
+) -> str:
     """Retry invalid anchors, then isolate short spans instead of relaxing checks."""
-    masked, literals = mask_evidence(part)
+    masked, literals = mask_evidence(part, language=language)
     data: dict[str, Any] = {
         "text": masked,
         "preserve_placeholders": list(literals),
@@ -322,12 +370,12 @@ async def translate_fragment(part: str, terms: str, *, subdivide: bool = True) -
             # numeric AND unit match; partially restored anchors are never accepted.
             anchors_valid = tokens == expected or (
                 not tokens
-                and numeric_translation_valid(part, value)
+                and numeric_translation_valid(part, value, language)
                 and measurements(part) == measurements(value)
             )
             if (
                 anchors_valid
-                and numeric_translation_valid(part, restored)
+                and numeric_translation_valid(part, restored, language)
                 and (tokens == expected or measurements(part) == measurements(restored))
                 and re.search(r"[\u3400-\u9fff]", restored)
             ):
@@ -336,7 +384,7 @@ async def translate_fragment(part: str, terms: str, *, subdivide: bool = True) -
                 "missing_placeholders": list((expected - tokens).elements()),
                 "unexpected_placeholders": list((tokens - expected).elements()),
                 "unexpected_numeric_counts": dict(
-                    (numbers(restored) - numbers(part)) - number_words(part)
+                    (numbers(restored) - numbers(part)) - number_words(part, language)
                 ),
                 "correction": "完整复制原文全部占位符，不添加数字，"
                 "不改变百分比、币种或单位。",
@@ -346,7 +394,9 @@ async def translate_fragment(part: str, terms: str, *, subdivide: bool = True) -
         pieces = split_translation(part, 500)
         return "\n".join(
             [
-                await translate_fragment(piece, terms, subdivide=False)
+                await translate_fragment(
+                    piece, terms, subdivide=False, language=language
+                )
                 for piece in pieces
             ]
         )
@@ -420,9 +470,9 @@ async def translate(title: str, content: str, language: str) -> dict[str, Any]:
         '返回顶层JSON {"title_zh":"中文标题","summary":"原文语言摘要",'
         '"summary_zh":"100至200字符的中文摘要"}，不要其他字段。术语表：' + terms
     )
-    protected_title, title_anchors = mask_evidence(title)
+    protected_title, title_anchors = mask_evidence(title, language=language)
     protected_content, content_anchors = mask_evidence(
-        content[:24000], offset=len(title_anchors)
+        content[:24000], offset=len(title_anchors), language=language
     )
     summary_anchors = title_anchors | content_anchors
     data: dict[str, Any] = {
@@ -473,14 +523,18 @@ async def translate(title: str, content: str, language: str) -> dict[str, Any]:
             summary = EditorialSummary.model_validate(candidate)
             if any("{{MI_NUM_" in text for text in summary.model_dump().values()):
                 raise ValueError("Unresolved numeric evidence anchor")
-            supported = numbers(title + content) + number_words(title + content)
+            supported = numbers(title + content) + number_words(
+                title + content, language
+            )
             if set(numbers(summary.summary_zh)) - set(supported):
                 raise ValueError("Summary contains unsupported numeric facts")
-            if not summary_measurements_valid(title + content, summary.summary_zh):
+            if not summary_measurements_valid(
+                title + content, summary.summary_zh, language
+            ):
                 raise ValueError("Summary changed numeric units or currencies")
-            if not numeric_translation_valid(title, summary.title_zh):
+            if not numeric_translation_valid(title, summary.title_zh, language):
                 raise ValueError("Translated title changed numeric evidence")
-            if not summary_measurements_valid(title, summary.title_zh):
+            if not summary_measurements_valid(title, summary.title_zh, language):
                 raise ValueError("Translated title changed numeric units")
             result.update(summary.model_dump())
             if not chinese and re.search(r"[\u3400-\u9fff]", result["summary"]):
@@ -516,8 +570,8 @@ async def translate(title: str, content: str, language: str) -> dict[str, Any]:
                 item["loc"] == ("summary_zh",) and item["type"] == "missing"
                 for item in error.errors()
             )
-            and numeric_translation_valid(title, candidate["title_zh"])
-            and summary_measurements_valid(title, candidate["title_zh"])
+            and numeric_translation_valid(title, candidate["title_zh"], language)
+            and summary_measurements_valid(title, candidate["title_zh"], language)
             and "{{MI_NUM_" not in candidate["title_zh"]
         ):
             # Preserve provenance: this fallback is visibly an extract, not
@@ -531,13 +585,15 @@ async def translate(title: str, content: str, language: str) -> dict[str, Any]:
     if chinese:
         return result
     translated = [
-        await translate_fragment(part, terms)
+        await translate_fragment(part, terms, language=language)
         for part in split_translation(content, get_settings().TRANSLATION_CHUNK_SIZE)
     ]
     result["content_zh"] = "\n".join(translated)
     if use_excerpt:
         result["summary_zh"] = translated_excerpt(result["content_zh"])
-        if not summary_measurements_valid(title + content, result["summary_zh"]):
+        if not summary_measurements_valid(
+            title + content, result["summary_zh"], language
+        ):
             raise ValueError("Translated excerpt changed numeric units")
     result["is_translated"] = True
     return result

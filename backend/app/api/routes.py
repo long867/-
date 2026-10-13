@@ -1,5 +1,6 @@
 """Versioned API for intelligence, users, consultations and operations."""
 
+import asyncio
 from datetime import datetime
 from typing import Annotated, Literal
 from uuid import UUID
@@ -526,7 +527,7 @@ async def review_article(
 @router.post("/admin/articles/{article_id}/retry", status_code=202, tags=["admin"])
 async def retry_article(article_id: UUID, db: DB, user: AdminUser) -> dict:
     """Requeue unpublished articles after committing the pending state."""
-    from app.tasks.ingest import process_article
+    from app.tasks.ingest import enqueue_article
 
     item = await db.get(Article, article_id, with_for_update=True)
     if item is None:
@@ -536,8 +537,8 @@ async def retry_article(article_id: UUID, db: DB, user: AdminUser) -> dict:
     item.status = "pending"
     item.processing_error = None
     await db.commit()
-    job = process_article.delay(str(article_id))
-    return {"task_id": job.id, "status": "queued"}
+    job = await asyncio.to_thread(enqueue_article, str(article_id))
+    return {"task_id": job.id if job is not None else None, "status": "queued"}
 
 
 @router.get("/admin/runs", response_model=list[RunOut], tags=["admin"])

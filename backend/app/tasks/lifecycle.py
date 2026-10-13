@@ -2,8 +2,10 @@
 
 import time
 
+import redis
 from celery import signals
 
+from app.core import processing_queue
 from app.core.task_history import record
 from pipeline.metrics import TASK_DURATION, TASKS
 
@@ -42,7 +44,7 @@ def retrying(sender=None, request=None, reason=None, **kwargs) -> None:
 
 
 @signals.task_postrun.connect
-def completed(sender=None, task_id=None, state=None, **kwargs) -> None:
+def completed(sender=None, task_id=None, state=None, args=None, **kwargs) -> None:
     """Track each attempt; preserve the dedicated retry signal's error metadata."""
     duration = max(
         0, time.monotonic() - getattr(sender.request, "ops_start", time.monotonic())
@@ -52,6 +54,20 @@ def completed(sender=None, task_id=None, state=None, **kwargs) -> None:
         TASK_DURATION.labels(sender.name).observe(duration)
     if state != "RETRY":
         record(task_id, sender.name, state, duration_seconds=round(duration, 3))
+    if state in {"SUCCESS", "FAILURE", "REVOKED"}:
+        release_processing_lease(sender.name, task_id, args)
+
+
+def release_processing_lease(name: str, task_id: str, args: list | None) -> None:
+    """Keep leases across retries; history/cache outages do not fail a task."""
+    if name != "miningintel.process_article" or not args or len(args) != 1:
+        return
+    try:
+        processing_queue.release(str(args[0]), task_id)
+    except (redis.RedisError, ValueError):
+        import structlog
+
+        structlog.get_logger().warning("processing_lease_release_deferred")
 
 
 @signals.task_failure.connect
@@ -65,6 +81,7 @@ def revoked(request=None, **kwargs) -> None:
     """Expose cancellations and expired jobs as terminal states."""
     if request:
         record(request.id, request.name, "REVOKED")
+        release_processing_lease(request.name, request.id, request.args)
 
 
 @signals.worker_process_shutdown.connect

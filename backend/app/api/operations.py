@@ -99,12 +99,13 @@ async def batch(payload: BatchReview, db: DB, user: AdminUser) -> BatchResult:
     tasks = []
     deferred = False
     if payload.action == "reprocess":
-        from app.tasks.ingest import process_article
+        from app.tasks.ingest import enqueue_article
 
         for article_id in ids:
             try:
-                task = await asyncio.to_thread(process_article.delay, str(article_id))
-                tasks.append(task.id)
+                task = await asyncio.to_thread(enqueue_article, str(article_id))
+                if task is not None:
+                    tasks.append(task.id)
             except Exception:
                 # Durable pending state is recovered by the 15-minute scanner.
                 deferred = True

@@ -257,8 +257,15 @@ class ChatOut(BaseModel):
     answer: str
     sources: list[Citation]
     mode: Literal[
-        "grounded", "analytical", "general", "extractive", "insufficient", "identity"
+        "grounded",
+        "analytical",
+        "general",
+        "extractive",
+        "insufficient",
+        "identity",
+        "clarification",
     ]
+    followups: list[str] = Field(default_factory=list, max_length=3)
 
 
 class ChatMessageOut(ORMModel):
@@ -269,6 +276,14 @@ class ChatMessageOut(ORMModel):
     sources_json: list[dict[str, Any]]
     mode: str
     created_at: datetime
+
+    @computed_field
+    @property
+    def followups(self) -> list[str]:
+        """Keep persisted history as interactive as the current SSE answer."""
+        from app.rag.conversation_context import next_questions
+
+        return next_questions(self.question, self.mode)
 
 
 class ChatSessionOut(ORMModel):

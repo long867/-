@@ -323,6 +323,9 @@ class ChatSession(Identity, Created, Base):
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
     title: Mapped[str] = mapped_column(String(200), default="新咨询")
+    context_json: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, default=dict, server_default=text("'{}'::jsonb")
+    )
 
 
 class ChatMessage(Identity, Created, Base):

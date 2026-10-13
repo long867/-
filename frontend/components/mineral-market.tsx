@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowUpRight,
@@ -143,7 +143,6 @@ function MineralCard({ item }: { item: MineralMarketItem }) {
 }
 
 export function MineralMarketPage({ initial }: { initial?: MineralMarket }) {
-  const router = useRouter();
   const params = useSearchParams();
   const search = params.get("q") || "";
   const group = params.get("group") || "全部";
@@ -158,13 +157,16 @@ export function MineralMarketPage({ initial }: { initial?: MineralMarket }) {
     refetchInterval: 300000,
   });
   function update(values: Record<string, string>) {
-    const next = new URLSearchParams(params.toString());
+    const next = new URLSearchParams(window.location.search);
     Object.entries(values).forEach(([key, value]) =>
       value ? next.set(key, value) : next.delete(key),
     );
-    router.replace(`/minerals${next.size ? `?${next}` : ""}`, {
-      scroll: false,
-    });
+    // Next.js integrates native history with useSearchParams without an RSC request.
+    window.history.replaceState(
+      null,
+      "",
+      `/minerals${next.size ? `?${next}` : ""}`,
+    );
   }
   const data = query.data;
   const groups = [

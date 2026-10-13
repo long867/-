@@ -1466,6 +1466,53 @@ select {
 }
 
 /* Public daily market: real product quotes, readable numbers and compact mobile cards. */
+.chat-context {
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 12px 16px;
+}
+.chat-context summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+.chat-context summary svg {
+  flex-shrink: 0;
+}
+.chat-context-body {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.8;
+  padding: 10px 0 4px;
+}
+.chat-context-body p {
+  margin-bottom: 8px;
+}
+.chat-followups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.chat-followups button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--accent);
+  border-radius: 9px;
+  font-size: 13px;
+  padding: 10px 12px;
+  text-align: left;
+  line-height: 1.6;
+}
+.chat-followups button:hover {
+  border-color: var(--accent);
+}
 .market-summary {
   display: grid;
   grid-template-columns: repeat(3, 1fr) 1.5fr;

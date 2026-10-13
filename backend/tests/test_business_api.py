@@ -1,8 +1,10 @@
 """Real PostgreSQL business contracts, ownership and Redis cache behavior."""
 
+import json
 import os
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+from unittest.mock import AsyncMock
 from uuid import uuid4
 
 import pytest
@@ -13,12 +15,15 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
 from app.core.cache import invalidate_public_cache
+from app.core.config import Settings
 from app.core.db import get_db
 from app.core.security import create_token, hash_password
 from app.main import app
 from app.models import (
     APIKey,
     Article,
+    ChatMessage,
+    ChatSession,
     Event,
     Policy,
     PriceRecord,
@@ -555,3 +560,87 @@ async def test_source_forms_crud_and_duplicate_address(business, monkeypatch):
     finally:
         async with business["factory"].begin() as db:
             await db.execute(delete(Source).where(Source.url == values["url"]))
+
+
+async def test_chat_memory_survives_prompt_window_and_is_private_and_clearable(
+    business, monkeypatch
+):
+    import app.rag.qa_chain as qa
+    from app.rag.retriever import HybridRetriever
+
+    session_id = uuid4()
+    now = datetime.now(UTC)
+    async with business["factory"].begin() as db:
+        db.add(
+            ChatSession(
+                id=session_id, user_id=business["user_id"], title="CONTEXT TEST FIXTURE"
+            )
+        )
+        await db.flush()
+        for index in range(7):
+            db.add(
+                ChatMessage(
+                    session_id=session_id,
+                    question="我负责澳大利亚铜采购，我们库存20吨。"
+                    if index == 0
+                    else "解释资源量与储量的区别",
+                    answer="TEST FIXTURE",
+                    mode="general",
+                    created_at=now - timedelta(minutes=8 - index),
+                )
+            )
+    generator = AsyncMock(
+        return_value={
+            "blocks": [
+                {
+                    "kind": "advice",
+                    "text": (
+                        "先核对你提到的20吨库存是否可用，再确认交期与供应商报价口径。"
+                    ),
+                }
+            ]
+        }
+    )
+    monkeypatch.setattr(qa, "complete_json", generator)
+    monkeypatch.setattr(
+        qa, "get_settings", lambda: Settings(LLM_API_KEY="fixture", _env_file=None)
+    )
+    monkeypatch.setattr(HybridRetriever, "_aretrieve", AsyncMock(return_value=[]))
+    response = await business["client"].post(
+        "/api/chat",
+        json={"question": "那下一步怎么做？", "session_id": str(session_id)},
+        headers=business["headers"],
+    )
+    assert response.status_code == 200, response.text
+    assert response.json()["followups"] and "20吨" in response.json()["answer"]
+    prompt = json.loads(generator.await_args.args[1])
+    assert len(prompt["history"]) == 5 and prompt["customer_context"]["role"] == "采购"
+    assert prompt["customer_context"]["minerals"] == ["铜"]
+    url = f"/api/chat/session/{session_id}/context"
+    data = (await business["client"].get(url, headers=business["headers"])).json()
+    assert data["regions"] == ["澳大利亚"] and data["minerals"] == ["铜"]
+    assert (
+        await business["client"].get(url, headers=business["other_headers"])
+    ).status_code == 404
+    assert (
+        await business["client"].delete(url, headers=business["other_headers"])
+    ).status_code == 404
+    cleared = await business["client"].delete(url, headers=business["headers"])
+    assert cleared.status_code == 200 and cleared.json()["minerals"] == []
+    before = generator.await_count
+    ambiguous = await business["client"].post(
+        "/api/chat",
+        json={"question": "现在价格怎么样？", "session_id": str(session_id)},
+        headers=business["headers"],
+    )
+    assert (
+        ambiguous.json()["mode"] == "clarification"
+        and ambiguous.json()["sources"] == []
+    )
+    assert generator.await_count == before
+    history = (
+        await business["client"].get(
+            f"/api/chat/history/{session_id}", headers=business["headers"]
+        )
+    ).json()
+    assert len(history) == 9

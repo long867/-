@@ -86,7 +86,7 @@ def parse_ppi_quotes(html: str, page_url: str) -> list[tuple[dict, str, str, dat
         }
         notes = "\n".join(
             p.get_text(" ", strip=True)
-            for p in soup.select("p")
+            for p in soup.select("p, span")
             if "湿吨" in p.get_text() or "一级冶金焦" in p.get_text()
         )
         evidence = (

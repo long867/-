@@ -1,5 +1,6 @@
 """Deterministic editorial processing of verified, already-Chinese spot quotes."""
 
+import re
 from datetime import datetime
 from typing import Any
 
@@ -18,11 +19,16 @@ def process_price(
     """Keep the observed value, commodity scope, source date and unit intact."""
     quote = PriceInput.model_validate(raw_json["price_observation"])
     literal = str(raw_json["price_observation"]["price"])
+    unit_verified = "元/" + quote.unit in content or (
+        quote.unit == "湿吨"
+        and "其余元/吨" in content
+        and bool(re.search(r"铁矿石[^。]*现货[^。]*湿吨", content))
+    )
     if (
         literal not in content
         or quote.price_type not in {"spot", "benchmark"}
         or quote.currency != "CNY"
-        or "元/" + quote.unit not in content
+        or not unit_verified
     ):
         raise ValueError("Price metadata does not match verified public evidence")
     kind = "现货价格" if quote.price_type == "spot" else "公开参考价"

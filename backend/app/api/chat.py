@@ -3,6 +3,7 @@
 import asyncio
 import json
 from collections.abc import AsyncIterator
+from datetime import UTC, datetime
 from uuid import UUID
 
 import structlog
@@ -13,6 +14,7 @@ from sqlalchemy import select, text
 from app.api.deps import DB, CurrentUser
 from app.core.observability import consultation
 from app.models import ChatMessage, ChatSession
+from app.rag.conversation_context import ConversationContext
 from app.rag.localization import localized_history
 from app.rag.qa_chain import answer_question
 from app.schemas.api import ChatInput, ChatMessageOut, ChatOut, ChatSessionOut
@@ -84,6 +86,36 @@ async def delete_session(session_id: UUID, db: DB, user: CurrentUser) -> Respons
     await db.delete(item)
     await db.commit()
     return Response(status_code=204)
+
+
+@router.get("/session/{session_id}/context", response_model=ConversationContext)
+async def session_context(
+    session_id: UUID, db: DB, user: CurrentUser
+) -> ConversationContext:
+    """Expose only the authenticated user's structured business context."""
+    item = await owned_session(session_id, db, user)
+    return ConversationContext.model_validate(item.context_json.get("memory", {}))
+
+
+@router.delete("/session/{session_id}/context", response_model=ConversationContext)
+async def clear_context(
+    session_id: UUID, db: DB, user: CurrentUser
+) -> ConversationContext:
+    """Forget prior context and prompt history while keeping visible message records."""
+    await owned_session(session_id, db, user)
+    await db.execute(
+        text("SELECT pg_advisory_xact_lock(hashtext(:key))"), {"key": str(session_id)}
+    )
+    item = await db.get(ChatSession, session_id, populate_existing=True)
+    if item is None or item.user_id != user.id:
+        raise HTTPException(404, "会话不存在")
+    empty = ConversationContext()
+    item.context_json = {
+        "memory": empty.model_dump(mode="json"),
+        "cleared_at": datetime.now(UTC).isoformat(),
+    }
+    await db.commit()
+    return empty
 
 
 def sse(event: str, data: dict) -> str:

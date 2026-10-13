@@ -219,7 +219,9 @@ export interface ChatAnswer {
     | "general"
     | "extractive"
     | "insufficient"
-    | "identity";
+    | "identity"
+    | "clarification";
+  followups?: string[];
 }
 export interface ChatMessage {
   id: string;
@@ -228,12 +230,24 @@ export interface ChatMessage {
   answer: string;
   sources_json: Citation[];
   mode: ChatAnswer["mode"];
+  followups?: string[];
   created_at: string;
 }
 export interface Session {
   id: string;
   title: string;
   created_at: string;
+}
+export interface ConversationContext {
+  minerals: string[];
+  regions: string[];
+  products: string[];
+  role: string | null;
+  purpose: string | null;
+  style: "normal" | "concise" | "detailed";
+  scenarios: string[];
+  focus_year: number | null;
+  updated_at: string | null;
 }
 export interface Subscription {
   id: string;

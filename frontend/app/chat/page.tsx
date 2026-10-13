@@ -3,13 +3,19 @@ import Link from "next/link";
 import { usePreferences } from "@/hooks/use-preferences";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Send, Plus, Trash2 } from "lucide-react";
+import { Send, Plus, Trash2, BrainCircuit } from "lucide-react";
 import { api } from "@/lib/api";
 import { streamChat } from "@/lib/chat-stream";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { ChatAnswerBody } from "@/components/chat-answer";
-import type { ChatAnswer, ChatMessage, Citation, Session } from "@/types";
+import type {
+  ChatAnswer,
+  ChatMessage,
+  Citation,
+  Session,
+  ConversationContext,
+} from "@/types";
 import { AGENT_NAME } from "@/lib/branding";
 
 type Pending = {
@@ -19,6 +25,7 @@ type Pending = {
   phase: string;
 };
 const phases: Record<string, string> = {
+  understanding: "正在理解问题与会话背景…",
   retrieving: "正在检索证据…",
   answering: "正在分析原因、影响和应对建议…",
   saving: "正在保存会话…",
@@ -94,6 +101,9 @@ export default function Chat() {
       client.invalidateQueries({
         queryKey: ["chat-history", auth.user?.id, result.session_id],
       });
+      client.invalidateQueries({
+        queryKey: ["chat-context", auth.user?.id, result.session_id],
+      });
     },
     onError: () => {
       setPending(undefined);
@@ -115,6 +125,26 @@ export default function Chat() {
       mutation.reset();
       client.invalidateQueries({ queryKey: ["sessions", auth.user?.id] });
     },
+  });
+  const context = useQuery({
+    queryKey: ["chat-context", auth.user?.id, sessionId],
+    queryFn: () =>
+      api<ConversationContext>(
+        `/chat/session/${sessionId}/context`,
+        {},
+        auth.token,
+      ),
+    enabled: !!auth.token && !!sessionId,
+  });
+  const forgetting = useMutation({
+    mutationFn: () =>
+      api<ConversationContext>(
+        `/chat/session/${sessionId}/context`,
+        { method: "DELETE" },
+        auth.token,
+      ),
+    onSuccess: (value) =>
+      client.setQueryData(["chat-context", auth.user?.id, sessionId], value),
   });
   if (!auth.user)
     return (
@@ -144,6 +174,7 @@ export default function Chat() {
       answer: item.answer,
       sources: item.sources_json,
       mode: item.mode,
+      followups: item.followups,
     } as ChatAnswer,
   }));
   const merged = [
@@ -154,7 +185,7 @@ export default function Chat() {
         !stored.some((row) => row.result.message_id === item.result.message_id),
     ),
   ];
-  const busy = mutation.isPending || deletion.isPending;
+  const busy = mutation.isPending || deletion.isPending || forgetting.isPending;
   return (
     <main className="small-page chat-workspace">
       <div className="eyebrow">EVIDENCE-BASED CONSULTATION</div>
@@ -174,6 +205,47 @@ export default function Chat() {
           {t("新会话", "New conversation")}
         </Button>
       </div>
+      {sessionId &&
+        context.data &&
+        (context.data.minerals.length > 0 ||
+          context.data.role ||
+          context.data.scenarios.length > 0) && (
+          <details className="chat-context">
+            <summary>
+              <BrainCircuit size={16} />
+              <span>
+                已了解：
+                {[
+                  context.data.role,
+                  ...context.data.minerals,
+                  ...context.data.products,
+                  ...context.data.regions,
+                ]
+                  .filter(Boolean)
+                  .join(" · ") || "本次业务场景"}
+              </span>
+            </summary>
+            <div className="chat-context-body">
+              <p>仅用于当前会话；这些内容来自你的描述，不作为市场事实证据。</p>
+              {context.data.scenarios.map((text, index) => (
+                <p key={index}>{text}</p>
+              ))}
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => forgetting.mutate()}
+                className="source-link"
+              >
+                清除当前记忆，保留聊天记录
+              </button>
+            </div>
+          </details>
+        )}
+      {forgetting.isError && (
+        <p role="alert" className="text-red-500">
+          {forgetting.error.message}
+        </p>
+      )}
       <p className="subtitle mb-6">
         {t(
           "把问题讲给矿眸智探：分析为什么、会有什么影响，以及下一步怎么做。关键事实附来源，可继续追问。",
@@ -308,8 +380,29 @@ export default function Chat() {
                           "矿眸智探 · 智能体介绍",
                           "矿眸智探 · About the assistant",
                         )
-                      : t("证据不足", "Insufficient evidence")}
+                      : item.result.mode === "clarification"
+                        ? t(
+                            "先确认一个关键条件，再继续分析",
+                            "Clarify one essential condition",
+                          )
+                        : t("证据不足", "Insufficient evidence")}
           </p>
+          {item === merged[merged.length - 1] &&
+            !pending &&
+            !!item.result.followups?.length && (
+              <div className="chat-followups" aria-label="继续追问">
+                {item.result.followups.map((text) => (
+                  <button
+                    key={text}
+                    disabled={busy}
+                    type="button"
+                    onClick={() => setQuestion(text)}
+                  >
+                    {text} ↗
+                  </button>
+                ))}
+              </div>
+            )}
         </article>
       ))}
       {pending && (
@@ -327,6 +420,7 @@ export default function Chat() {
                 phases[pending.phase] || "正在处理…",
                 (
                   {
+                    understanding: "Understanding your question and context…",
                     retrieving: "Retrieving evidence…",
                     answering: "Analyzing causes, implications and actions…",
                     saving: "Saving conversation…",

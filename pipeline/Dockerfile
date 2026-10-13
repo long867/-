@@ -4,10 +4,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PYTHONPATH=/workspace:/workspac
 WORKDIR /workspace/backend
 COPY backend/pyproject.toml backend/requirements.lock ./
 RUN pip install --no-cache-dir -r requirements.lock
+RUN playwright install --with-deps chromium
 COPY backend/app ./app
 RUN pip install --no-cache-dir --no-deps .
 RUN if [ "$INSTALL_ML" = "true" ]; then pip install --no-cache-dir '.[ml]'; fi
-RUN playwright install --with-deps chromium
 COPY backend/alembic ./alembic
 COPY backend/alembic.ini ./
 COPY pipeline /workspace/pipeline

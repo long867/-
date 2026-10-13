@@ -97,6 +97,20 @@ def test_spot_products_preserve_gold_silver_and_wet_ore_units():
     assert [q["unit"] for q in quotes] == ["克", "千克", "湿吨", "吨"]
     assert all(Decimal(q["price"]) != 999 for q in quotes)
     assert quotes[-1]["source"].endswith("1162.html#spot")
+    wet_quote, wet_evidence, _, published = next(
+        item
+        for item in parse_ppi_quotes(html, "https://example.com/table")
+        if item[0]["mineral"] == "铁矿石"
+    )
+    processed = process_price(
+        "铁矿石报价",
+        wet_evidence,
+        {"price_observation": wet_quote},
+        8,
+        published,
+        "中国",
+    )
+    assert "元/湿吨" in processed["summary_zh"]
     without_wet_note = html.replace("铁矿石现货为湿吨，期货为干吨。", "未知口径")
     assert "铁矿石" not in {
         item[0]["mineral"]

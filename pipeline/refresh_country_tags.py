@@ -12,13 +12,17 @@ from app.models import Article, Event
 from pipeline.processors.entities import extract_regions
 
 
-async def refresh(*, dry_run: bool = False) -> dict[str, int]:
+async def refresh(
+    *, dry_run: bool = False, published_only: bool = False
+) -> dict[str, int]:
     """Read at most fifty articles per batch and reconcile existing event tags."""
     counts: Counter[str] = Counter()
     after = None
     while True:
         async with SessionFactory.begin() as db:
             statement = select(Article).order_by(Article.id).limit(50)
+            if published_only:
+                statement = statement.where(Article.status == "published")
             if after:
                 statement = statement.where(Article.id > after)
             rows = (await db.scalars(statement)).all()
@@ -37,6 +41,8 @@ async def refresh(*, dry_run: bool = False) -> dict[str, int]:
                     if not dry_run:
                         article.regions = regions
             after = rows[-1].id
+            if counts["examined"] % 500 == 0:
+                print(dict(counts), flush=True)
     if not dry_run:
         async with SessionFactory.begin() as db:
             grouped = (
@@ -65,8 +71,11 @@ def main() -> None:
     """Require an explicit command; dry-run reports counts without writing."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--published-only", action="store_true")
     args = parser.parse_args()
-    print(asyncio.run(refresh(dry_run=args.dry_run)))
+    print(
+        asyncio.run(refresh(dry_run=args.dry_run, published_only=args.published_only))
+    )
 
 
 if __name__ == "__main__":

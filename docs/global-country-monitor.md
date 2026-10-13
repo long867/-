@@ -22,6 +22,6 @@
 
 更新 M49 目录：`python scripts/update_country_catalog.py`。保留现有中文规范名，补充六种联合国语言名称，排除 Jordan、Chad、Georgia、Santa Elena、Reunión 等人物、州名、矿山名或普通词歧义。
 
-已有语料地区重识别：先 `python -m pipeline.refresh_country_tags --dry-run`，再 `python -m pipeline.refresh_country_tags`。每批 50 篇，仅改地区元数据及事件地区；不改原文、引用片段或偏移。价格来源保持原有明确地域。更新完成后清除公共缓存。
+已有语料地区重识别：先 `python -m pipeline.refresh_country_tags --dry-run`，再 `python -m pipeline.refresh_country_tags`。小服务器可增加 `--published-only` 先更新公开知识库，其余文章在正常加工时更新。每批 50 篇，仅改地区元数据及事件地区；不改原文、引用片段或偏移。价格来源保持原有明确地域。更新完成后清除公共缓存。
 
 小规格服务器继续使用轻量词表和公开每日报价；不新增大模型、地图服务或独立长期容器。受限、付费、空响应或未验证信源不自动启用。

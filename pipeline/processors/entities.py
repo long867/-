@@ -59,12 +59,27 @@ def entity_patterns() -> dict[str, list[tuple[str, re.Pattern[str]]]]:
     return patterns
 
 
+@lru_cache
+def region_patterns() -> list[tuple[str, str, re.Pattern[str]]]:
+    """Retain a cheap literal prefilter before expensive multilingual boundaries."""
+    aliases = (alias for values in lexicon()["regions"].values() for alias in values)
+    return [
+        (name, alias.casefold(), pattern)
+        for (name, pattern), alias in zip(
+            entity_patterns()["regions"], aliases, strict=True
+        )
+    ]
+
+
 def extract_regions(text: str) -> list[str]:
     """Prefer longer country names: Guinea must not match Papua New Guinea."""
+    text = text[:200000]
+    folded = text.casefold()
     spans = [
         (match.start(), match.end(), name)
-        for name, pattern in entity_patterns()["regions"]
-        for match in pattern.finditer(text[:200000])
+        for name, literal, pattern in region_patterns()
+        if literal in folded
+        for match in pattern.finditer(text)
     ]
     selected: list[tuple[int, int, str]] = []
     for start, end, name in sorted(

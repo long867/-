@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
@@ -115,6 +115,11 @@ export function CountryWatch({ initial }: { initial?: CountryMonitor }) {
   const continent = params.get("continent") || "";
   const topic = params.get("topic") || "";
   const mineral = params.get("mineral") || "";
+  const [debouncedMineral, setDebouncedMineral] = useState(mineral);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedMineral(mineral), 300);
+    return () => clearTimeout(timer);
+  }, [mineral]);
   const days = params.get("days") === "30" ? 30 : 7;
   const onlyCovered = params.get("covered") === "1";
   const [limit, setLimit] = useState(36);
@@ -125,13 +130,14 @@ export function CountryWatch({ initial }: { initial?: CountryMonitor }) {
     )
   )
     request.set("topic", topic);
-  if (mineral) request.set("mineral", mineral);
+  if (debouncedMineral) request.set("mineral", debouncedMineral);
   const query = useQuery({
     queryKey: ["country-watch", request.toString()],
     queryFn: () => publicApi<CountryMonitor>(`/regions/monitor?${request}`),
     initialData: days === 7 && !topic && !mineral ? initial : undefined,
     staleTime: 300000,
     refetchInterval: 300000,
+    placeholderData: (previous) => previous,
   });
   function update(key: string, value: string) {
     const next = new URLSearchParams(params.toString());

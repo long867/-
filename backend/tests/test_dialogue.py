@@ -95,6 +95,7 @@ def test_lead_time_gap_is_computed_with_explicit_scenario_assumptions():
     )
     metrics = {row["name"]: row for row in scenario_calculations(context)}
     assert metrics["交期换算"]["value"] == "14"
+    assert metrics["交期内预计耗用量"]["value"] == "70"
     assert metrics["交期与库存覆盖缺口"]["value"] == "8"
     assert metrics["理论物料缺口"]["value"] == "40"
     assert "无在途到货" in metrics["理论物料缺口"]["basis"]

@@ -99,6 +99,7 @@ def scenario_calculations(context: ConversationContext) -> list[dict[str, str]]:
         gap_tonnes = max(Decimal(0), usage[0] * lead - stock[0]) / 1000
         for name, quantity, unit in (
             ("交期换算", lead, "天"),
+            ("交期内预计耗用量", usage[0] * lead / 1000, "吨"),
             ("交期与库存覆盖缺口", gap_days, "天"),
             ("理论物料缺口", gap_tonnes, "吨"),
         ):

@@ -515,7 +515,8 @@ async def test_chat_api_sse_history_followups_weather_and_ownership(state, monke
         ),
     )
 
-    async def generate(_, prompt):
+    async def generate(_, prompt, *, profile):
+        assert profile == "chat"
         data = json.loads(prompt)
         evidence, span = next(
             (item, span)

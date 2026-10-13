@@ -52,6 +52,16 @@ def test_unknown_units_dates_missing_values_and_ambiguous_rows_fail_closed(html)
         parse_ppi_quote(html, "https://example.com/day")
 
 
+def test_chinese_scale_and_compound_unit_changes_are_rejected():
+    assert not summary_measurements_valid("€669 Million financing", "融资669亿欧元")
+    assert summary_measurements_valid("€669 Million financing", "融资669百万欧元")
+    assert not summary_measurements_valid("5 million ounces", "5百万吨")
+    assert summary_measurements_valid("5 million ounces", "5百万盎司")
+    assert not summary_measurements_valid("27,000 Tonnes", "27,000 Tonnes吨")
+    assert summary_measurements_valid("3.4 millones de onzas", "3.4百万盎司", "es")
+    assert not summary_measurements_valid("3.4 millones de onzas", "3.4百万吨", "es")
+
+
 def test_atomic_anchors_preserve_dates_units_magnitude_and_word_measurements():
     original = (
         "On September 30, 2026, US$5 million rose 6.9%; a 257-metre "

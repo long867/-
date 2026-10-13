@@ -217,15 +217,28 @@ UNIT_ALIASES = {
     "año": "年",
     "semanas": "周",
     "semana": "周",
+    "万": "ten_thousand",
+    "十万": "hundred_thousand",
+    "千万": "ten_million",
+    "亿": "hundred_million",
+    "万亿": "trillion",
+    "trillion": "trillion",
 }
 UNIT_PATTERN = "|".join(
     re.escape(unit)
     + (r"(?![A-Za-zÀ-ÖØ-öø-ÿ])" if re.search(r"[A-Za-zÀ-ÖØ-öø-ÿ]$", unit) else "")
     for unit in sorted(UNIT_ALIASES, key=len, reverse=True)
 )
+PHYSICAL_PATTERN = "|".join(
+    re.escape(unit)
+    + (r"(?![A-Za-zÀ-ÖØ-öø-ÿ])" if re.search(r"[A-Za-zÀ-ÖØ-öø-ÿ]$", unit) else "")
+    for unit in sorted(UNIT_ALIASES, key=len, reverse=True)
+    if UNIT_ALIASES[unit] in {"米", "千米", "吨", "短吨", "盎司", "磅", "公顷", "g/t"}
+)
 MEASUREMENT = re.compile(
     rf"(?P<currency>US\$|C\$|A\$|USD\s*|CAD\s*|AUD\s*|CNY\s*|GBP\s*|EUR\s*|[$€£¥￥])?"
     rf"(?P<number>{NUMBER})(?P<unit>\s*[-–]?\s*(?:{UNIT_PATTERN}))?"
+    rf"(?P<physical>\s*(?:de\s+)?(?:{PHYSICAL_PATTERN}))?"
     r"(?P<suffix>\s*(?:美元|加元|澳元|人民币|英镑|欧元|USD\b|CAD\b|AUD\b|CNY\b|GBP\b|EUR\b))?",
     re.I,
 )
@@ -254,6 +267,14 @@ def measurements(text: str) -> Counter[tuple[str, str, str]]:
                 currency, canonical = currency or "CNY", "吨"
             elif canonical in {"USD/吨", "CAD/吨", "CNY/吨"}:
                 currency, canonical = canonical.split("/")
+            if physical := match.group("physical"):
+                physical = re.sub(r"^de\s+", "", physical.strip(), flags=re.I)
+                physical_unit = next(
+                    value
+                    for alias, value in UNIT_ALIASES.items()
+                    if alias.casefold() == physical.casefold()
+                )
+                canonical += "/" + physical_unit
             result[
                 (
                     str(Decimal(match.group("number").replace(",", "")).normalize()),

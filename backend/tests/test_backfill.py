@@ -48,6 +48,24 @@ def test_spanish_evidence_preserves_counts_units_magnitudes_and_currency():
     assert not summary_measurements_valid("267 Metropolitan shares", "267米")
 
 
+def test_named_calendar_months_are_not_unrelated_quantity_permissions():
+    assert numeric_translation_valid(
+        "Plantas de litio se inauguran en octubre", "锂工厂10月投产", "es"
+    )
+    assert not numeric_translation_valid(
+        "Plantas de litio se inauguran en octubre", "锂工厂11月投产", "es"
+    )
+    assert not numeric_translation_valid(
+        "Plantas se inauguran en octubre", "10家工厂投产", "es"
+    )
+    assert numeric_translation_valid("On May 15", "5月15日", "en")
+    assert numeric_translation_valid("el 12 de octubre", "10月12日", "es")
+    assert not numeric_translation_valid("Mining may resume", "矿山5月恢复", "en")
+    assert not numeric_translation_valid(
+        "October Mining starts drilling", "10月开始钻探", "en"
+    )
+
+
 def feed_response(url: str, links: list[str]) -> httpx.Response:
     """Create a small RSS response with original article evidence."""
     entries = "".join(

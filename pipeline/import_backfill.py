@@ -19,6 +19,7 @@ from pipeline.processors.dedup import normalize_title, normalize_url, simhash
 from pipeline.processors.entities import extract_entities
 from pipeline.processors.policy_document import general_mineral_policy
 from pipeline.processors.translator import (
+    calendar_month_counts,
     number_words,
     numbers,
     numeric_translation_valid,
@@ -77,7 +78,9 @@ def validate_record(value: dict[str, Any]) -> tuple[SourceDefinition, RawArticle
     if not summary_measurements_valid(article.title, title, article.language):
         raise ValueError("Reviewed title changed source units")
     if set(numbers(summary)) - set(
-        numbers(evidence) + number_words(evidence, article.language)
+        numbers(evidence)
+        + number_words(evidence, article.language)
+        + calendar_month_counts(evidence, summary, article.language)
     ):
         raise ValueError("Reviewed summary contains unsupported numbers")
     if not summary_measurements_valid(evidence, summary, article.language):

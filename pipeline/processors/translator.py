@@ -88,13 +88,52 @@ def number_words(text: str, language: str = "en") -> Counter[str]:
     )
 
 
+def calendar_month_counts(
+    original: str, translated: str, language: str = "en"
+) -> Counter[str]:
+    """Allow named months only in date contexts and Chinese month labels."""
+    locale = language.lower().replace("_", "-").split("-")[0]
+    vocabulary = {
+        "en": "January February March April May June July August September "
+        "October November December",
+        "es": "enero febrero marzo abril mayo junio julio agosto septiembre "
+        "octubre noviembre diciembre",
+    }.get(locale)
+    if not vocabulary:
+        return Counter()
+    prefix = (
+        r"\b(?:in|during|for|from|through|until|by|on)\s+$"
+        if locale == "en"
+        else r"\b(?:en|durante|para|desde|hasta)\s+$|\b\d{1,2}\s+de\s+$"
+    )
+    suffix = (
+        r"^\s*(?:\d{1,2}(?:st|nd|rd|th)?\b|[12]\d{3}\b)"
+        if locale == "en"
+        else r"^\s+de\s+[12]\d{3}\b"
+    )
+    available: Counter[str] = Counter()
+    for index, month in enumerate(vocabulary.split(), 1):
+        for match in re.finditer(r"\b" + month + r"\b", original, re.I):
+            if re.search(
+                prefix, original[max(0, match.start() - 25) : match.start()], re.I
+            ) or re.search(suffix, original[match.end() :], re.I):
+                available[str(Decimal(index).normalize())] += 1
+    actual = Counter(
+        str(Decimal(match.group(1)).normalize())
+        for match in re.finditer(r"(?<![\d.])(\d{1,2})\s*月", translated)
+    )
+    return available & actual
+
+
 def numeric_translation_valid(
     original: str, translated: str, language: str = "en"
 ) -> bool:
     """Keep all numeric literals; permit exact source word counts such as five→5."""
     expected, actual = numbers(original), numbers(translated)
     return not (expected - actual) and not (
-        (actual - expected) - number_words(original, language)
+        (actual - expected)
+        - number_words(original, language)
+        - calendar_month_counts(original, translated, language)
     )
 
 
@@ -430,7 +469,9 @@ async def translate_fragment(
                 "missing_placeholders": list((expected - tokens).elements()),
                 "unexpected_placeholders": list((tokens - expected).elements()),
                 "unexpected_numeric_counts": dict(
-                    (numbers(restored) - numbers(part)) - number_words(part, language)
+                    (numbers(restored) - numbers(part))
+                    - number_words(part, language)
+                    - calendar_month_counts(part, restored, language)
                 ),
                 "correction": "完整复制原文全部占位符，不添加数字，"
                 "不改变百分比、币种或单位。",
@@ -571,6 +612,9 @@ async def translate(title: str, content: str, language: str) -> dict[str, Any]:
                 raise ValueError("Unresolved numeric evidence anchor")
             supported = numbers(title + content) + number_words(
                 title + content, language
+            )
+            supported += calendar_month_counts(
+                title + content, summary.summary_zh, language
             )
             if set(numbers(summary.summary_zh)) - set(supported):
                 raise ValueError("Summary contains unsupported numeric facts")

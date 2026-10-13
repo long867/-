@@ -34,11 +34,48 @@ def nlp() -> Language:
         [
             {"label": kind.upper(), "pattern": alias, "id": name}
             for kind, entries in lexicon().items()
+            if kind != "regions"
             for name, aliases in entries.items()
             for alias in aliases
         ]
     )
     return model
+
+
+@lru_cache
+def entity_patterns() -> dict[str, list[tuple[str, re.Pattern[str]]]]:
+    """Compile once; country names use word boundaries outside Chinese text."""
+    patterns = {}
+    for kind, entries in lexicon().items():
+        patterns[kind] = []
+        for name, aliases in entries.items():
+            for alias in aliases:
+                pattern = re.escape(alias)
+                if kind == "regions" and not re.search(r"[\u3400-\u9fff]", alias):
+                    pattern = rf"(?<!\w){pattern}(?!\w)"
+                elif alias.isascii():
+                    pattern = rf"(?<![a-zA-Z]){pattern}(?![a-zA-Z])"
+                patterns[kind].append((name, re.compile(pattern, re.IGNORECASE)))
+    return patterns
+
+
+def extract_regions(text: str) -> list[str]:
+    """Prefer longer country names: Guinea must not match Papua New Guinea."""
+    spans = [
+        (match.start(), match.end(), name)
+        for name, pattern in entity_patterns()["regions"]
+        for match in pattern.finditer(text[:200000])
+    ]
+    selected: list[tuple[int, int, str]] = []
+    for start, end, name in sorted(
+        spans, key=lambda item: item[1] - item[0], reverse=True
+    ):
+        if not any(
+            start < other_end and end > other_start
+            for other_start, other_end, _ in selected
+        ):
+            selected.append((start, end, name))
+    return sorted({name for _, _, name in selected})
 
 
 def extract_entities(text: str) -> dict[str, list[str]]:
@@ -47,13 +84,11 @@ def extract_entities(text: str) -> dict[str, list[str]]:
     if get_settings().ENTITY_MATCHER == "spacy":
         for entity in nlp()(text[:200000]).ents:
             result[entity.label_.lower()].add(entity.ent_id_)
-    for kind, entries in lexicon().items():
-        for name, aliases in entries.items():
-            for alias in aliases:
-                pattern = re.escape(alias)
-                if alias.isascii():
-                    pattern = rf"(?<![a-zA-Z]){pattern}(?![a-zA-Z])"
-                if re.search(pattern, text, re.IGNORECASE):
+    for kind, patterns in entity_patterns().items():
+        if kind == "regions":
+            result[kind].update(extract_regions(text))
+        else:
+            for name, pattern in patterns:
+                if name not in result[kind] and pattern.search(text):
                     result[kind].add(name)
-                    break
     return {key: sorted(value) for key, value in result.items()}

@@ -79,6 +79,33 @@ async def test_conditional_feed_304(monkeypatch) -> None:
     fetch.assert_awaited_once_with(source.url, {"If-None-Match": '"v1"'})
 
 
+async def test_country_feed_excludes_unrelated_politics_before_enrichment(monkeypatch):
+    from pipeline.fetchers.rss_fetcher import RSSFetcher
+    from pipeline.fetchers.transport import FetchTransport
+    from pipeline.schemas import SourceDefinition
+
+    body = """<rss version="2.0"><channel><title>Country feed</title>
+    <item><title>Election announcement</title><link>https://example.com/election</link>
+    <description>Parliament announces the local election date.</description></item>
+    <item><title>New copper mine in Malawi</title><link>https://example.com/mine</link>
+    <description>Copper exploration at a mine in Malawi advances.</description></item>
+    </channel></rss>"""
+    response = httpx.Response(
+        200, text=body, request=httpx.Request("GET", "https://example.com/feed")
+    )
+    monkeypatch.setattr(FetchTransport, "get", AsyncMock(return_value=response))
+    source = SourceDefinition(
+        name="Country feed",
+        url="https://example.com/feed",
+        type="rss",
+        category="news",
+        authority_score=7,
+        parser_config={"require_mineral_match": True, "fetch_full_content": False},
+    )
+    rows = await RSSFetcher(source).fetch()
+    assert len(rows) == 1 and rows[0].url.endswith("/mine")
+
+
 async def test_price_api_mapping(monkeypatch) -> None:
     from pipeline.fetchers.api_fetcher import APIFetcher
     from pipeline.fetchers.transport import FetchTransport

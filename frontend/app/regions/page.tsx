@@ -1,12 +1,14 @@
-import { Directory } from "@/components/directory";
+import { Suspense } from "react";
+import { CountryWatch } from "@/components/country-watch";
 import { serverApi } from "@/lib/server-api";
-import type { MineralFacet } from "@/types";
+import type { CountryMonitor } from "@/types";
 export const revalidate = 300;
 export default async function Page() {
   return (
-    <Directory
-      kind="regions"
-      initial={await serverApi<MineralFacet[]>("/regions")}
-    />
+    <Suspense>
+      <CountryWatch
+        initial={await serverApi<CountryMonitor>("/regions/monitor")}
+      />
+    </Suspense>
   );
 }

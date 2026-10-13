@@ -17,6 +17,7 @@ from app.schemas.api import (
     SubscriptionInput,
     SubscriptionOut,
 )
+from pipeline.analyzers.country_topics import CountryTopic
 
 
 class ArticleQuery(BaseModel):
@@ -26,6 +27,8 @@ class ArticleQuery(BaseModel):
     mineral: str | None = Field(default=None, max_length=100)
     region: str | None = Field(default=None, max_length=100)
     category: Category | None = None
+    topic: CountryTopic | None = None
+    exclude_prices: bool = False
     company: str | None = Field(default=None, max_length=200)
     search: str | None = Field(default=None, max_length=200)
     tag: str | None = Field(default=None, max_length=100)

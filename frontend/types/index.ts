@@ -91,6 +91,41 @@ export interface MineralFacet {
   trend: "up" | "down" | "flat";
 }
 
+export interface CountryItem extends MineralFacet {
+  iso2: string;
+  iso3: string;
+  english_name: string;
+  continent: string;
+  subregion: string;
+  kind: "country_or_area" | "organization";
+  coverage_status: "recent" | "historical" | "uncovered";
+  source_count: number;
+  policy_count: number;
+  last_published_at: string | null;
+  topics: Record<string, number>;
+  latest_article: Article | null;
+}
+export interface CountryMonitor {
+  items: CountryItem[];
+  total: number;
+  covered: number;
+  recent: number;
+  window_days: number;
+  topic_labels: Record<string, string>;
+  generated_at: string;
+  last_successful_fetch_at: string | null;
+  active_sources: number;
+  refresh_schedule: string;
+  coverage_note: string;
+}
+export interface CountryIntelligence {
+  country: CountryItem;
+  window_days: number;
+  topic_labels: Record<string, string>;
+  articles: Article[];
+  generated_at: string;
+}
+
 export interface MineralMarketItem extends MineralFacet {
   symbol: string;
   english_name: string;

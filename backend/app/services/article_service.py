@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models import Article, Source
 from app.schemas.api import ArticleDetail, ArticleOut, ArticlePage
 from app.schemas.intelligence import ArticleQuery, TimelineBucket, TimelineOut
+from pipeline.analyzers.country_topics import TOPIC_PATTERNS, CountryTopic
 
 DEMO_PREFIX = "https://example.com/miningintel-demo/"
 
@@ -18,6 +19,19 @@ DEMO_PREFIX = "https://example.com/miningintel-demo/"
 def public_conditions() -> list[Any]:
     """Allow reviewed evidence and exclude the known synthetic seed namespace."""
     return [Article.status == "published", ~Article.url.startswith(DEMO_PREFIX)]
+
+
+def country_topic_condition(topic: CountryTopic) -> Any:
+    """Match named reporting topics against headlines and summaries, not footers."""
+    text = func.concat_ws(
+        " ", Article.title, Article.title_zh, Article.summary, Article.summary_zh
+    )
+    condition = text.op("~*")(TOPIC_PATTERNS[topic])
+    if topic == "policy":
+        condition = condition | (Article.category == "policy")
+    elif topic == "projects":
+        condition = condition | (func.cardinality(Article.projects) > 0)
+    return condition
 
 
 def escape_search(value: str) -> str:
@@ -68,6 +82,10 @@ def conditions(query: ArticleQuery) -> list[Any]:
             result.append(column.contains([value.strip()]))
     if query.category:
         result.append(Article.category == query.category)
+    if query.topic:
+        result.append(country_topic_condition(query.topic))
+    if query.exclude_prices:
+        result.append(Article.category != "price")
     if query.search and query.search.strip():
         result.append(
             func.concat_ws(

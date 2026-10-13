@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { MapPin } from "lucide-react";
 import { ArticleFeed } from "./article-feed";
+import { CountryBrief } from "./country-brief";
 import { PolicyCard } from "./policy-card";
 import { SectionHeading } from "./section-heading";
 import { SubscriptionDialog } from "./subscription-dialog";
@@ -39,12 +40,13 @@ export function RegionWorkspace({
     <main className="workspace">
       <SectionHeading
         eyebrow="REGIONAL RESOURCE INTELLIGENCE"
-        zh={`${name} · 地区情报`}
+        zh={`${name} · 国家资源动向`}
         en={`${name} · Regional intelligence`}
         description="资源、项目与政策，在地理视角下连接。"
         descriptionEn="Connect resources, projects and policy through a regional lens."
         actions={<SubscriptionDialog region={name} />}
       />
+      <CountryBrief name={name} />
       {projects.isPending ? (
         <SkeletonCards count={2} />
       ) : projects.isError ? (
@@ -63,7 +65,7 @@ export function RegionWorkspace({
         )}
       </p>
       <div className="dashboard">
-        <ArticleFeed region={name} initial={initial} />
+        <ArticleFeed region={name} initial={initial} excludePrices />
         <aside>
           <section className="panel">
             <h2 className="panel-title">{t("项目观察", "Project watch")}</h2>

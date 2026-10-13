@@ -19,12 +19,14 @@ export function ArticleFeed({
   mineral,
   region,
   hideFilters = false,
+  excludePrices = false,
 }: {
   initial?: ArticlePage;
   initialFacets?: Facets;
   mineral?: string;
   region?: string;
   hideFilters?: boolean;
+  excludePrices?: boolean;
 }) {
   const { t } = usePreferences();
   const { filters, update, ready } = useUrlFilters();
@@ -51,6 +53,7 @@ export function ArticleFeed({
   const pageSize = initial?.page_size ?? 4;
   const params = filterParams(effective);
   params.set("page_size", String(pageSize));
+  if (excludePrices) params.set("exclude_prices", "true");
   const key = params.toString();
   const defaultQuery =
     !filters.minerals.length &&
@@ -58,6 +61,7 @@ export function ArticleFeed({
     !filters.tags.length &&
     !filters.search &&
     !filters.category &&
+    !filters.topic &&
     !filters.date_from &&
     !filters.date_to &&
     !filters.company &&

@@ -80,6 +80,13 @@ def validate_editorial(
     category = candidate.get("category", row.category)
     if verified_policy_source(document.source):
         category = "policy"
+    elif (
+        category == "policy"
+        and document.source.category == "news"
+        and document.source.parser_config.get("require_mineral_match")
+    ):
+        # A news report about a policy is an observation, not the legal document.
+        category = "news"
     if category not in {"news", "price", "policy", "report", "company"}:
         raise ValueError("Invalid article category")
     return editorial.model_dump() | {

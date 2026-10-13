@@ -8,7 +8,7 @@ export default async function Page({ params }: { params: { name: string } }) {
     <RegionWorkspace
       name={name}
       initial={await serverApi<ArticlePage>(
-        `/regions/${encodeURIComponent(name)}/articles?page_size=10`,
+        `/regions/${encodeURIComponent(name)}/articles?page_size=10&exclude_prices=true`,
       )}
     />
   );

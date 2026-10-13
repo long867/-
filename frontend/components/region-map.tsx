@@ -9,6 +9,7 @@ import {
 import { useEffect } from "react";
 import { usePreferences } from "@/hooks/use-preferences";
 import type { ProjectLocation } from "@/types";
+import { REGION_CENTERS } from "@/lib/resource-geography";
 import "leaflet/dist/leaflet.css";
 const centers: Record<string, [number, number]> = {
   中国: [35, 104],
@@ -56,7 +57,10 @@ export default function RegionMap({
   const located = projects.filter(
     (item) => item.latitude !== null && item.longitude !== null,
   );
-  const center = centers[name] || ([20, 0] as [number, number]);
+  const known = REGION_CENTERS[name];
+  const center: [number, number] = known
+    ? [known[1], known[0]]
+    : centers[name] || [20, 0];
   return (
     <div className={`map-frame ${theme === "dark" ? "map-dark" : ""}`}>
       <MapContainer

@@ -6,6 +6,7 @@ export interface FeedFilters {
   tags: string[];
   search: string;
   category: string;
+  topic: string;
   sort_by: string;
   date_from: string;
   date_to: string;
@@ -17,6 +18,7 @@ export const emptyFilters: FeedFilters = {
   tags: [],
   search: "",
   category: "",
+  topic: "",
   sort_by: "published_at",
   date_from: "",
   date_to: "",
@@ -36,6 +38,15 @@ export function parseFilters(search: string): FeedFilters {
     tags: params.getAll("tags").concat(params.getAll("tag")).slice(0, 20),
     search: params.get("q") || params.get("search") || "",
     category: params.get("category") || "",
+    topic: [
+      "policy",
+      "trade",
+      "projects",
+      "supply_chain",
+      "investment",
+    ].includes(params.get("topic") || "")
+      ? params.get("topic")!
+      : "",
     sort_by:
       params.get("sort_by") === "quality_score"
         ? "quality_score"
@@ -53,7 +64,13 @@ export function filterParams(filters: FeedFilters, page = 1): URLSearchParams {
   });
   for (const key of ["minerals", "regions", "tags"] as const)
     for (const value of filters[key]) params.append(key, value);
-  for (const key of ["category", "date_from", "date_to", "company"] as const)
+  for (const key of [
+    "category",
+    "topic",
+    "date_from",
+    "date_to",
+    "company",
+  ] as const)
     if (filters[key]) params.set(key, filters[key]);
   if (filters.search.trim()) params.set("search", filters.search.trim());
   return params;
@@ -70,7 +87,11 @@ export function useUrlFilters() {
     sync();
     setReady(true);
     window.addEventListener("popstate", sync);
-    return () => window.removeEventListener("popstate", sync);
+    window.addEventListener("miningintel:filters-changed", sync);
+    return () => {
+      window.removeEventListener("popstate", sync);
+      window.removeEventListener("miningintel:filters-changed", sync);
+    };
   }, []);
   const update = useCallback((changes: Partial<FeedFilters>) => {
     const next = { ...latest.current, ...changes };
@@ -87,6 +108,7 @@ export function useUrlFilters() {
       "",
       `${location.pathname}${params.size ? "?" + params : ""}`,
     );
+    window.dispatchEvent(new Event("miningintel:filters-changed"));
   }, []);
   return { filters, update, ready };
 }

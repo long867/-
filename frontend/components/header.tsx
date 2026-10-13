@@ -61,7 +61,7 @@ export function Header() {
   const links = [
     ["/", "情报中心", "Intelligence"],
     ["/minerals", "矿种", "Minerals"],
-    ["/regions", "地区", "Regions"],
+    ["/regions", "国家动向", "Country watch"],
     ["/policies", "政策", "Policy"],
     ["/trends", "趋势", "Trends"],
     ["/digest", "简报", "Briefs"],

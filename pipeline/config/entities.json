@@ -557,6 +557,8 @@
       "Chine",
       "china",
       "chinese",
+      "Китай",
+      "الصين",
       "中国"
     ],
     "澳大利亚": [
@@ -564,27 +566,49 @@
       "Australie",
       "australia",
       "australian",
+      "Австралия",
+      "أستراليا",
       "澳大利亚"
     ],
     "智利": [
+      "Chile",
       "Chili",
       "chile",
       "chilean",
+      "Чили",
+      "شيلي",
       "智利"
     ],
     "刚果（金）": [
+      "Congo-Kinshasa",
+      "DR Congo",
+      "DRC",
+      "Democratic Republic of Congo",
+      "Democratic Republic of the Congo",
+      "República Democrática del Congo",
       "République démocratique du Congo",
       "democratic republic of congo",
       "drc",
+      "Демократическая Республика Конго",
+      "جمهورية الكونغو الديمقراطية",
+      "刚果民主共和国",
       "刚果（金）"
     ],
     "美国": [
+      "American",
       "Arizona",
       "Estados Unidos",
+      "Estados Unidos de América",
       "Nevada",
+      "United States",
+      "United States of America",
       "u.s.",
       "united states",
       "États-Unis",
+      "États-Unis d’Amérique",
+      "Соединенные Штаты Америки",
+      "الولايات المتحدة الأمريكية",
+      "美利坚合众国",
       "美国"
     ],
     "欧盟": [
@@ -593,13 +617,19 @@
       "欧盟"
     ],
     "印度尼西亚": [
+      "Indonesia",
+      "Indonesian",
+      "Indonésie",
       "indonesia",
       "indonesian",
-      "印度尼西亚",
-      "印尼"
+      "Индонезия",
+      "إندونيسيا",
+      "印尼",
+      "印度尼西亚"
     ],
     "加拿大": [
       "British Columbia",
+      "Canada",
       "Canadá",
       "Newfoundland",
       "Ontario",
@@ -607,19 +637,27 @@
       "Québec",
       "canada",
       "canadian",
+      "Канада",
+      "كندا",
       "加拿大"
     ],
     "巴西": [
       "Brasil",
+      "Brazil",
       "Brésil",
       "brazil",
       "brazilian",
+      "Бразилия",
+      "البرازيل",
       "巴西"
     ],
     "南非": [
+      "Afrique du Sud",
       "South Africa",
       "Sudáfrica",
       "África do Sul",
+      "Южная Африка",
+      "جنوب أفريقيا",
       "南非"
     ],
     "秘鲁": [
@@ -627,6 +665,8 @@
       "Peruvian",
       "Perú",
       "Pérou",
+      "Перу",
+      "بيرو",
       "秘鲁"
     ],
     "墨西哥": [
@@ -634,41 +674,74 @@
       "Mexico",
       "Mexique",
       "México",
+      "Мексика",
+      "المكسيك",
       "墨西哥"
     ],
     "阿根廷": [
       "Argentina",
+      "Argentine",
+      "Аргентина",
+      "الأرجنتين",
       "阿根廷"
     ],
     "印度": [
+      "Inde",
       "India",
+      "Индия",
+      "الهند",
       "印度"
     ],
     "哈萨克斯坦": [
+      "Kazajstán",
+      "Kazakh",
       "Kazakhstan",
+      "Kazakhstani",
+      "Казахстан",
+      "كازاخستان",
       "哈萨克斯坦"
     ],
     "蒙古": [
       "Mongolia",
+      "Mongolian",
+      "Mongolie",
+      "Монголия",
+      "منغوليا",
       "蒙古"
     ],
     "赞比亚": [
       "Zambia",
+      "Zambian",
+      "Zambie",
       "Zâmbia",
+      "Замбия",
+      "زامبيا",
       "赞比亚"
     ],
     "俄罗斯": [
+      "Federación de Rusia",
+      "Fédération de Russie",
       "Rusia",
       "Russia",
       "Russian",
+      "Russian Federation",
       "Russie",
       "Rússia",
-      "俄罗斯"
+      "Российская Федерация",
+      "الاتحاد الروسي",
+      "俄罗斯",
+      "俄罗斯联邦"
     ],
     "英国": [
       "Britain",
       "British",
+      "Reino Unido de Gran Bretaña e Irlanda del Norte",
+      "Royaume-Uni de Grande-Bretagne et d’Irlande du Nord",
       "United Kingdom",
+      "United Kingdom of Great Britain and Northern Ireland",
+      "Соединенное Королевство Великобритании и Северной Ирландии",
+      "المملكة المتحدة لبريطانيا العظمى وآيرلندا الشمالية",
+      "大不列颠及北爱尔兰联合王国",
       "英国"
     ],
     "德国": [
@@ -676,140 +749,1744 @@
       "Allemagne",
       "German",
       "Germany",
+      "Германия",
+      "ألمانيا",
       "德国"
     ],
     "法国": [
       "France",
       "Francia",
       "French",
+      "Франция",
+      "فرنسا",
       "法国"
     ],
     "日本": [
       "Japan",
       "Japanese",
+      "Japon",
       "Japón",
+      "Япония",
+      "اليابان",
       "日本"
     ],
     "韩国": [
-      "Korean",
+      "Republic of Korea",
+      "República de Corea",
+      "République de Corée",
       "South Korea",
+      "South Korean",
+      "Республика Корея",
+      "جمهورية كوريا",
+      "大韩民国",
       "韩国"
     ],
     "瑞典": [
       "Suecia",
+      "Suède",
       "Sweden",
       "Swedish",
+      "Швеция",
+      "السويد",
       "瑞典"
     ],
     "芬兰": [
       "Finland",
+      "Finlande",
       "Finlandia",
       "Finnish",
+      "Финляндия",
+      "فنلندا",
       "芬兰"
     ],
     "挪威": [
       "Noruega",
+      "Norvège",
       "Norway",
       "Norwegian",
+      "Норвегия",
+      "النرويج",
       "挪威"
     ],
     "津巴布韦": [
       "Zimbabue",
       "Zimbabwe",
+      "Zimbabwean",
+      "Зимбабве",
+      "زمبابوي",
       "津巴布韦"
     ],
     "纳米比亚": [
       "Namibia",
+      "Namibian",
+      "Namibie",
       "Namíbia",
+      "Намибия",
+      "ناميبيا",
       "纳米比亚"
     ],
     "马达加斯加": [
       "Madagascar",
+      "Мадагаскар",
+      "مدغشقر",
       "马达加斯加"
     ],
     "沙特阿拉伯": [
+      "Arabia Saudita",
+      "Arabie saoudite",
       "Saudi Arabia",
+      "Саудовская Аравия",
+      "المملكة العربية السعودية",
       "沙特阿拉伯"
     ],
     "土耳其": [
       "Turkey",
+      "Turkish",
       "Turquía",
       "Türkiye",
+      "Турция",
+      "تركيا",
       "土耳其"
     ],
     "乌兹别克斯坦": [
+      "Ouzbékistan",
+      "Uzbek",
       "Uzbekistan",
+      "Uzbekistani",
+      "Uzbekistán",
+      "Узбекистан",
+      "أوزبكستان",
       "乌兹别克斯坦"
     ],
     "博茨瓦纳": [
       "Botswana",
+      "Botswanan",
+      "Ботсвана",
+      "بوتسوانا",
       "博茨瓦纳"
     ],
     "坦桑尼亚": [
+      "República Unida de Tanzanía",
+      "République-Unie de Tanzanie",
       "Tanzania",
+      "Tanzanian",
       "Tanzânia",
-      "坦桑尼亚"
+      "United Republic of Tanzania",
+      "Объединенная Республика Танзания",
+      "جمهورية تنزانيا المتحدة",
+      "坦桑尼亚",
+      "坦桑尼亚联合共和国"
     ],
     "加纳": [
       "Ghana",
+      "Ghanaian",
+      "Гана",
+      "غانا",
       "加纳"
     ],
     "莫桑比克": [
       "Mozambique",
       "Moçambique",
+      "Мозамбик",
+      "موزامبيق",
       "莫桑比克"
     ],
     "几内亚": [
-      "Republic of Guinea",
+      "Guinea",
       "Guinean",
+      "Guinée",
+      "Republic of Guinea",
       "République de Guinée",
+      "Гвинея",
+      "غينيا",
+      "几内亚",
       "几内亚共和国"
     ],
     "菲律宾": [
+      "Filipinas",
       "Philippines",
+      "Филиппины",
+      "الفلبين",
       "菲律宾"
     ],
     "越南": [
       "Viet Nam",
       "Vietnam",
+      "Vietnamese",
+      "Вьетнам",
+      "فييت نام",
       "越南"
     ],
     "马来西亚": [
+      "Malaisie",
+      "Malasia",
       "Malaysia",
+      "Малайзия",
+      "ماليزيا",
       "马来西亚"
     ],
     "巴布亚新几内亚": [
+      "PNG",
+      "Papouasie-Nouvelle-Guinée",
       "Papua New Guinea",
+      "Papua Nueva Guinea",
+      "Папуа-Новая Гвинея",
+      "بابوا غينيا الجديدة",
       "巴布亚新几内亚"
     ],
     "乌克兰": [
+      "Ucrania",
       "Ukraine",
+      "Украина",
+      "أوكرانيا",
       "乌克兰"
     ],
     "波兰": [
       "Poland",
+      "Pologne",
+      "Polonia",
+      "Польша",
+      "بولندا",
       "波兰"
     ],
     "西班牙": [
+      "Espagne",
       "España",
       "Spain",
+      "Испания",
+      "إسبانيا",
       "西班牙"
     ],
     "葡萄牙": [
       "Portugal",
+      "Португалия",
+      "البرتغال",
       "葡萄牙"
     ],
     "厄瓜多尔": [
       "Ecuador",
+      "Équateur",
+      "Эквадор",
+      "إكوادور",
       "厄瓜多尔"
     ],
     "玻利维亚": [
       "Bolivia",
+      "Bolivia (Estado Plurinacional de)",
+      "Bolivia (Plurinational State of)",
+      "Bolivian",
+      "Bolivie (État plurinational de)",
+      "Боливия (Многонациональное Государство)",
+      "بوليفيا (دولة - المتعددة القوميات)",
+      "多民族玻利维亚国",
       "玻利维亚"
     ],
     "哥伦比亚": [
       "Colombia",
+      "Colombie",
+      "Колумбия",
+      "كولومبيا",
       "哥伦比亚"
+    ],
+    "Country or Area": [
+      "Country or Area"
+    ],
+    "阿尔及利亚": [
+      "Algeria",
+      "Algérie",
+      "Argelia",
+      "Алжир",
+      "الجزائر",
+      "阿尔及利亚"
+    ],
+    "埃及": [
+      "Egipto",
+      "Egypt",
+      "Égypte",
+      "Египет",
+      "مصر",
+      "埃及"
+    ],
+    "利比亚": [
+      "Libia",
+      "Libya",
+      "Libye",
+      "Ливия",
+      "ليبيا",
+      "利比亚"
+    ],
+    "摩洛哥": [
+      "Maroc",
+      "Marruecos",
+      "Morocco",
+      "Марокко",
+      "المغرب",
+      "摩洛哥"
+    ],
+    "苏丹": [
+      "Soudan",
+      "Sudan",
+      "Sudán",
+      "Судан",
+      "السودان",
+      "苏丹"
+    ],
+    "突尼斯": [
+      "Tunisia",
+      "Tunisie",
+      "Túnez",
+      "Тунис",
+      "تونس",
+      "突尼斯"
+    ],
+    "西撒哈拉": [
+      "Sahara occidental",
+      "Sáhara Occidental",
+      "Western Sahara",
+      "Западная Сахара",
+      "الصحراء الغربية",
+      "西撒哈拉"
+    ],
+    "英属印度洋领土": [
+      "British Indian Ocean Territory",
+      "Territoire britannique de l'océan Indien",
+      "Territorio Británico del Océano Índico",
+      "Британская территория в Индийском океане",
+      "المحيط الهندي الإقليم البريطاني في",
+      "英属印度洋领土"
+    ],
+    "布隆迪": [
+      "Burundi",
+      "Бурунди",
+      "بوروندي",
+      "布隆迪"
+    ],
+    "科摩罗": [
+      "Comoras",
+      "Comores",
+      "Comoros",
+      "Коморские Острова",
+      "جزر القمر",
+      "科摩罗"
+    ],
+    "吉布提": [
+      "Djibouti",
+      "Джибути",
+      "جيبوتي",
+      "吉布提"
+    ],
+    "厄立特里亚": [
+      "Eritrea",
+      "Érythrée",
+      "Эритрея",
+      "إريتريا",
+      "厄立特里亚"
+    ],
+    "埃塞俄比亚": [
+      "Ethiopia",
+      "Etiopía",
+      "Éthiopie",
+      "Эфиопия",
+      "إثيوبيا",
+      "埃塞俄比亚"
+    ],
+    "法属南方领地": [
+      "French Southern Territories",
+      "Terres australes françaises",
+      "Territorio de las Tierras Australes Francesas",
+      "Южные земли (французская заморская территория)",
+      "الأراضي الفرنسية الجنوبية الجنوبية",
+      "法属南方领地"
+    ],
+    "肯尼亚": [
+      "Kenya",
+      "Кения",
+      "كينيا",
+      "肯尼亚"
+    ],
+    "马拉维": [
+      "Malawi",
+      "Малави",
+      "ملاوي",
+      "马拉维"
+    ],
+    "毛里求斯": [
+      "Maurice",
+      "Mauricio",
+      "Mauritius",
+      "Маврикий",
+      "موريشيوس",
+      "毛里求斯"
+    ],
+    "马约特": [
+      "Mayotte",
+      "Остров Майотта",
+      "مايوت",
+      "马约特"
+    ],
+    "留尼汪": [
+      "Реюньон",
+      "ريونيون",
+      "留尼汪"
+    ],
+    "卢旺达": [
+      "Rwanda",
+      "Руанда",
+      "رواندا",
+      "卢旺达"
+    ],
+    "塞舌尔": [
+      "Seychelles",
+      "Сейшельские Острова",
+      "سيشيل",
+      "塞舌尔"
+    ],
+    "索马里": [
+      "Somalia",
+      "Somalie",
+      "Сомали",
+      "الصومال",
+      "索马里"
+    ],
+    "南苏丹": [
+      "Soudan du Sud",
+      "South Sudan",
+      "Sudán del Sur",
+      "Южный Судан",
+      "جنوب السودان",
+      "南苏丹"
+    ],
+    "乌干达": [
+      "Ouganda",
+      "Uganda",
+      "Уганда",
+      "أوغندا",
+      "乌干达"
+    ],
+    "安哥拉": [
+      "Angola",
+      "Ангола",
+      "أنغولا",
+      "安哥拉"
+    ],
+    "喀麦隆": [
+      "Cameroon",
+      "Cameroun",
+      "Camerún",
+      "Камерун",
+      "الكاميرون",
+      "喀麦隆"
+    ],
+    "中非共和国": [
+      "Central African Republic",
+      "República Centroafricana",
+      "République centrafricaine",
+      "Центральноафриканская Республика",
+      "جمهورية أفريقيا الوسطى",
+      "中非共和国"
+    ],
+    "乍得": [
+      "Chadian",
+      "Republic of Chad",
+      "Tchad",
+      "Чад",
+      "تشاد",
+      "乍得"
+    ],
+    "刚果（布）": [
+      "Congo-Brazzaville",
+      "Republic of Congo",
+      "Republic of the Congo",
+      "刚果共和国",
+      "刚果（布）"
+    ],
+    "赤道几内亚": [
+      "Equatorial Guinea",
+      "Guinea Ecuatorial",
+      "Guinée équatoriale",
+      "Экваториальная Гвинея",
+      "غينيا الاستوائية",
+      "赤道几内亚"
+    ],
+    "加蓬": [
+      "Gabon",
+      "Gabón",
+      "Габон",
+      "غابون",
+      "加蓬"
+    ],
+    "圣多美和普林西比": [
+      "Santo Tomé y Príncipe",
+      "Sao Tome and Principe",
+      "Sao Tomé-et-Principe",
+      "Сан-Томе и Принсипи",
+      "سان تومي وبرينسيبي",
+      "圣多美和普林西比"
+    ],
+    "斯威士兰": [
+      "Eswatini",
+      "Swaziland",
+      "Эсватини",
+      "إسواتيني",
+      "斯威士兰"
+    ],
+    "莱索托": [
+      "Lesotho",
+      "Лесото",
+      "ليسوتو",
+      "莱索托"
+    ],
+    "贝宁": [
+      "Benin",
+      "Bénin",
+      "Бенин",
+      "بنن",
+      "贝宁"
+    ],
+    "布基纳法索": [
+      "Burkina Faso",
+      "Burkinabe",
+      "Burkinabè",
+      "Буркина-Фасо",
+      "بوركينا فاسو",
+      "布基纳法索"
+    ],
+    "佛得角": [
+      "Cabo Verde",
+      "Кабо-Верде",
+      "كابو فيردي",
+      "佛得角"
+    ],
+    "科特迪瓦": [
+      "Côte d'Ivoire",
+      "Côte d’Ivoire",
+      "Ivorian",
+      "Ivory Coast",
+      "Кот-д'Ивуар",
+      "كوت ديفوار",
+      "科特迪瓦"
+    ],
+    "冈比亚": [
+      "Gambia",
+      "Gambie",
+      "Гамбия",
+      "غامبيا",
+      "冈比亚"
+    ],
+    "几内亚比绍": [
+      "Guinea-Bissau",
+      "Guinée-Bissau",
+      "Гвинея-Бисау",
+      "غينيا - بيساو",
+      "几内亚比绍"
+    ],
+    "利比里亚": [
+      "Liberia",
+      "Libéria",
+      "Либерия",
+      "ليبريا",
+      "利比里亚"
+    ],
+    "马里": [
+      "Mali",
+      "Malian",
+      "Malí",
+      "Мали",
+      "مالي",
+      "马里"
+    ],
+    "毛里塔尼亚": [
+      "Mauritania",
+      "Mauritanie",
+      "Мавритания",
+      "موريتانيا",
+      "毛里塔尼亚"
+    ],
+    "尼日尔": [
+      "Niger",
+      "Níger",
+      "Нигер",
+      "النيجر",
+      "尼日尔"
+    ],
+    "尼日利亚": [
+      "Nigeria",
+      "Nigéria",
+      "Нигерия",
+      "نيجيريا",
+      "尼日利亚"
+    ],
+    "圣赫勒拿": [
+      "Saint Helena",
+      "Sainte-Hélène",
+      "Остров Святой Елены",
+      "سانت هيلانة",
+      "圣赫勒拿"
+    ],
+    "塞内加尔": [
+      "Senegal",
+      "Senegalese",
+      "Sénégal",
+      "Сенегал",
+      "السنغال",
+      "塞内加尔"
+    ],
+    "塞拉利昂": [
+      "Sierra Leona",
+      "Sierra Leone",
+      "Сьерра-Леоне",
+      "سيراليون",
+      "塞拉利昂"
+    ],
+    "多哥": [
+      "Togo",
+      "Того",
+      "توغو",
+      "多哥"
+    ],
+    "安圭拉": [
+      "Anguila",
+      "Anguilla",
+      "Ангилья",
+      "أنغويلا",
+      "安圭拉"
+    ],
+    "安提瓜和巴布达": [
+      "Antigua and Barbuda",
+      "Antigua y Barbuda",
+      "Antigua-et-Barbuda",
+      "Антигуа и Барбуда",
+      "أنتيغوا وبربودا",
+      "安提瓜和巴布达"
+    ],
+    "阿鲁巴": [
+      "Aruba",
+      "Аруба",
+      "أروبا",
+      "阿鲁巴"
+    ],
+    "巴哈马": [
+      "Bahamas",
+      "Багамские Острова",
+      "جزر البهاما",
+      "巴哈马"
+    ],
+    "巴巴多斯": [
+      "Barbade",
+      "Barbados",
+      "Барбадос",
+      "بربادوس",
+      "巴巴多斯"
+    ],
+    "博纳尔，圣俄斯塔休斯和萨巴": [
+      "Bonaire, Saint-Eustache et Saba",
+      "Bonaire, San Eustaquio y Saba",
+      "Bonaire, Sint Eustatius and Saba",
+      "Бонайре, Синт-Эстатиус и Саба",
+      "بونير وسانت يوستاشيوس وسابا",
+      "博纳尔，圣俄斯塔休斯和萨巴"
+    ],
+    "英属维尔京群岛": [
+      "British Virgin Islands",
+      "Islas Vírgenes Británicas",
+      "Îles Vierges britanniques",
+      "Британские Виргинские острова",
+      "جزر فرجن البريطانية",
+      "英属维尔京群岛"
+    ],
+    "开曼群岛": [
+      "Cayman Islands",
+      "Islas Caimán",
+      "Îles Caïmanes",
+      "Кайман острова",
+      "جزر كايمان",
+      "开曼群岛"
+    ],
+    "古巴": [
+      "Cuba",
+      "Куба",
+      "كوبا",
+      "古巴"
+    ],
+    "库拉索": [
+      "Curazao",
+      "Curaçao",
+      "Кюрасао",
+      "كوراساو",
+      "库拉索"
+    ],
+    "多米尼克": [
+      "Dominica",
+      "Dominique",
+      "Доминика",
+      "دومينيكا",
+      "多米尼克"
+    ],
+    "多米尼加": [
+      "Dominican Republic",
+      "República Dominicana",
+      "République dominicaine",
+      "Доминиканская Республика",
+      "الجمهورية الدومينيكية",
+      "多米尼加"
+    ],
+    "格林纳达": [
+      "Granada",
+      "Grenada",
+      "Grenade",
+      "Гренада",
+      "غرينادا",
+      "格林纳达"
+    ],
+    "瓜德罗普": [
+      "Guadalupe",
+      "Guadeloupe",
+      "Гваделупа",
+      "غوادلوب",
+      "瓜德罗普"
+    ],
+    "海地": [
+      "Haiti",
+      "Haití",
+      "Haïti",
+      "Гаити",
+      "هايتي",
+      "海地"
+    ],
+    "牙买加": [
+      "Jamaica",
+      "Jamaïque",
+      "Ямайка",
+      "جامايكا",
+      "牙买加"
+    ],
+    "马提尼克": [
+      "Martinica",
+      "Martinique",
+      "Мартиника",
+      "مارتينيك",
+      "马提尼克"
+    ],
+    "蒙特塞拉特": [
+      "Монтсеррат",
+      "مونتسيرات",
+      "蒙特塞拉特"
+    ],
+    "波多黎各": [
+      "Porto Rico",
+      "Puerto Rico",
+      "Пуэрто-Рико",
+      "بورتوريكو",
+      "波多黎各"
+    ],
+    "圣巴泰勒米": [
+      "Saint Barthélemy",
+      "Saint-Barthélemy",
+      "San Barthélemy",
+      "Сен-Бартелеми",
+      "سان بارتليمي",
+      "圣巴泰勒米"
+    ],
+    "圣基茨和尼维斯": [
+      "Saint Kitts and Nevis",
+      "Saint Kitts y Nevis",
+      "Saint-Kitts-et-Nevis",
+      "Сент-Китс и Невис",
+      "سانت كيتس ونيفس",
+      "圣基茨和尼维斯"
+    ],
+    "圣卢西亚": [
+      "Saint Lucia",
+      "Sainte-Lucie",
+      "Santa Lucía",
+      "Сент-Люсия",
+      "سانت لوسيا",
+      "圣卢西亚"
+    ],
+    "圣马丁（法属）": [
+      "Saint Martin (French Part)",
+      "Saint-Martin (partie française)",
+      "San Martín (parte francesa)",
+      "Сен-Мартен (французская часть)",
+      "سانت مارتن (الجزء الفرنسي)",
+      "圣马丁（法属）"
+    ],
+    "圣文森特和格林纳丁斯": [
+      "Saint Vincent and the Grenadines",
+      "Saint-Vincent-et-les Grenadines",
+      "San Vicente y las Granadinas",
+      "Сент-Винсент и Гренадины",
+      "سانت فنسنت وجزر غرينادين",
+      "圣文森特和格林纳丁斯"
+    ],
+    "圣马丁（荷属）": [
+      "Saint-Martin (partie néerlandaise)",
+      "San Martín (parte Holandesa)",
+      "Sint Maarten (Dutch part)",
+      "Синт-Мартен (нидерландская часть)",
+      "سانت مارتن (الجزء الهولندي)",
+      "圣马丁（荷属）"
+    ],
+    "特立尼达和多巴哥": [
+      "Trinidad and Tobago",
+      "Trinidad y Tabago",
+      "Trinité-et-Tobago",
+      "Тринидад и Тобаго",
+      "ترينيداد وتوباغو",
+      "特立尼达和多巴哥"
+    ],
+    "特克斯和凯科斯群岛": [
+      "Islas Turcas y Caicos",
+      "Turks and Caicos Islands",
+      "Îles Turques-et-Caïques",
+      "Острова Теркс и Кайкос",
+      "جزر تركس وكايكوس",
+      "特克斯和凯科斯群岛"
+    ],
+    "美属维尔京群岛": [
+      "Islas Vírgenes de los Estados Unidos",
+      "United States Virgin Islands",
+      "Îles Vierges américaines",
+      "Виргинские острова Соединенных Штатов",
+      "جزر فرجن التابعة للولايات المتحدة",
+      "美属维尔京群岛"
+    ],
+    "伯利兹": [
+      "Belice",
+      "Belize",
+      "Белиз",
+      "بليز",
+      "伯利兹"
+    ],
+    "哥斯达黎加": [
+      "Costa Rica",
+      "Коста-Рика",
+      "كوستاريكا",
+      "哥斯达黎加"
+    ],
+    "萨尔瓦多": [
+      "El Salvador",
+      "Сальвадор",
+      "السلفادور",
+      "萨尔瓦多"
+    ],
+    "危地马拉": [
+      "Guatemala",
+      "Гватемала",
+      "غواتيمالا",
+      "危地马拉"
+    ],
+    "洪都拉斯": [
+      "Honduras",
+      "Гондурас",
+      "هندوراس",
+      "洪都拉斯"
+    ],
+    "尼加拉瓜": [
+      "Nicaragua",
+      "Никарагуа",
+      "نيكاراغوا",
+      "尼加拉瓜"
+    ],
+    "巴拿马": [
+      "Panama",
+      "Panamá",
+      "Панама",
+      "بنما",
+      "巴拿马"
+    ],
+    "布维岛": [
+      "Bouvet Island",
+      "Isla Bouvet",
+      "Île Bouvet",
+      "Остров Буве",
+      "جزيرة بوفيت",
+      "布维岛"
+    ],
+    "福克兰群岛（马尔维纳斯）": [
+      "Falkland Islands (Malvinas)",
+      "Islas Malvinas (Falkland)",
+      "Îles Falkland (Malvinas)",
+      "Фолклендские (Мальвинские) острова",
+      "جزر فوكلاند (مالفيناس)",
+      "福克兰群岛（马尔维纳斯）"
+    ],
+    "法属圭亚那": [
+      "French Guiana",
+      "Guayana Francesa",
+      "Guyane française",
+      "Французская Гвиана",
+      "غيانا الفرنسية",
+      "法属圭亚那"
+    ],
+    "圭亚那": [
+      "Guyana",
+      "Гайана",
+      "غيانا",
+      "圭亚那"
+    ],
+    "巴拉圭": [
+      "Paraguay",
+      "Парагвай",
+      "باراغواي",
+      "巴拉圭"
+    ],
+    "南乔治亚岛和南桑德韦奇岛": [
+      "Georgia del Sur y las Islas Sandwich del Sur",
+      "Géorgie du Sud-et-les Îles Sandwich du Sud",
+      "South Georgia and the South Sandwich Islands",
+      "Южная Джорджия и Южные Сандвичевы острова",
+      "جورجيا الجنوبية وجزر ساندويتش الجنوبية",
+      "南乔治亚岛和南桑德韦奇岛"
+    ],
+    "苏里南": [
+      "Suriname",
+      "Суринам",
+      "سورينام",
+      "苏里南"
+    ],
+    "乌拉圭": [
+      "Uruguay",
+      "Уругвай",
+      "أوروغواي",
+      "乌拉圭"
+    ],
+    "委内瑞拉": [
+      "Venezuela",
+      "Venezuela (Bolivarian Republic of)",
+      "Venezuela (República Bolivariana de)",
+      "Venezuela (République bolivarienne du)",
+      "Venezuelan",
+      "Венесуэла (Боливарианская Республика)",
+      "فنزويلا (جمهورية - البوليفارية)",
+      "委内瑞拉",
+      "委内瑞拉玻利瓦尔共和国"
+    ],
+    "百慕大": [
+      "Bermuda",
+      "Bermudes",
+      "Бермудские острова",
+      "برمودا",
+      "百慕大"
+    ],
+    "格陵兰": [
+      "Greenland",
+      "Groenland",
+      "Groenlandia",
+      "Гренландия",
+      "غرينلند",
+      "格陵兰"
+    ],
+    "圣皮埃尔和密克隆": [
+      "Saint Pierre and Miquelon",
+      "Saint-Pierre-et-Miquelon",
+      "San Pedro y Miquelón",
+      "Сен-Пьер и Микелон",
+      "سان بيير وميكلون",
+      "圣皮埃尔和密克隆"
+    ],
+    "南极洲": [
+      "Antarctica",
+      "Antarctique",
+      "Antártida",
+      "Антарктике",
+      "أنتاركتيكا",
+      "南极洲"
+    ],
+    "吉尔吉斯斯坦": [
+      "Kirghizistan",
+      "Kirguistán",
+      "Kyrgyzstan",
+      "Кыргызстан",
+      "قيرغيزستان",
+      "吉尔吉斯斯坦"
+    ],
+    "塔吉克斯坦": [
+      "Tadjikistan",
+      "Tajikistan",
+      "Tayikistán",
+      "Таджикистан",
+      "طاجيكستان",
+      "塔吉克斯坦"
+    ],
+    "土库曼斯坦": [
+      "Turkmenistan",
+      "Turkmenistán",
+      "Turkménistan",
+      "Туркменистан",
+      "تركمانستان",
+      "土库曼斯坦"
+    ],
+    "中国香港": [
+      "China, Hong Kong Special Administrative Region",
+      "China, región administrativa especial de Hong Kong",
+      "Chine, région administrative spéciale de Hong Kong",
+      "Китай, Специальный административный район Гонконг",
+      "الصين، منطقة هونغ كونغ الإدارية الخاصة",
+      "中国香港",
+      "中国香港特别行政区"
+    ],
+    "中国澳门": [
+      "China, Macao Special Administrative Region",
+      "China, región administrativa especial de Macao",
+      "Chine, région administrative spéciale de Macao",
+      "Китай, Специальный административный район Макао",
+      "الصين، منطقة ماكاو الإدارية الخاصة",
+      "中国澳门",
+      "中国澳门特别行政区"
+    ],
+    "朝鲜": [
+      "Democratic People's Republic of Korea",
+      "North Korea",
+      "North Korean",
+      "República Popular Democrática de Corea",
+      "République populaire démocratique de Corée",
+      "Корейская Народно-Демократическая Республика",
+      "جمهورية كوريا الشعبية الديمقراطية",
+      "朝鲜",
+      "朝鲜民主主义人民共和国"
+    ],
+    "文莱": [
+      "Brunei",
+      "Brunei Darussalam",
+      "Brunéi Darussalam",
+      "Бруней-Даруссалам",
+      "بروني دار السلام",
+      "文莱",
+      "文莱达鲁萨兰国"
+    ],
+    "柬埔寨": [
+      "Cambodge",
+      "Cambodia",
+      "Camboya",
+      "Камбоджа",
+      "كمبوديا",
+      "柬埔寨"
+    ],
+    "老挝": [
+      "Lao PDR",
+      "Lao People's Democratic Republic",
+      "Laos",
+      "República Democrática Popular Lao",
+      "République démocratique populaire lao",
+      "Лаосская Народно-Демократическая Республика",
+      "جمهورية لاو الديمقراطية الشعبية",
+      "老挝",
+      "老挝人民民主共和国"
+    ],
+    "缅甸": [
+      "Myanmar",
+      "Мьянма",
+      "ميانمار",
+      "缅甸"
+    ],
+    "新加坡": [
+      "Singapore",
+      "Singapour",
+      "Singapur",
+      "Сингапур",
+      "سنغافورة",
+      "新加坡"
+    ],
+    "泰国": [
+      "Tailandia",
+      "Thailand",
+      "Thaïlande",
+      "Таиланд",
+      "تايلند",
+      "泰国"
+    ],
+    "东帝汶": [
+      "Timor-Leste",
+      "Тимор-Лешти",
+      "تيمور - ليشتي",
+      "东帝汶"
+    ],
+    "阿富汗": [
+      "Afganistán",
+      "Afghanistan",
+      "Афганистан",
+      "أفغانستان",
+      "阿富汗"
+    ],
+    "孟加拉国": [
+      "Bangladesh",
+      "Бангладеш",
+      "بنغلاديش",
+      "孟加拉国"
+    ],
+    "不丹": [
+      "Bhoutan",
+      "Bhutan",
+      "Bhután",
+      "Бутан",
+      "بوتان",
+      "不丹"
+    ],
+    "伊朗": [
+      "Iran",
+      "Iran (Islamic Republic of)",
+      "Iran (République islamique d’)",
+      "Iranian",
+      "Irán (República Islámica del)",
+      "Иран (Исламская Республика)",
+      "إيران (جمهورية - الإسلامية)",
+      "伊朗",
+      "伊朗伊斯兰共和国"
+    ],
+    "马尔代夫": [
+      "Maldivas",
+      "Maldives",
+      "Мальдивские Острова",
+      "ملديف",
+      "马尔代夫"
+    ],
+    "尼泊尔": [
+      "Nepal",
+      "Népal",
+      "Непал",
+      "نيبال",
+      "尼泊尔"
+    ],
+    "巴基斯坦": [
+      "Pakistan",
+      "Pakistán",
+      "Пакистан",
+      "باكستان",
+      "巴基斯坦"
+    ],
+    "斯里兰卡": [
+      "Sri Lanka",
+      "Шри-Ланка",
+      "سري لانكا",
+      "斯里兰卡"
+    ],
+    "亚美尼亚": [
+      "Armenia",
+      "Arménie",
+      "Армения",
+      "أرمينيا",
+      "亚美尼亚"
+    ],
+    "阿塞拜疆": [
+      "Azerbaijan",
+      "Azerbaiyán",
+      "Azerbaïdjan",
+      "Азербайджан",
+      "أذربيجان",
+      "阿塞拜疆"
+    ],
+    "巴林": [
+      "Bahrain",
+      "Bahrein",
+      "Bahreïn",
+      "Бахрейн",
+      "البحرين",
+      "巴林"
+    ],
+    "塞浦路斯": [
+      "Chipre",
+      "Chypre",
+      "Cyprus",
+      "Кипр",
+      "قبرص",
+      "塞浦路斯"
+    ],
+    "格鲁吉亚": [
+      "Georgian",
+      "Géorgie",
+      "Republic of Georgia",
+      "country of Georgia",
+      "Грузия",
+      "جورجيا",
+      "格鲁吉亚"
+    ],
+    "伊拉克": [
+      "Iraq",
+      "Ирак",
+      "العراق",
+      "伊拉克"
+    ],
+    "以色列": [
+      "Israel",
+      "Israël",
+      "Израиль",
+      "إسرائيل",
+      "以色列"
+    ],
+    "约旦": [
+      "Hashemite Kingdom of Jordan",
+      "Jordania",
+      "Jordanian",
+      "Jordanie",
+      "Иордания",
+      "الأردن",
+      "约旦"
+    ],
+    "科威特": [
+      "Koweït",
+      "Kuwait",
+      "Кувейт",
+      "الكويت",
+      "科威特"
+    ],
+    "黎巴嫩": [
+      "Lebanon",
+      "Liban",
+      "Líbano",
+      "Ливан",
+      "لبنان",
+      "黎巴嫩"
+    ],
+    "阿曼": [
+      "Oman",
+      "Omán",
+      "Оман",
+      "عمان",
+      "阿曼"
+    ],
+    "卡塔尔": [
+      "Qatar",
+      "Катар",
+      "قطر",
+      "卡塔尔"
+    ],
+    "巴勒斯坦": [
+      "Estado de Palestina",
+      "Palestine",
+      "State of Palestine",
+      "État de Palestine",
+      "Государство Палестина",
+      "دولة فلسطين",
+      "巴勒斯坦",
+      "巴勒斯坦国"
+    ],
+    "叙利亚": [
+      "República Árabe Siria",
+      "République arabe syrienne",
+      "Syria",
+      "Syrian",
+      "Syrian Arab Republic",
+      "Сирийская Арабская Республика",
+      "الجمهورية العربية السورية",
+      "叙利亚",
+      "阿拉伯叙利亚共和国"
+    ],
+    "阿拉伯联合酋长国": [
+      "Emiratos Árabes Unidos",
+      "United Arab Emirates",
+      "Émirats arabes unis",
+      "Объединенные Арабские Эмираты",
+      "الإمارات العربية المتحدة",
+      "阿拉伯联合酋长国"
+    ],
+    "也门": [
+      "Yemen",
+      "Yémen",
+      "Йемен",
+      "اليمن",
+      "也门"
+    ],
+    "白俄罗斯": [
+      "Belarus",
+      "Belarús",
+      "Bélarus",
+      "Беларусь",
+      "بيلاروس",
+      "白俄罗斯"
+    ],
+    "保加利亚": [
+      "Bulgaria",
+      "Bulgarie",
+      "Болгария",
+      "بلغاريا",
+      "保加利亚"
+    ],
+    "捷克": [
+      "Chequia",
+      "Czech",
+      "Czech Republic",
+      "Czechia",
+      "Tchéquie",
+      "Чехия",
+      "تشيكيا",
+      "捷克"
+    ],
+    "匈牙利": [
+      "Hongrie",
+      "Hungary",
+      "Hungría",
+      "Венгрия",
+      "هنغاريا",
+      "匈牙利"
+    ],
+    "摩尔多瓦": [
+      "Moldova",
+      "Republic of Moldova",
+      "República de Moldova",
+      "République de Moldova",
+      "Республика Молдова",
+      "جمهورية مولدوفا",
+      "摩尔多瓦",
+      "摩尔多瓦共和国"
+    ],
+    "罗马尼亚": [
+      "Romania",
+      "Roumanie",
+      "Rumania",
+      "Румыния",
+      "رومانيا",
+      "罗马尼亚"
+    ],
+    "斯洛伐克": [
+      "Eslovaquia",
+      "Slovakia",
+      "Slovaquie",
+      "Словакия",
+      "سلوفاكيا",
+      "斯洛伐克"
+    ],
+    "奥兰群岛": [
+      "Islas Åland",
+      "Åland Islands",
+      "Îles d’Åland",
+      "Аландских островов",
+      "جزر ألاند",
+      "奥兰群岛"
+    ],
+    "丹麦": [
+      "Danemark",
+      "Denmark",
+      "Dinamarca",
+      "Дания",
+      "الدانمرك",
+      "丹麦"
+    ],
+    "爱沙尼亚": [
+      "Estonia",
+      "Estonie",
+      "Эстония",
+      "إستونيا",
+      "爱沙尼亚"
+    ],
+    "法罗群岛": [
+      "Faroe Islands",
+      "Islas Feroe",
+      "Îles Féroé",
+      "Фарерские острова",
+      "جزر فايرو",
+      "法罗群岛"
+    ],
+    "格恩西": [
+      "Guernesey",
+      "Guernsey",
+      "Гернси",
+      "غيرنسي",
+      "格恩西"
+    ],
+    "冰岛": [
+      "Iceland",
+      "Islande",
+      "Islandia",
+      "Исландия",
+      "آيسلندا",
+      "冰岛"
+    ],
+    "爱尔兰": [
+      "Ireland",
+      "Irlanda",
+      "Irlande",
+      "Ирландия",
+      "آيرلندا",
+      "爱尔兰"
+    ],
+    "马恩岛": [
+      "Isla de Man",
+      "Isle of Man",
+      "Île de Man",
+      "Остров Мэн",
+      "جزيرة مان",
+      "马恩岛"
+    ],
+    "泽西": [
+      "Джерси",
+      "جيرسي",
+      "泽西"
+    ],
+    "拉脱维亚": [
+      "Latvia",
+      "Letonia",
+      "Lettonie",
+      "Латвия",
+      "لاتفيا",
+      "拉脱维亚"
+    ],
+    "立陶宛": [
+      "Lithuania",
+      "Lituania",
+      "Lituanie",
+      "Литва",
+      "ليتوانيا",
+      "立陶宛"
+    ],
+    "斯瓦尔巴群岛和扬马延岛": [
+      "Islas Svalbard y Jan Mayen",
+      "Svalbard and Jan Mayen Islands",
+      "Îles Svalbard-et-Jan Mayen",
+      "Острова Свальбард и Ян-Майен",
+      "جزيرتي سفالبارد وجان مايِن",
+      "斯瓦尔巴群岛和扬马延岛"
+    ],
+    "阿尔巴尼亚": [
+      "Albania",
+      "Albanie",
+      "Албания",
+      "ألبانيا",
+      "阿尔巴尼亚"
+    ],
+    "安道尔": [
+      "Andorra",
+      "Andorre",
+      "Андорра",
+      "أندورا",
+      "安道尔"
+    ],
+    "波斯尼亚和黑塞哥维那": [
+      "Bosnia and Herzegovina",
+      "Bosnia y Herzegovina",
+      "Bosnie-Herzégovine",
+      "Босния и Герцеговина",
+      "البوسنة والهرسك",
+      "波斯尼亚和黑塞哥维那"
+    ],
+    "克罗地亚": [
+      "Croacia",
+      "Croatia",
+      "Croatie",
+      "Хорватия",
+      "كرواتيا",
+      "克罗地亚"
+    ],
+    "直布罗陀": [
+      "Gibraltar",
+      "Гибралтар",
+      "جبل طارق",
+      "直布罗陀"
+    ],
+    "希腊": [
+      "Grecia",
+      "Greece",
+      "Grèce",
+      "Греция",
+      "اليونان",
+      "希腊"
+    ],
+    "教廷": [
+      "Holy See",
+      "Saint-Siège",
+      "Santa Sede",
+      "Святой Престол",
+      "الكرسي الرسولي",
+      "教廷"
+    ],
+    "意大利": [
+      "Italia",
+      "Italie",
+      "Italy",
+      "Италия",
+      "إيطاليا",
+      "意大利"
+    ],
+    "马耳他": [
+      "Malta",
+      "Malte",
+      "Мальта",
+      "مالطة",
+      "马耳他"
+    ],
+    "黑山": [
+      "Montenegro",
+      "Monténégro",
+      "Черногория",
+      "الجبل الأسود",
+      "黑山"
+    ],
+    "北马其顿": [
+      "Macedonia del Norte",
+      "Macédoine du Nord",
+      "North Macedonia",
+      "Северная Македония",
+      "مقدونيا الشمالية",
+      "北马其顿"
+    ],
+    "圣马力诺": [
+      "Saint-Marin",
+      "San Marino",
+      "Сан-Марино",
+      "سان مارينو",
+      "圣马力诺"
+    ],
+    "塞尔维亚": [
+      "Serbia",
+      "Serbie",
+      "Сербия",
+      "صربيا",
+      "塞尔维亚"
+    ],
+    "斯洛文尼亚": [
+      "Eslovenia",
+      "Slovenia",
+      "Slovénie",
+      "Словения",
+      "سلوفينيا",
+      "斯洛文尼亚"
+    ],
+    "奥地利": [
+      "Austria",
+      "Autriche",
+      "Австрия",
+      "النمسا",
+      "奥地利"
+    ],
+    "比利时": [
+      "Belgique",
+      "Belgium",
+      "Bélgica",
+      "Бельгия",
+      "بلجيكا",
+      "比利时"
+    ],
+    "列支敦士登": [
+      "Liechtenstein",
+      "Лихтенштейн",
+      "ليختنشتاين",
+      "列支敦士登"
+    ],
+    "卢森堡": [
+      "Luxembourg",
+      "Luxemburgo",
+      "Люксембург",
+      "لكسمبرغ",
+      "卢森堡"
+    ],
+    "摩纳哥": [
+      "Monaco",
+      "Mónaco",
+      "Монако",
+      "موناكو",
+      "摩纳哥"
+    ],
+    "荷兰王国": [
+      "Netherlands (Kingdom of the)",
+      "Pays-Bas (Royaume des)",
+      "Países Bajos (Reino de los)",
+      "Нидерланды (Королевство)",
+      "هولندا (مملكة _)",
+      "荷兰王国"
+    ],
+    "瑞士": [
+      "Suisse",
+      "Suiza",
+      "Switzerland",
+      "Швейцария",
+      "سويسرا",
+      "瑞士"
+    ],
+    "圣诞岛": [
+      "Christmas Island",
+      "Isla Christmas",
+      "Île Christmas",
+      "остров Рождества",
+      "جزيرة عيد الميلاد",
+      "圣诞岛"
+    ],
+    "科科斯（基林）群岛": [
+      "Cocos (Keeling) Islands",
+      "Islas Cocos (Keeling)",
+      "Îles des Cocos (Keeling)",
+      "Кокосовых (Килинг) островов",
+      "جزر كوكس (كيلينغ)",
+      "科科斯（基林）群岛"
+    ],
+    "赫德岛和麦克唐纳岛": [
+      "Heard Island and McDonald Islands",
+      "Islas Heard y McDonald",
+      "Île Heard-et-Îles MacDonald",
+      "Остров Херд и острова Макдональд",
+      "جزيرة هيرد وجزر ماكدونالد",
+      "赫德岛和麦克唐纳岛"
+    ],
+    "新西兰": [
+      "New Zealand",
+      "Nouvelle-Zélande",
+      "Nueva Zelandia",
+      "Новая Зеландия",
+      "نيوزيلندا",
+      "新西兰"
+    ],
+    "诺福克岛": [
+      "Isla Norfolk",
+      "Norfolk Island",
+      "Île Norfolk",
+      "Остров Норфолк",
+      "جزيرة نورفولك",
+      "诺福克岛"
+    ],
+    "斐济": [
+      "Fidji",
+      "Fiji",
+      "Фиджи",
+      "فيجي",
+      "斐济"
+    ],
+    "新喀里多尼亚": [
+      "New Caledonia",
+      "Nouvelle-Calédonie",
+      "Nueva Caledonia",
+      "Новая Каледония",
+      "كاليدونيا الجديدة",
+      "新喀里多尼亚"
+    ],
+    "所罗门群岛": [
+      "Islas Salomón",
+      "Solomon Islands",
+      "Îles Salomon",
+      "Соломоновы Острова",
+      "جزر سليمان",
+      "所罗门群岛"
+    ],
+    "瓦努阿图": [
+      "Vanuatu",
+      "Вануату",
+      "فانواتو",
+      "瓦努阿图"
+    ],
+    "关岛": [
+      "Guam",
+      "Гуам",
+      "غوام",
+      "关岛"
+    ],
+    "基里巴斯": [
+      "Kiribati",
+      "Кирибати",
+      "كيريباس",
+      "基里巴斯"
+    ],
+    "马绍尔群岛": [
+      "Islas Marshall",
+      "Marshall Islands",
+      "Îles Marshall",
+      "Маршалловы Острова",
+      "جزر مارشال",
+      "马绍尔群岛"
+    ],
+    "密克罗尼西亚联邦": [
+      "Micronesia (Estados Federados de)",
+      "Micronesia (Federated States of)",
+      "Micronésie (États fédérés de)",
+      "Микронезия (Федеративные Штаты)",
+      "ميكرونيزيا (ولايات - الموحدة)",
+      "密克罗尼西亚联邦"
+    ],
+    "瑙鲁": [
+      "Naoero",
+      "Наоэро",
+      "ناويرو",
+      "瑙鲁"
+    ],
+    "北马里亚纳群岛": [
+      "Islas Marianas Septentrionales",
+      "Northern Mariana Islands",
+      "Îles Mariannes du Nord",
+      "Северные Марианские острова",
+      "جزر ماريانا الشمالية",
+      "北马里亚纳群岛"
+    ],
+    "帕劳": [
+      "Palaos",
+      "Palau",
+      "Палау",
+      "بالاو",
+      "帕劳"
+    ],
+    "美国本土外小岛屿": [
+      "Islas menores alejadas de Estados Unidos",
+      "United States Minor Outlying Islands",
+      "Îles mineures éloignées des États-Unis",
+      "Внешние малые острова Соединенных Штатов",
+      "نائية التابعة للولايات المتحدة",
+      "美国本土外小岛屿"
+    ],
+    "美属萨摩亚": [
+      "American Samoa",
+      "Samoa Americana",
+      "Samoa américaines",
+      "Американское Самоа",
+      "ساموا الأمريكية",
+      "美属萨摩亚"
+    ],
+    "库克群岛": [
+      "Cook Islands",
+      "Islas Cook",
+      "Îles Cook",
+      "Острова Кука",
+      "جزر كوك",
+      "库克群岛"
+    ],
+    "法属波利尼西亚": [
+      "French Polynesia",
+      "Polinesia Francesa",
+      "Polynésie française",
+      "Французская Полинезия",
+      "بولينيزيا الفرنسية",
+      "法属波利尼西亚"
+    ],
+    "纽埃": [
+      "Nioué",
+      "Niue",
+      "Ниуэ",
+      "نيوي",
+      "纽埃"
+    ],
+    "皮特凯恩": [
+      "Pitcairn",
+      "Питкэрн",
+      "بيتكرن",
+      "皮特凯恩"
+    ],
+    "萨摩亚": [
+      "Samoa",
+      "Самоа",
+      "ساموا",
+      "萨摩亚"
+    ],
+    "托克劳": [
+      "Tokelau",
+      "Tokélaou",
+      "Токелау",
+      "توكيلاو",
+      "托克劳"
+    ],
+    "汤加": [
+      "Tonga",
+      "Тонга",
+      "تونغا",
+      "汤加"
+    ],
+    "图瓦卢": [
+      "Tuvalu",
+      "Тувалу",
+      "توفالو",
+      "图瓦卢"
+    ],
+    "瓦利斯群岛和富图纳群岛": [
+      "Islas Wallis y Futuna",
+      "Wallis and Futuna Islands",
+      "Îles Wallis-et-Futuna",
+      "Острова Уоллис и Футуна",
+      "جزر واليس وفوتونا",
+      "瓦利斯群岛和富图纳群岛"
     ]
   },
   "companies": {

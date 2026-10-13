@@ -937,3 +937,70 @@ sources:
       effective_date_evidence: 本法自2025年7月1日起施行
       max_items: 1
       verification: cloud_public_document_2026-10-12
+  country_monitoring:
+  - name: Minería Pan-Americana
+    url: https://www.mineria-pa.com/feed/
+    type: rss
+    category: news
+    region: 拉丁美洲
+    language: es
+    authority_score: 7
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      max_items: 30
+      fetch_full_content: false
+      min_interval: 1.5
+      license_required: false
+      require_mineral_match: true
+      verification: public_country_feed_2026-10-13
+      access_note: 公开 RSS/Atom 正文；遵守 robots；不采集付费正文
+  - name: Mining South East Europe
+    url: https://www.miningsee.eu/feed/
+    type: rss
+    category: news
+    region: 欧洲
+    language: en
+    authority_score: 6
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      max_items: 30
+      fetch_full_content: false
+      min_interval: 1.5
+      license_required: false
+      require_mineral_match: true
+      verification: public_country_feed_2026-10-13
+      access_note: 公开 RSS/Atom 正文；遵守 robots；不采集付费正文
+  - name: The Astana Times 矿业动态
+    url: https://astanatimes.com/category/business/feed/
+    type: rss
+    category: news
+    region: 哈萨克斯坦
+    language: en
+    authority_score: 6
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      max_items: 30
+      min_interval: 1.5
+      fetch_full_content: false
+      require_mineral_match: true
+      verification: public_country_feed_2026-10-13
+      access_note: 公开 RSS/Atom 正文；遵守 robots；不采集付费正文
+  - name: Mining Focus Africa
+    url: https://miningfocusafrica.com/feed/
+    type: rss
+    category: news
+    region: 非洲
+    language: en
+    authority_score: 6
+    fetch_interval: 21600
+    active: true
+    parser_config:
+      max_items: 30
+      min_interval: 1.5
+      fetch_full_content: false
+      require_mineral_match: true
+      verification: public_country_feed_2026-10-13
+      access_note: 公开 RSS/Atom 正文；遵守 robots；不采集付费正文

@@ -100,6 +100,18 @@ class RSSFetcher(BaseFetcher):
                     markup = entry.content[0].get("value", markup)
                 content = plain_text(markup)
                 full_text = False
+                if self.config.get("require_mineral_match"):
+                    from pipeline.processors.entities import extract_entities
+                    from pipeline.processors.policy_document import (
+                        general_mineral_policy,
+                    )
+
+                    title = plain_text(entry.get("title", ""))
+                    if not (
+                        extract_entities(title + "\n" + content)["minerals"]
+                        or general_mineral_policy(self.source, title, content)
+                    ):
+                        continue
                 if self.config.get("fetch_full_content", True):
                     try:
                         page = await self.transport.get(url)

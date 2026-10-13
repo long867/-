@@ -65,6 +65,63 @@ async def test_public_mineral_market_has_real_latest_series_and_coverage(busines
     assert data["quoted_products"] >= 1
 
 
+async def test_country_monitor_gates_evidence_topics_and_empty_coverage(
+    business, monkeypatch
+):
+    from app.services import country_monitor
+
+    def meta(name, code):
+        return dict(
+            name=name,
+            iso2=code,
+            iso3=code,
+            english_name="TEST COUNTRY",
+            continent="TEST",
+            subregion="TEST",
+            kind="country_or_area",
+        )
+
+    region = business["region"]
+    monkeypatch.setattr(
+        country_monitor,
+        "country_catalog",
+        lambda: [meta(region, "TEST"), meta("EMPTY FIXTURE", "EMPTY")],
+    )
+    async with business["factory"].begin() as db:
+        article = await db.get(Article, business["ids"][0])
+        article.title_zh = "铜矿出口限制与矿山勘探"
+        # Future and unpublished records cannot inflate observed country activity.
+        private = await db.get(Article, business["ids"][3])
+        private.published_at = datetime.now(UTC) + timedelta(days=3)
+    await invalidate_public_cache()
+    client = business["client"]
+    response = await client.get("/api/regions/monitor?days=7")
+    assert response.status_code == 200
+    data = response.json()
+    current = next(item for item in data["items"] if item["name"] == region)
+    assert current["article_count"] == 3 and current["recent_count"] == 3
+    assert current["source_count"] == 1 and current["policy_count"] == 1
+    assert current["topics"]["trade"] == 1
+    assert current["latest_article"]["id"] == str(business["ids"][0])
+    empty = next(item for item in data["items"] if item["name"] == "EMPTY FIXTURE")
+    assert empty["coverage_status"] == "uncovered" and empty["latest_article"] is None
+    detail = await client.get(f"/api/regions/{region}/intelligence")
+    assert detail.status_code == 200 and len(detail.json()["articles"]) == 3
+    filtered = await client.get("/api/regions/monitor?days=30&topic=trade&mineral=铜")
+    assert filtered.status_code == 200
+    assert (
+        next(i for i in filtered.json()["items"] if i["name"] == region)[
+            "article_count"
+        ]
+        == 1
+    )
+    feed = await client.get(f"/api/articles?region={region}&topic=trade")
+    assert feed.json()["total"] == 1
+    assert (await client.get("/api/regions/monitor?days=8")).status_code == 422
+    assert (await client.get("/api/regions/monitor?topic=invalid")).status_code == 422
+    assert (await client.get("/api/regions/unknown/intelligence")).status_code == 404
+
+
 @pytest_asyncio.fixture
 async def business():
     """Isolate evidence and accounts, retaining every pre-existing real article."""

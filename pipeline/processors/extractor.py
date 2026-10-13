@@ -109,7 +109,14 @@ async def extract(title: str, content: str, category: Category) -> EntityAnalysi
             "news/price/policy/report/company；relevance_score为矿产相关度0至1。"
             "返回minerals,regions,companies,projects,policies,category,relevance_score。",
             json.dumps(
-                {"title": title, "content": content[:24000], "vocabulary": lexicon()},
+                {
+                    "title": title,
+                    "content": content[:24000],
+                    "vocabulary": {
+                        "minerals": lexicon()["minerals"],
+                        "regions": analysis.regions,
+                    },
+                },
                 ensure_ascii=False,
             ),
         )

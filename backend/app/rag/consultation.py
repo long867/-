@@ -39,6 +39,7 @@ CURRENT_CLAIM = re.compile(
     r"最新(?:价格|报价|政策|数据)|(?:今日|今天|昨天|本周|今年).{0,15}"
     r"(?:报价|价格|涨|跌|产量|发布|实施)|数据显示|报告显示|公告显示|"
     r"(?:已宣布|已生效|已实施|已导致|实际上涨|实际下跌)"
+    r"|(?:已经?|已)(?:完成|建成|投产|达产|签署|收购|获批|批准|开工|停产|关闭)"
 )
 MARKET_QUANTITY = re.compile(
     r"US\$|USD|CNY|人民币|\d[\d,.]*\s*(?:%|％|美元|万元|亿元|"
@@ -88,12 +89,11 @@ def scaled_quantities(text: str) -> Counter[tuple[str, int, str]]:
     return result
 
 
-def quantities_match(original: str, answer: str) -> bool:
+def quantities_match(original: str, answer: str, language: str = "en") -> bool:
     """Reject silent million→万, billion→亿 and scaled tonnage→pounds changes."""
-    if not summary_measurements_valid(original, answer):
-        return False
-    available = scaled_quantities(original)
-    return all(quantity in available for quantity in scaled_quantities(answer))
+    # The shared validator now retains both magnitude and physical unit.
+    # Duplicating that parser here rejects faithful Spanish compound quantities.
+    return summary_measurements_valid(original, answer, language)
 
 
 def evidence_spans(source: Citation) -> list[tuple[int, int]]:
@@ -130,7 +130,9 @@ def needs_current_evidence(question: str) -> bool:
         return False
     return bool(
         re.search(
-            r"最新|实时|今天|今日|昨天|本周|本月|今年|20\d{2}年|现价|报价", question
+            r"最新|实时|今天|今日|昨天|本周|本月|今年|20\d{2}年|现价|报价|"
+            r"报道|新闻|公告|进展|动向|投产情况",
+            question,
         )
         or (
             re.search(r"价格|行情|走势", question)
@@ -266,7 +268,14 @@ def validate_discussion(
         and block.kind != "clarification"
         and CURRENT_CLAIM.search(block.text)
     ):
-        raise ValueError("unsourced_current_claim")
+        for match in CURRENT_CLAIM.finditer(block.text):
+            prefix = re.split(r"[。！？!?；;\n]", block.text[: match.start()])[-1]
+            conditional = re.search(r"如果|假如|假设|若|一旦|是否", prefix)
+            verification_advice = block.kind == "advice" and re.search(
+                r"(?:建议|应|需|请|先|再|务必).{0,16}(?:核实|确认|核对)", prefix
+            )
+            if not conditional and not verification_advice:
+                raise ValueError("unsourced_current_claim")
     if block.kind == "background" and MARKET_QUANTITY.search(block.text):
         raise ValueError("general_knowledge_contains_current_claim")
     return selected

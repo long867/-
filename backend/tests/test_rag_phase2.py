@@ -272,6 +272,7 @@ async def test_rerank_only_top_twenty_and_returns_reranker_scores(monkeypatch) -
                 title="铜",
                 title_zh="铜",
                 summary_zh="铜矿新闻摘要",
+                language="en",
                 url="https://example.com",
                 minerals=["铜"],
                 regions=[],

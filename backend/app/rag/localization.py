@@ -44,21 +44,21 @@ def chinese_prose(text: str) -> bool:
     return bool(count) and not (len(words) >= 8 and sum(map(len, words)) > count * 6)
 
 
-def translation_valid(original: str, translated: str) -> bool:
+def translation_valid(original: str, translated: str, language: str = "en") -> bool:
     """Require Chinese, every original number/unit, and no invented associations."""
     return (
         chinese_prose(translated)
         and "{{MI_NUM_" not in translated
-        and numeric_translation_valid(original, translated)
-        and not (measurements(original) - measurements(translated))
-        and summary_measurements_valid(original, translated)
+        and numeric_translation_valid(original, translated, language)
+        and not (measurements(original, language) - measurements(translated, language))
+        and summary_measurements_valid(original, translated, language)
     )
 
 
-def translation_key(original: str) -> str:
+def translation_key(original: str, language: str = "en") -> str:
     """Share only translations of identical original evidence, never conversations."""
-    digest = hashlib.sha256(original.encode()).hexdigest()
-    return "miningintel:rag:zh:v1:" + digest
+    digest = hashlib.sha256((language + "\0" + original).encode()).hexdigest()
+    return "miningintel:rag:zh:v2:" + digest
 
 
 async def localize_citations(
@@ -78,14 +78,20 @@ async def localize_citations(
             if chinese_prose(source.quote):
                 source.quote_zh = source.quote
                 continue
-            if source.quote_zh and translation_valid(source.quote, source.quote_zh):
+            if source.quote_zh and translation_valid(
+                source.quote, source.quote_zh, source.language
+            ):
                 continue
             source.quote_zh = None
             if cache:
                 try:
-                    cached = await cache.get(translation_key(source.quote))
+                    cached = await cache.get(
+                        translation_key(source.quote, source.language)
+                    )
                     value = cached.decode() if cached else ""
-                    if value and translation_valid(source.quote, value):
+                    if value and translation_valid(
+                        source.quote, value, source.language
+                    ):
                         source.quote_zh = value
                 except RedisError:
                     logger.warning("evidence_translation_cache_unavailable")
@@ -97,16 +103,18 @@ async def localize_citations(
             return result
         # Batching identical fragments reduces gateway calls in repeated citations.
         originals = list(dict.fromkeys(source.quote for source in missing))
+        languages = {source.quote: source.language for source in missing}
         payload, anchors = [], {}
         offset = 0
         for index, original in enumerate(originals):
             if "{{MI_NUM_" in original:
                 logger.warning("reserved_evidence_marker_rejected")
                 continue
-            masked, literals = mask_evidence(original, offset=offset)
+            language = languages[original]
+            masked, literals = mask_evidence(original, offset=offset, language=language)
             offset += len(literals)
             label = f"excerpt-{index + 1}"
-            anchors[label] = (original, literals)
+            anchors[label] = (original, literals, language)
             payload.append({"id": label, "text": masked, "anchor_meanings": literals})
         if not payload:
             return result
@@ -127,17 +135,17 @@ async def localize_citations(
             for item in items:
                 if not isinstance(item, dict) or item.get("id") not in anchors:
                     continue
-                original, literals = anchors[item["id"]]
+                original, literals, language = anchors[item["id"]]
                 value = item.get("quote_zh")
                 if not isinstance(value, str):
                     continue
                 value = restore_numeric_literals(value.strip(), literals)
-                if translation_valid(original, value):
+                if translation_valid(original, value, language):
                     accepted[original] = value
                     if cache:
                         try:
                             await cache.set(
-                                translation_key(original), value, ex=CACHE_TTL
+                                translation_key(original, language), value, ex=CACHE_TTL
                             )
                         except RedisError:
                             logger.warning("evidence_translation_cache_unavailable")

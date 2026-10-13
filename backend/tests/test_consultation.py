@@ -160,11 +160,119 @@ def test_scaled_resource_numbers_cannot_silently_change_magnitude_or_unit(
         AnswerBlock(kind="analysis", text="供货可能承压 [99]。", sources=[1]),
         AnswerBlock(kind="background", text="最新报价为999元/吨。"),
         AnswerBlock(kind="background", text="政府已宣布新的出口禁令。"),
+        AnswerBlock(kind="analysis", text="该银矿的连接坡道已完成，将提升运输效率。"),
+        AnswerBlock(kind="background", text="该公司已经签署新的承购协议。"),
+        AnswerBlock(kind="analysis", text="我已确认该项目已完成建设。"),
     ],
 )
 def test_analysis_rejects_false_precision_guarantees_and_fake_references(block):
     with pytest.raises(ValueError):
         validate_discussion(block, [policy_source()], "铜政策影响？")
+
+
+def test_spanish_fact_counts_and_months_remain_exactly_cited():
+    from app.rag.qa_chain import Claim, validate_claims
+
+    quote = "Cuatro plantas de litio se inauguran en octubre."
+    source = policy_source().model_copy(
+        update={
+            "title": "锂工厂更新",
+            "quote": quote,
+            "language": "es",
+            "published_at": None,
+            "end_char": 20 + len(quote),
+        }
+    )
+    answer, sources = validate_claims(
+        GroundedAnswer(
+            claims=[Claim(text="4座锂工厂将于10月投产。", evidence=1, quote=quote)]
+        ),
+        [source],
+    )
+    assert "[1]" in answer and sources[0].quote == quote
+    with pytest.raises(ValueError):
+        validate_claims(
+            GroundedAnswer(
+                claims=[Claim(text="5座锂工厂将于10月投产。", evidence=1, quote=quote)]
+            ),
+            [source],
+        )
+
+
+def test_conditional_project_advice_does_not_assert_completed_construction():
+    block = AnswerBlock(
+        kind="advice", text="如果连接坡道已完成，可先核对试运行记录和运输效率。"
+    )
+    assert validate_discussion(block, [], "如何核对矿山运输条件？") == []
+    assert quantities_match("3.4 millones de onzas", "3.4百万盎司", "es")
+    assert not quantities_match("3.4 millones de onzas", "3.4百万吨", "es")
+
+
+async def test_reported_development_retries_missing_model_citations(monkeypatch):
+    from unittest.mock import AsyncMock
+
+    from llama_index.core.schema import NodeWithScore, TextNode
+
+    from app.core.config import Settings
+    from app.rag import qa_chain as module
+
+    source = policy_source()
+    node = NodeWithScore(
+        node=TextNode(
+            id_=str(source.chunk_id),
+            text=source.quote,
+            metadata={
+                "article_id": str(source.article_id),
+                "title": source.title,
+                "url": source.url,
+                "source_name": source.source_name,
+                "published_at": source.published_at,
+                "start_char": source.start_char,
+                "end_char": source.end_char,
+            },
+        )
+    )
+    monkeypatch.setattr(
+        module, "get_settings", lambda: Settings(LLM_API_KEY="fixture", _env_file=None)
+    )
+    monkeypatch.setattr(
+        module,
+        "localize_citations",
+        AsyncMock(side_effect=lambda rows, **_kwargs: rows),
+    )
+    generate = AsyncMock(
+        side_effect=[
+            {
+                "blocks": [
+                    {"kind": "analysis", "text": "该项目已完成建设，将提升产量。"},
+                    {"kind": "advice", "text": "建议先核对项目验收记录。"},
+                ]
+            },
+            {
+                "blocks": [
+                    {
+                        "kind": "fact",
+                        "text": "铜出口需要许可。",
+                        "sources": [1],
+                        "span": 1,
+                    },
+                    {
+                        "kind": "analysis",
+                        "text": "如果许可审批放缓，交付时间可能受到影响。",
+                        "sources": [1],
+                    },
+                ]
+            },
+        ]
+    )
+    monkeypatch.setattr(module, "complete_json", generate)
+    response = await module.GroundedSynthesizer(
+        "根据报道分析铜矿进展和政策影响", []
+    ).asynthesize("铜矿", [node])
+    assert generate.await_count == 2
+    assert response.metadata["mode"] == "analytical"
+    assert response.metadata["sources"][0]["url"] == source.url
+    assert "[1]" in str(response) and "已完成建设" not in str(response)
 
 
 def test_general_concepts_are_answered_without_pretending_to_have_live_sources():

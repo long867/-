@@ -32,6 +32,7 @@ async def test_llamaindex_retrieval_keeps_filters_and_source_diversity(
                     title="Copper policy",
                     title_zh=None,
                     summary_zh=None,
+                    language="en",
                     published_at=None,
                     minerals=["铜"],
                     regions=["智利"],

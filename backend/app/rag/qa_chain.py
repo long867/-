@@ -50,6 +50,7 @@ from app.rag.retriever import HybridRetriever
 from app.schemas.api import ChatInput, ChatOut, Citation
 from app.services.llm import complete_json
 from pipeline.processors.entities import extract_entities
+from pipeline.processors.translator import calendar_month_counts, number_words
 from pipeline.processors.translator import numbers as numeric_values
 
 INSUFFICIENT = "根据现有资料，未找到相关信息"
@@ -105,6 +106,8 @@ SYSTEM_PROMPT = (
     "analysis/advice 如果基于具体资料就引用相关编号；一般性分析和流程建议"
     "可以 sources: []，不需要为了给建议而寻找原文，不要编造引用。"
     "background/clarification 不引用资料。"
+    "具体矿山或公司的已完成、已投产、已签约等进展是fact，不是background或无来源analysis。"
+    "用户要求依据报道时，至少提供一个可支持的fact及对应sources和span，再给条件性分析。"
     "text 不含原文长段、不含链接、不手写来源标记；系统添加编号。"
     "找不到可支持的数据时不要编造 fact，仍可给 background 或 clarification；"
     "完全无法回答则返回 blocks: []。"
@@ -268,9 +271,11 @@ def validate_claims(
             + "\n"
             + (source.published_at.isoformat() if source.published_at else "")
         )
-        if set(numeric_values(claim.text)) - set(numeric_values(evidence)):
+        supported = numeric_values(evidence) + number_words(evidence, source.language)
+        supported += calendar_month_counts(evidence, claim.text, source.language)
+        if set(numeric_values(claim.text)) - set(supported):
             raise ValueError("A numerical claim is absent from its evidence")
-        if not quantities_match(evidence, claim.text):
+        if not quantities_match(evidence, claim.text, source.language):
             raise ValueError("A claim changed the units or currency of its evidence")
         narrowed = source.model_copy(
             update={
@@ -479,6 +484,7 @@ class GroundedSynthesizer(BaseSynthesizer):
                 end_char=node.node.metadata["end_char"],
                 published_at=node.node.metadata["published_at"],
                 source_name=node.node.metadata["source_name"],
+                language=node.node.metadata.get("language", "en"),
                 summary_zh=node.node.metadata.get("summary_zh"),
             )
             for index, node in enumerate(nodes, start=1)
@@ -492,7 +498,7 @@ class GroundedSynthesizer(BaseSynthesizer):
                     result = GroundedAnswer.model_validate(
                         await complete_json(
                             SYSTEM_PROMPT,
-                            json.dumps(
+                            request_payload := json.dumps(
                                 {
                                     "history": [
                                         {
@@ -543,13 +549,37 @@ class GroundedSynthesizer(BaseSynthesizer):
                             ),
                         )
                     )
-                    answer, citations, mode = validate_conversation(
+                    answer, selected, mode = validate_conversation(
                         result,
                         citations,
                         self.question,
                         scenario_context="\n".join(self.context.scenarios),
                     )
+                    if (
+                        citations
+                        and not selected
+                        and needs_current_evidence(self.question)
+                    ):
+                        result = GroundedAnswer.model_validate(
+                            await complete_json(
+                                SYSTEM_PROMPT + "上次回答没有有效来源。请纠正："
+                                "具体事件必须用fact，并选择evidence中的编号和支持句span；"
+                                "不得把已完成、已投产或已签约包装成一般知识。"
+                                "若证据不能支持问题，明确说明，不编造具体事件。",
+                                request_payload,
+                            )
+                        )
+                        answer, selected, mode = validate_conversation(
+                            result,
+                            citations,
+                            self.question,
+                            scenario_context="\n".join(self.context.scenarios),
+                        )
+                        if not selected:
+                            raise ValueError("Reported development requires a source")
+                    citations = selected
                 except Exception as exc:
+                    mode = "extractive" if citations else "insufficient"
                     structlog.get_logger().warning(
                         "rag_generation_fallback", error_type=type(exc).__name__
                     )

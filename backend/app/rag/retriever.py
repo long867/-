@@ -302,6 +302,7 @@ class HybridRetriever(BaseRetriever):
                             "summary_zh": article.summary_zh,
                             "url": article.url,
                             "source_name": source_name,
+                            "language": article.language,
                             "published_at": article.published_at.isoformat()
                             if article.published_at
                             else None,

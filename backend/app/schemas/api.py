@@ -235,6 +235,7 @@ class Citation(BaseModel):
     end_char: int
     published_at: datetime | None
     source_name: str = "未知来源"
+    language: str = Field(default="en", max_length=20)
     quote_zh: str | None = None
     summary_zh: str | None = None
 

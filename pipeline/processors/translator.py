@@ -223,6 +223,14 @@ UNIT_ALIASES = {
     "亿": "hundred_million",
     "万亿": "trillion",
     "trillion": "trillion",
+    "m": "米",
+    "bn": "financial_billion",
+    "b": "financial_billion",
+    "mil": "mil",
+    "克": "克",
+    "grams": "克",
+    "gram": "克",
+    "g": "克",
 }
 UNIT_PATTERN = "|".join(
     re.escape(unit)
@@ -233,18 +241,19 @@ PHYSICAL_PATTERN = "|".join(
     re.escape(unit)
     + (r"(?![A-Za-zÀ-ÖØ-öø-ÿ])" if re.search(r"[A-Za-zÀ-ÖØ-öø-ÿ]$", unit) else "")
     for unit in sorted(UNIT_ALIASES, key=len, reverse=True)
-    if UNIT_ALIASES[unit] in {"米", "千米", "吨", "短吨", "盎司", "磅", "公顷", "g/t"}
+    if UNIT_ALIASES[unit]
+    in {"米", "千米", "吨", "短吨", "盎司", "磅", "公顷", "g/t", "克"}
 )
 MEASUREMENT = re.compile(
     rf"(?P<currency>US\$|C\$|A\$|USD\s*|CAD\s*|AUD\s*|CNY\s*|GBP\s*|EUR\s*|[$€£¥￥])?"
     rf"(?P<number>{NUMBER})(?P<unit>\s*[-–]?\s*(?:{UNIT_PATTERN}))?"
-    rf"(?P<physical>\s*(?:de\s+)?(?:{PHYSICAL_PATTERN}))?"
+    rf"(?P<physical>\s*[-–]?\s*(?:de\s+)?(?:{PHYSICAL_PATTERN}))?"
     r"(?P<suffix>\s*(?:美元|加元|澳元|人民币|英镑|欧元|USD\b|CAD\b|AUD\b|CNY\b|GBP\b|EUR\b))?",
     re.I,
 )
 
 
-def measurements(text: str) -> Counter[tuple[str, str, str]]:
+def measurements(text: str, language: str = "en") -> Counter[tuple[str, str, str]]:
     """Compare anchored values and units; never equate million with billion."""
     result: Counter[tuple[str, str, str]] = Counter()
     for match in MEASUREMENT.finditer(text):
@@ -261,6 +270,14 @@ def measurements(text: str) -> Counter[tuple[str, str, str]]:
                 (v for k, v in UNIT_ALIASES.items() if k.casefold() == unit.casefold()),
                 unit,
             )
+            if unit.casefold() == "m" and currency:
+                canonical = "million"
+            elif canonical == "financial_billion" and (
+                currency or match.group("physical")
+            ):
+                canonical = "billion"
+            elif canonical == "mil" and language.lower().startswith("es"):
+                canonical = "thousand"
             if canonical in {"USD", "CAD", "AUD", "CNY", "GBP", "EUR"} and not currency:
                 currency, canonical = canonical, ""
             elif canonical == "元/吨":
@@ -268,7 +285,8 @@ def measurements(text: str) -> Counter[tuple[str, str, str]]:
             elif canonical in {"USD/吨", "CAD/吨", "CNY/吨"}:
                 currency, canonical = canonical.split("/")
             if physical := match.group("physical"):
-                physical = re.sub(r"^de\s+", "", physical.strip(), flags=re.I)
+                physical = physical.strip().lstrip("-–").strip()
+                physical = re.sub(r"^de\s+", "", physical, flags=re.I)
                 physical_unit = next(
                     value
                     for alias, value in UNIT_ALIASES.items()
@@ -295,7 +313,9 @@ def summary_measurements_valid(
         re.I,
     ):
         return False
-    available = measurements(original)
+    if re.search(rf"{NUMBER}\s*[%％]\s*[%％]", summary):
+        return False
+    available = measurements(original, language)
     for match in re.finditer(
         r"\b("
         + ("|".join(number_word_values(language)) or r"(?!)")
@@ -307,8 +327,10 @@ def summary_measurements_valid(
     ):
         values = number_words(match.group(1), language)
         if values:
-            available.update(measurements(next(iter(values)) + " " + match.group(2)))
-    actual = measurements(summary)
+            available.update(
+                measurements(next(iter(values)) + " " + match.group(2), language)
+            )
+    actual = measurements(summary, language)
     for value, currency, unit in actual:
         if unit == "年" and not currency and 1900 <= Decimal(value) <= 2100:
             if value in numbers(original):
@@ -392,12 +414,15 @@ async def translate_fragment(
             anchors_valid = tokens == expected or (
                 not tokens
                 and numeric_translation_valid(part, value, language)
-                and measurements(part) == measurements(value)
+                and measurements(part, language) == measurements(value, language)
             )
             if (
                 anchors_valid
                 and numeric_translation_valid(part, restored, language)
-                and (tokens == expected or measurements(part) == measurements(restored))
+                and (
+                    tokens == expected
+                    or measurements(part, language) == measurements(restored, language)
+                )
                 and re.search(r"[\u3400-\u9fff]", restored)
             ):
                 return restored

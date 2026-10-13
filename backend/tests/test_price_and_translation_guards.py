@@ -60,6 +60,19 @@ def test_chinese_scale_and_compound_unit_changes_are_rejected():
     assert not summary_measurements_valid("27,000 Tonnes", "27,000 Tonnes吨")
     assert summary_measurements_valid("3.4 millones de onzas", "3.4百万盎司", "es")
     assert not summary_measurements_valid("3.4 millones de onzas", "3.4百万吨", "es")
+    assert summary_measurements_valid("US$100m financing", "US$100百万融资")
+    assert not summary_measurements_valid("US$100m financing", "US$100万融资")
+    assert summary_measurements_valid("$3.46B investment", "$3.46十亿投资")
+    assert not summary_measurements_valid("$3.46B investment", "$3.46亿投资")
+    assert summary_measurements_valid("100m drilling", "100米钻探")
+    assert not summary_measurements_valid("100m drilling", "100百万米钻探")
+    assert summary_measurements_valid("18B-lb copper", "18十亿磅铜")
+    assert not summary_measurements_valid("18B-lb copper", "18亿磅铜")
+    assert summary_measurements_valid("145 mil", "145千", "es")
+    assert not summary_measurements_valid("145 mil", "145万", "es")
+    assert not summary_measurements_valid("145 mil", "145千", "en")
+    assert not summary_measurements_valid("3.10% copper", "3.10%%铜")
+    assert not summary_measurements_valid("0.98 g/t gold", "0.98 g/t克黄金")
 
 
 def test_atomic_anchors_preserve_dates_units_magnitude_and_word_measurements():

@@ -111,8 +111,11 @@ jobs:
           docker run --rm --entrypoint promtool -v "$PWD/deploy:/rules:ro" -w /rules prom/prometheus:v3.2.1 test rules alert-tests.yml
       - name: Validate deploy scripts
         run: bash -n deploy/release.sh deploy/pull_images.sh
+      - name: Validate dynamic gateway DNS configuration
+        run: docker run --rm -v "$PWD/deploy/nginx.conf:/etc/nginx/nginx.conf:ro" nginx:1.28-alpine nginx -t
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     needs: [backend, frontend, containers, monitoring]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
     environment: production

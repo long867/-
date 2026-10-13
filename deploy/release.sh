@@ -35,13 +35,27 @@ if [[ -f .images.env ]]; then cp .images.env .images.previous.env; fi
 if [[ "$deployment_mode" == small ]]; then
   # Stop this project's optional services only; keep their data volumes.
   "${compose[@]}" stop prometheus grafana alertmanager backup qdrant
+  # Allow interactive API startup before the NLP worker imports its registry.
+  # Late-acknowledged tasks are recovered by Celery, not discarded.
+  "${compose[@]}" stop -t 30 worker beat
 fi
 "${compose[@]}" run --rm migrate
-"${compose[@]}" up -d --no-build --remove-orphans
 healthy=false
 stack_ready=false
+web_ready=true
+if [[ "$deployment_mode" == small ]]; then
+  if "${compose[@]}" up -d --no-build --wait --wait-timeout 180 api && \
+     "${compose[@]}" up -d --no-build --wait --wait-timeout 120 frontend nginx && \
+     "${compose[@]}" exec -T nginx nginx -t && \
+     "${compose[@]}" exec -T nginx nginx -s reload; then
+    echo 'Interactive web services are ready; starting background jobs'
+  else
+    web_ready=false
+  fi
+fi
 # Beat's previous leader lease can take 90 seconds to expire after recreation.
-if "${compose[@]}" up -d --no-build --wait --wait-timeout 300 && \
+if [[ "$web_ready" == true ]] && \
+   "${compose[@]}" up -d --no-build --remove-orphans --wait --wait-timeout 300 && \
    "${compose[@]}" exec -T nginx nginx -t && \
    "${compose[@]}" exec -T nginx nginx -s reload; then
   # Refresh Docker DNS after API/frontend containers receive new addresses.

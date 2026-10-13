@@ -148,6 +148,7 @@ def can_offer_background(question: str) -> bool:
             r"什么是|是什么|解释|区别|原理|因素|为什么|原因|影响|分析|研判|"
             r"怎么办|怎么做|应对|建议|风险|机会|走势|看法|你觉得|"
             r"如何|怎么|怎样|评估|规划|方案|总结|整理|汇报|有哪些|用途|值不值得|有用|"
+            r"哪个|哪一个|比较|对比|更好|优先|取舍|展开|具体|如果|假如|假设|"
             r"what is|explain|why|impact|analy[sz]|recommend",
             question,
             re.I,
@@ -250,6 +251,13 @@ def validate_discussion(
         + (item.published_at.isoformat() if item.published_at else "")
         for item in selected
     )
+    # Customer calculations have their own provenance. They may accompany a
+    # cited policy, but must not be silently attributed to that policy.
+    if block.kind in {"analysis", "advice"} and re.search(
+        r"(?:按|根据|结合|基于)?(?:你|用户|客户)(?:提供|给定|说|提到|的|目前)",
+        block.text,
+    ):
+        evidence += "\n" + question
     if block.kind == "clarification":
         if not block.text.rstrip().endswith(("?", "？")):
             raise ValueError("clarification_must_be_question")
@@ -282,18 +290,7 @@ def validate_discussion(
 
 
 def discussion_paragraph(block: AnswerBlock, citations: list[Citation]) -> str:
-    """Label the first clause so inference cannot masquerade as reported fact."""
-    labels = {
-        "analysis": "分析判断",
-        "advice": "建议",
-        "background": "一般行业分析",
-        "clarification": "",
-    }
-    label = labels[block.kind]
-    if block.kind == "analysis" and not citations:
-        label = "一般分析"
+    """Render conversational paragraphs; answer mode identifies their provenance."""
     text = block.text.strip()
-    if label and not text.startswith(label):
-        text = label + "：" + text
     marker = "".join(f"[{item.index}]" for item in citations)
     return text + (" " + marker if marker else "")

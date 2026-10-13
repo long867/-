@@ -62,7 +62,7 @@ def test_analysis_can_explain_mechanism_without_a_literal_causal_quote():
     )
     answer, sources, mode = validate_conversation(result, [source], "我们该怎么应对？")
     assert mode == "analytical"
-    assert answer.startswith("分析判断：")
+    assert answer.startswith("如果许可办理时间拉长")
     assert "建议先向供应商" in answer and answer.count("[1]") == 3
     assert source.quote not in answer
     assert sources[0].quote == source.quote
@@ -90,7 +90,7 @@ def test_bad_fact_does_not_discard_independently_supported_analysis():
         ]
     )
     answer, sources, mode = validate_conversation(result, [source], "有什么影响？")
-    assert "分析判断" in answer and "invented" not in answer
+    assert "交付的不确定性" in answer and "invented" not in answer
     assert mode == "analytical" and len(sources) == 1
 
 
@@ -289,7 +289,7 @@ def test_general_concepts_are_answered_without_pretending_to_have_live_sources()
     )
     answer, sources, mode = validate_conversation(result, [], "什么是稀土？")
     assert mode == "general" and sources == []
-    assert "17种" in answer and "一般行业分析" in answer
+    assert answer.startswith("稀土通常指17种")
     assert "未找到相关信息" not in answer
 
 
@@ -309,7 +309,7 @@ def test_qualitative_advice_does_not_require_an_arbitrary_article_citation():
         result, [], "我们该如何做采购风险管理？"
     )
     assert mode == "general" and not sources and "[1]" not in answer
-    assert "建议先整理供应商" in answer and "一般分析" in answer
+    assert "建议先整理供应商" in answer and "如果供应商集中" in answer
 
 
 def test_customer_scenario_quantity_is_not_mistaken_for_an_invented_market_quote():
@@ -370,7 +370,7 @@ def test_general_definition_with_wrong_model_role_never_invents_article_support(
         "解释资源量与储量的区别",
     )
     assert mode == "general" and sources == [] and "[1]" not in answer
-    assert "指示" in answer and "一般行业分析" in answer
+    assert answer.startswith("资源量分为推断、指示和测定")
     with pytest.raises(ValueError):
         validate_conversation(
             GroundedAnswer(
@@ -459,5 +459,5 @@ async def test_no_documents_does_not_disable_model_for_industry_concepts(monkeyp
     )
     assert response.metadata["mode"] == "general" and not response.metadata["sources"]
     assert "储量" in str(response) and "资源量" in str(response)
-    assert "一般行业分析" in str(response)
+    assert str(response).startswith("储量通常强调")
     assert json.loads(generate.await_args.args[1])["evidence"] == []

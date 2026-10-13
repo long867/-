@@ -10,7 +10,7 @@ import jieba
 import structlog
 from llama_index.core.retrievers import BaseRetriever
 from llama_index.core.schema import NodeWithScore, QueryBundle, TextNode
-from sqlalchemy import and_, func, or_, select, text
+from sqlalchemy import and_, case, func, or_, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
@@ -39,6 +39,24 @@ STOPWORDS = {
     "is",
     "what",
     "how",
+    "分析",
+    "影响",
+    "报道",
+    "已有",
+    "根据",
+    "说明",
+    "可能",
+    "请问",
+    "帮我",
+    "我们",
+    "一下",
+    "具体",
+    "建议",
+    "问题",
+    "优先",
+    "资料",
+    "source",
+    "please",
 }
 PRICE_WORDS = (
     "价格",
@@ -60,7 +78,10 @@ PRICE_WORDS = (
 
 def search_terms(query: str) -> list[str]:
     """Expand canonical labels into Chinese and original-language search terms."""
-    terms = [
+    # Preserve project/company names before long country-alias expansions reach
+    # the term cap. Conversational instructions must not dominate retrieval.
+    terms = re.findall(r"[A-Za-z][A-Za-zÀ-ÿ0-9'-]{2,}", query)
+    terms += [
         word.strip()
         for word in jieba.cut(query)
         if len(word.strip()) > 1 and word.lower() not in STOPWORDS
@@ -68,7 +89,9 @@ def search_terms(query: str) -> list[str]:
     for kind, names in extract_entities(query).items():
         for name in names:
             terms.extend(lexicon()[kind][name])
-    return list(dict.fromkeys(terms))[:30]
+    return list(dict.fromkeys(term for term in terms if term.lower() not in STOPWORDS))[
+        :30
+    ]
 
 
 def reciprocal_rank_fusion(
@@ -169,6 +192,17 @@ class HybridRetriever(BaseRetriever):
         document = func.to_tsvector(
             text("'simple'::regconfig"), ArticleChunk.search_text
         )
+        named_terms = set(re.findall(r"[A-Za-z][A-Za-zÀ-ÿ0-9'-]{2,}", query))
+        keyword_coverage = sum(
+            case(
+                (
+                    ArticleChunk.search_text.ilike(f"%{term}%", escape="\\"),
+                    4 if terms[index] in named_terms else 1,
+                ),
+                else_=0,
+            )
+            for index, term in enumerate(escaped)
+        )
         lexical = list(
             (
                 await self.db.execute(
@@ -182,6 +216,7 @@ class HybridRetriever(BaseRetriever):
                         )
                     )
                     .order_by(
+                        keyword_coverage.desc(),
                         func.ts_rank_cd(document, ts_query).desc(),
                         Article.published_at.desc().nullslast(),
                         ArticleChunk.id,

@@ -20,6 +20,7 @@ class ConversationContext(BaseModel):
     style: Literal["normal", "concise", "detailed"] = "normal"
     scenarios: list[str] = Field(default_factory=list, max_length=6)
     focus_year: int | None = Field(default=None, ge=1900, le=2100)
+    topic_question: str | None = Field(default=None, max_length=480)
     updated_at: datetime | None = None
 
 
@@ -34,7 +35,8 @@ PRIVATE_OR_INSTRUCTION = re.compile(
     re.I,
 )
 BUSINESS = re.compile(
-    r"采购|供应|交期|库存|用量|消耗|预算|产品|规格|合同|矿山|项目|研究|汇报|成本|冶炼"
+    r"采购|供应|交期|库存|用量|消耗|日耗|每日用|每天用|预算|产品|规格|"
+    r"合同|矿山|项目|研究|汇报|成本|冶炼"
 )
 
 
@@ -42,11 +44,21 @@ def remember(context: ConversationContext, question: str) -> ConversationContext
     """Update bounded topic and explicit business facts; never use assistant answers."""
     next_context = context.model_copy(deep=True)
     entities = extract_entities(question)
+    if not PRIVATE_OR_INSTRUCTION.search(question) and (
+        entities["minerals"]
+        or entities.get("companies")
+        or re.search(r"矿山|矿业|矿区|出口政策|这个项目", question)
+    ):
+        next_context.topic_question = question[:480]
     if entities["minerals"]:
-        switched = bool(
-            context.minerals and set(context.minerals) != set(entities["minerals"])
+        compared = bool(re.search(r"相比|对比|比较|哪个|哪一个|更好|取舍", question))
+        minerals = (
+            list(dict.fromkeys(context.minerals + entities["minerals"]))
+            if compared
+            else entities["minerals"]
         )
-        next_context.minerals = entities["minerals"][:8]
+        switched = bool(context.minerals and set(context.minerals) != set(minerals))
+        next_context.minerals = minerals[:8]
         if switched:
             next_context.regions = []
             next_context.products = []
@@ -89,14 +101,21 @@ def remember(context: ConversationContext, question: str) -> ConversationContext
             break
     if re.search(r"(?:请|以后|回答|说|讲).{0,8}(?:简洁|简短|少一点)|少说点", question):
         next_context.style = "concise"
-    elif re.search(r"请.{0,5}详细|讲详细|展开(?:说|讲)|多解释", question):
+    elif re.search(r"请.{0,5}详细|讲详细|展开(?:说|讲)?|多解释|具体一点", question):
         next_context.style = "detailed"
     years = re.findall(r"(?<!\d)(20\d{2})年", question)
     if years:
         next_context.focus_year = int(years[-1])
     elif re.search(r"今日|今天|最新|最近|当前|现在", question):
         next_context.focus_year = None
-    for sentence in re.split(r"[。！？\n]", question):
+    # A normal customer often gives constraints and asks for advice in one turn.
+    # Keep the declarative clauses, never the following request or a secret.
+    clauses = (
+        []
+        if PRIVATE_OR_INSTRUCTION.search(question)
+        else re.split(r"[。！？\n，；;]|(?<!\d),|,(?!\d)", question)
+    )
+    for sentence in clauses:
         declarative = bool(
             re.search(
                 r"(?:^|[，,:：])\s*(?:我|我们|本公司|我公司)(?:的)?"
@@ -108,7 +127,7 @@ def remember(context: ConversationContext, question: str) -> ConversationContext
         short_condition = bool(
             re.match(
                 r"\s*(?:库存|交期|交货期|预算|用量|每日用|每天用|日耗)"
-                r"[^。！？\n]{0,12}(?:\d|[一二三四五六七八九十百])",
+                r"[^。！？\n]{0,12}(?:\d|[零一二两三四五六七八九十百])",
                 sentence,
             )
         )
@@ -176,6 +195,29 @@ def clarification(question: str, context: ConversationContext) -> str | None:
             "我先结合对应行情分析，再一起核对交期和供应条件。"
         )
     return None
+
+
+def recall_customer(question: str, context: ConversationContext) -> str | None:
+    """Recall explicit customer constraints without searching market news."""
+    if not re.search(r"我(?:们)?(?:刚才|之前|前面|说过|提过)|还记得我", question):
+        return None
+    if re.search(r"怎么|如何|怎么办|建议|影响|分析|应对|安排", question):
+        return None
+    subjects = [
+        name for name in ("库存", "日耗", "用量", "交期", "预算") if name in question
+    ]
+    if not subjects:
+        return None
+    recalled = [
+        row for row in context.scenarios if any(name in row for name in subjects)
+    ]
+    if recalled:
+        return "你前面提到：" + "；".join(recalled) + "。这些是你提供的业务条件。"
+    return (
+        "你还没有告诉我具体的"
+        + "、".join(subjects)
+        + "，补充后我就能沿用这些条件分析。"
+    )
 
 
 def next_questions(question: str, mode: str) -> list[str]:

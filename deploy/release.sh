@@ -59,7 +59,7 @@ for attempt in $(seq 1 12); do
 done
 if [[ "$healthy" == true ]]; then
   # Register newly verified public feeds only; preserve existing manual switches.
-  "${compose[@]}" exec -T -e ENTITY_MATCHER=dictionary beat python -m pipeline.enable_country_sources
+  "${compose[@]}" exec -T -e ENTITY_MATCHER=dictionary worker python -m pipeline.enable_country_sources
   mv .images.next.env .images.env
   echo 'MiningIntel release is healthy'
 else

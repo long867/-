@@ -456,7 +456,9 @@ class GatewayLLM(CustomLLM):
     @property
     def metadata(self) -> LLMMetadata:
         return LLMMetadata(
-            context_window=16384, num_output=2048, model_name=get_settings().LLM_MODEL
+            context_window=16384,
+            num_output=2048,
+            model_name=get_settings().CHAT_LLM_MODEL or get_settings().LLM_MODEL,
         )
 
     def complete(self, prompt: str, **kwargs: Any) -> CompletionResponse:
@@ -509,7 +511,9 @@ class GroundedSynthesizer(BaseSynthesizer):
         correction = ""
         for attempt in range(2):
             try:
-                draft = await complete_json(SYSTEM_PROMPT + correction, request_payload)
+                draft = await complete_json(
+                    SYSTEM_PROMPT + correction, request_payload, profile="chat"
+                )
             except Exception:
                 if best is not None:
                     return best

@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     LLM_MODEL: str = "configure-your-model"
     LLM_EXTRA_BODY: dict[str, Any] = Field(default_factory=dict)
     LLM_TIMEOUT: float = Field(default=90, gt=0, le=300)
+    CHAT_LLM_MODEL: str = ""
+    CHAT_LLM_EXTRA_BODY: dict[str, Any] = Field(default_factory=dict)
+    CHAT_LLM_TIMEOUT: float = Field(default=90, gt=0, le=300)
     EMBEDDING_MODEL: str = "BAAI/bge-m3"
     RERANKER_MODEL: str = "BAAI/bge-reranker-v2-m3"
     EMBEDDING_DIM: Literal[1024] = 1024

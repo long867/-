@@ -89,6 +89,20 @@ def test_thousands_separator_is_not_mistaken_for_a_clause_boundary():
     assert scenario_calculations(context)[0]["value"] == "4"
 
 
+def test_lead_time_gap_is_computed_with_explicit_scenario_assumptions():
+    context = remember(
+        ConversationContext(), "我负责铜采购，我们库存30吨，日耗5吨，交期两周。"
+    )
+    metrics = {row["name"]: row for row in scenario_calculations(context)}
+    assert metrics["交期换算"]["value"] == "14"
+    assert metrics["交期与库存覆盖缺口"]["value"] == "8"
+    assert metrics["理论物料缺口"]["value"] == "40"
+    assert "无在途到货" in metrics["理论物料缺口"]["basis"]
+    context = remember(context, "我们库存80吨。")
+    metrics = {row["name"]: row for row in scenario_calculations(context)}
+    assert metrics["理论物料缺口"]["value"] == "0"
+
+
 def test_named_project_terms_survive_alias_expansion_and_style_instructions():
     terms = search_terms("请根据已有报道分析Guanajuato连接San Ignacio和Bolañitos的影响")
     assert "Guanajuato" in terms and "Bolañitos" in terms

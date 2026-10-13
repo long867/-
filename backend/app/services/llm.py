@@ -1,12 +1,15 @@
 """A small HTTP adapter for OpenAI-compatible model gateways."""
 
+import asyncio
 import hashlib
 import json
-from typing import Any
+import time
+from typing import Any, Literal
+from uuid import uuid4
 
 import httpx
 from redis.asyncio import Redis
-from redis.exceptions import LockError
+from redis.exceptions import LockError, RedisError
 from tenacity import (
     retry,
     retry_if_exception,
@@ -21,9 +24,16 @@ class MalformedModelResponseError(ValueError):
     """A gateway response cannot be parsed as the requested JSON object."""
 
 
+class ModelConcurrencyBusyError(RuntimeError):
+    """The shared gateway slot is temporarily occupied, not a bad article."""
+
+
 def transient_model_error(exc: BaseException) -> bool:
     """Retry gateway throttling/outages, never invalid credentials or payloads."""
-    return isinstance(exc, (httpx.TransportError, MalformedModelResponseError)) or (
+    return isinstance(
+        exc,
+        (httpx.TransportError, MalformedModelResponseError, ModelConcurrencyBusyError),
+    ) or (
         isinstance(exc, httpx.HTTPStatusError)
         and exc.response.status_code in {429, 502, 503, 504}
     )
@@ -35,12 +45,17 @@ def transient_model_error(exc: BaseException) -> bool:
     stop=stop_after_attempt(3),
     reraise=True,
 )
-async def complete_json(system: str, prompt: str) -> dict[str, Any]:
+async def complete_json(
+    system: str, prompt: str, *, profile: Literal["default", "chat"] = "default"
+) -> dict[str, Any]:
     """Request structured output; callers validate it with their own schema."""
     settings = get_settings()
     if not settings.LLM_API_KEY.get_secret_value():
         raise RuntimeError("LLM_API_KEY is not configured")
     if settings.RATE_LIMIT_BACKEND == "redis":
+        timeout = (
+            settings.CHAT_LLM_TIMEOUT if profile == "chat" else settings.LLM_TIMEOUT
+        )
         client = Redis.from_url(
             settings.REDIS_URL, socket_connect_timeout=1, socket_timeout=1
         )
@@ -49,37 +64,58 @@ async def complete_json(system: str, prompt: str) -> dict[str, Any]:
         ).hexdigest()[:24]
         lock = client.lock(
             "miningintel:llm:" + digest,
-            timeout=settings.LLM_TIMEOUT + 30,
-            blocking_timeout=settings.LLM_TIMEOUT,
+            timeout=timeout + 30,
             thread_local=False,
         )
+        waiters = "miningintel:llm:interactive:" + digest
+        token = str(uuid4()) if profile == "chat" else None
         try:
-            if not await lock.acquire():
-                raise RuntimeError("Model concurrency slot is busy")
-            return await request_json(system, prompt)
+            if token:
+                await client.zadd(waiters, {token: time.time() + timeout * 2 + 30})
+                await client.expire(waiters, int(timeout * 2 + 90))
+            deadline = time.monotonic() + timeout
+            while time.monotonic() < deadline:
+                pending = (
+                    0 if token else await client.zcount(waiters, time.time(), "+inf")
+                )
+                if not pending and await lock.acquire(blocking=False):
+                    break
+                await asyncio.sleep(0.1)
+            else:
+                raise ModelConcurrencyBusyError("Model concurrency slot is busy")
+            return await request_json(system, prompt, profile=profile)
         finally:
             try:
                 if await lock.owned():
                     await lock.release()
-            except LockError:
+                if token:
+                    await client.zrem(waiters, token)
+            except (LockError, RedisError):
                 pass
             await client.aclose()
-    return await request_json(system, prompt)
+    return await request_json(system, prompt, profile=profile)
 
 
-async def request_json(system: str, prompt: str) -> dict[str, Any]:
+async def request_json(
+    system: str, prompt: str, *, profile: Literal["default", "chat"] = "default"
+) -> dict[str, Any]:
     """Perform one bounded gateway request; credentials never enter output logs."""
     settings = get_settings()
-    async with httpx.AsyncClient(timeout=settings.LLM_TIMEOUT) as client:
+    chat = profile == "chat"
+    extra = settings.LLM_EXTRA_BODY | (settings.CHAT_LLM_EXTRA_BODY if chat else {})
+    timeout = settings.CHAT_LLM_TIMEOUT if chat else settings.LLM_TIMEOUT
+    async with httpx.AsyncClient(timeout=timeout) as client:
         response = await client.post(
             f"{settings.LLM_BASE_URL.rstrip('/')}/chat/completions",
             headers={
                 "Authorization": f"Bearer {settings.LLM_API_KEY.get_secret_value()}"
             },
-            json=settings.LLM_EXTRA_BODY
+            json=extra
             | {
-                "model": settings.LLM_MODEL,
-                "temperature": 0,
+                "model": settings.CHAT_LLM_MODEL or settings.LLM_MODEL
+                if chat
+                else settings.LLM_MODEL,
+                "temperature": 0.2 if chat else 0,
                 "response_format": {"type": "json_object"},
                 "messages": [
                     {"role": "system", "content": system},

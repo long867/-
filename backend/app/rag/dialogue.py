@@ -44,6 +44,31 @@ def _amount(text: str, subject: str) -> tuple[Decimal, str] | None:
     return (value * 1000 if unit in {"吨", "t"} else value), "kg"
 
 
+def _formatted(value: Decimal) -> str:
+    """Bound display precision without changing the underlying calculation."""
+    rounded = value.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    return format(rounded, "f").rstrip("0").rstrip(".")
+
+
+def _lead_days(text: str) -> Decimal | None:
+    """Normalize one explicit lead time; exclude ranges and ambiguous schedules."""
+    matches = re.findall(
+        r"(?:交期|交货期|到货周期|交货周期)\s*(?:是|为|约|大约)?\s*"
+        r"(\d{1,3}|[一二两三四五六七八九十])\s*(天|周|星期)",
+        text,
+    )
+    digits = {word: index for index, word in enumerate("零一二三四五六七八九十")}
+    digits["两"] = 2
+    values = {
+        Decimal(int(value) if value.isdigit() else digits[value])
+        * (7 if unit in {"周", "星期"} else 1)
+        for value, unit in matches
+    }
+    if len(values) != 1 or not 0 < next(iter(values)) <= 90:
+        return None
+    return next(iter(values))
+
+
 def scenario_calculations(context: ConversationContext) -> list[dict[str, str]]:
     """Calculate stock coverage only when compatible, explicit inputs exist.
 
@@ -57,9 +82,9 @@ def scenario_calculations(context: ConversationContext) -> list[dict[str, str]]:
     usage = _amount(text, "日耗|每日用量|每天用量|每日消耗|每天消耗|每天用|每日用")
     if not stock or not usage:
         return []
-    days = (stock[0] / usage[0]).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-    value = format(days, "f").rstrip("0").rstrip(".") if "." in str(days) else str(days)
-    return [
+    days = stock[0] / usage[0]
+    value = _formatted(days)
+    metrics = [
         {
             "name": "库存覆盖天数",
             "value": value,
@@ -68,6 +93,32 @@ def scenario_calculations(context: ConversationContext) -> list[dict[str, str]]:
             "statement": f"按用户提供的库存与日耗计算，库存覆盖约{value}天。",
         }
     ]
+    lead = _lead_days(text)
+    if lead is not None:
+        gap_days = max(Decimal(0), lead - days)
+        gap_tonnes = max(Decimal(0), usage[0] * lead - stock[0]) / 1000
+        for name, quantity, unit in (
+            ("交期换算", lead, "天"),
+            ("交期与库存覆盖缺口", gap_days, "天"),
+            ("理论物料缺口", gap_tonnes, "吨"),
+        ):
+            display = _formatted(quantity)
+            metrics.append(
+                {
+                    "name": name,
+                    "value": display,
+                    "unit": unit,
+                    "basis": (
+                        "仅按客户库存、稳定日耗及交期计算，"
+                        "假设库存全部可用且无在途到货。"
+                    ),
+                    "statement": (
+                        "按用户提供条件、假设无在途到货且日耗稳定，"
+                        f"{name}为{display}{unit}。"
+                    ),
+                }
+            )
+    return metrics
 
 
 def response_plan(question: str, context: ConversationContext) -> dict:

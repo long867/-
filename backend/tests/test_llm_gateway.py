@@ -143,3 +143,48 @@ async def test_waiting_chat_has_priority_and_waiter_is_cleaned_up(profile, monke
     lock.acquire.assert_awaited_once_with(blocking=False)
     lock.release.assert_awaited_once()
     redis_client.aclose.assert_awaited_once()
+
+
+@pytest.mark.parametrize("chat_model,shares_slot", [("advanced", False), ("", True)])
+async def test_distinct_models_have_independent_slots_but_same_models_share_one(
+    chat_model, shares_slot, monkeypatch
+):
+    import app.services.llm as module
+
+    monkeypatch.setattr(
+        module,
+        "get_settings",
+        lambda: Settings(
+            LLM_API_KEY="fixture",
+            RATE_LIMIT_BACKEND="redis",
+            LLM_MODEL="translator",
+            CHAT_LLM_MODEL=chat_model,
+            _env_file=None,
+        ),
+    )
+    names = []
+    lock = SimpleNamespace(
+        acquire=AsyncMock(return_value=True),
+        owned=AsyncMock(return_value=True),
+        release=AsyncMock(),
+    )
+
+    def create_lock(name, **_kwargs):
+        names.append(name)
+        return lock
+
+    redis_client = SimpleNamespace(
+        lock=create_lock,
+        zadd=AsyncMock(),
+        expire=AsyncMock(),
+        zrem=AsyncMock(),
+        zcount=AsyncMock(return_value=0),
+        aclose=AsyncMock(),
+    )
+    monkeypatch.setattr(
+        module.Redis, "from_url", lambda *_args, **_kwargs: redis_client
+    )
+    monkeypatch.setattr(module, "request_json", AsyncMock(return_value={"blocks": []}))
+    await module.complete_json("JSON", "翻译")
+    await module.complete_json("JSON", "问答", profile="chat")
+    assert (names[0] == names[1]) is shares_slot

@@ -60,7 +60,15 @@ async def complete_json(
             settings.REDIS_URL, socket_connect_timeout=1, socket_timeout=1
         )
         digest = hashlib.sha256(
-            settings.LLM_API_KEY.get_secret_value().encode()
+            (
+                settings.LLM_API_KEY.get_secret_value()
+                + "\0"
+                + (
+                    settings.CHAT_LLM_MODEL or settings.LLM_MODEL
+                    if profile == "chat"
+                    else settings.LLM_MODEL
+                )
+            ).encode()
         ).hexdigest()[:24]
         lock = client.lock(
             "miningintel:llm:" + digest,

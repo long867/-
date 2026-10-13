@@ -50,7 +50,9 @@ def main() -> None:
     with ZipFile(archive, "w", ZIP_DEFLATED) as output:
         for path in sorted(root.rglob("*")):
             relative = path.relative_to(root)
-            if not path.is_file() or any(part in ignored for part in relative.parts):
+            if not path.is_file() or any(
+                part in ignored or part.startswith(".next") for part in relative.parts
+            ):
                 continue
             if path.name.startswith(".env") and path.name not in {
                 ".env.example",

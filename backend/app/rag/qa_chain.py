@@ -36,6 +36,7 @@ from app.rag.consultation import (
 )
 from app.rag.conversation_context import (
     ConversationContext,
+    business_guidance,
     clarification,
     next_questions,
     remember,
@@ -535,7 +536,8 @@ class GroundedSynthesizer(BaseSynthesizer):
                                     ],
                                     "as_of": datetime.now(UTC).isoformat(),
                                     "question": self.question,
-                                    "response_focus": turn_guidance(self.question),
+                                    "response_focus": turn_guidance(self.question)
+                                    + business_guidance(self.context, self.question),
                                 },
                                 ensure_ascii=False,
                             ),

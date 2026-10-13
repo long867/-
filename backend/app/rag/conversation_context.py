@@ -97,9 +97,25 @@ def remember(context: ConversationContext, question: str) -> ConversationContext
     elif re.search(r"今日|今天|最新|最近|当前|现在", question):
         next_context.focus_year = None
     for sentence in re.split(r"[。！？\n]", question):
+        declarative = bool(
+            re.search(
+                r"(?:^|[，,:：])\s*(?:我|我们|本公司|我公司)(?:的)?"
+                r"(?:现在|目前|现有|主要)?(?:负责|从事|做|是|有|库存|交期|"
+                r"交货期|预算|用量|每日用|每天用|日耗|产品|需求|需要|计划|准备|采购|关注)",
+                sentence,
+            )
+        )
+        short_condition = bool(
+            re.match(
+                r"\s*(?:库存|交期|交货期|预算|用量|每日用|每天用|日耗)"
+                r"[^。！？\n]{0,12}(?:\d|[一二三四五六七八九十百])",
+                sentence,
+            )
+        )
         if (
-            re.search(r"我|我们|本公司|我公司", sentence)
+            (declarative or short_condition)
             and BUSINESS.search(sentence)
+            and not re.search(r"怎么|如何|多少|什么|是否|请结合|请考虑|帮我", sentence)
             and not PRIVATE_OR_INSTRUCTION.search(sentence)
         ):
             snippet = sentence.strip()[:160]
@@ -114,6 +130,21 @@ def remember(context: ConversationContext, question: str) -> ConversationContext
                 next_context.scenarios = (next_context.scenarios + [snippet])[-6:]
     next_context.updated_at = datetime.now(UTC)
     return next_context
+
+
+def business_guidance(context: ConversationContext, question: str) -> str:
+    """Adapt an action answer to known constraints without inventing missing inputs."""
+    if context.role == "采购" and re.search(
+        r"下一步|怎么做|怎么安排|采购|补货|方案", question
+    ):
+        return (
+            "本轮要具体采购步骤，避免重讲价格原理。已有客户库存条件要沿用，"
+            "先核对实际可用库存、日耗和到货周期，再核对合同价格条款与供应商交期，"
+            "按库存能否覆盖补货周期说明何时需要补货或备选渠道。"
+            "未给日耗和交期时不能算覆盖天数或采购数量；先给核对步骤，"
+            "最后只问一个最关键的缺失条件。不要只说综合考虑、密切关注或灵活调整。"
+        )
+    return ""
 
 
 def clarification(question: str, context: ConversationContext) -> str | None:

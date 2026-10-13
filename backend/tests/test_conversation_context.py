@@ -89,3 +89,12 @@ def test_explicit_inventory_correction_replaces_old_customer_condition():
     context = remember(context, "更正一下，我们库存30吨。")
     assert any("30吨" in item for item in context.scenarios)
     assert not any("20吨" in item for item in context.scenarios)
+
+
+def test_a_request_to_recall_inventory_never_overwrites_the_actual_condition():
+    context = remember(ConversationContext(), "我做铜采购，我们库存20吨。")
+    context = remember(context, "那我下一步怎么安排采购？请结合我刚才说的库存量。")
+    assert any("20吨" in item for item in context.scenarios)
+    assert not any("请结合" in item for item in context.scenarios)
+    context = remember(context, "交期两周，日耗5吨。")
+    assert any("交期两周" in item for item in context.scenarios)

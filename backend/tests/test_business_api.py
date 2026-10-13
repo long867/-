@@ -10,7 +10,7 @@ from uuid import uuid4
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy import delete
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
@@ -120,6 +120,45 @@ async def test_country_monitor_gates_evidence_topics_and_empty_coverage(
     assert (await client.get("/api/regions/monitor?days=8")).status_code == 422
     assert (await client.get("/api/regions/monitor?topic=invalid")).status_code == 422
     assert (await client.get("/api/regions/unknown/intelligence")).status_code == 404
+
+
+async def test_country_feed_registration_is_idempotent_and_keeps_manual_switches(
+    business, monkeypatch
+):
+    import pipeline.enable_country_sources as registration
+    from pipeline.schemas import SourceDefinition
+
+    root = business["root"]
+    new_url = root + "/country-feed"
+    definitions = [
+        SourceDefinition(
+            name="COUNTRY FIXTURE",
+            url=url,
+            type="rss",
+            category="news",
+            authority_score=7,
+            active=True,
+            parser_config={"verification": "public_country_feed_test"},
+        )
+        for url in (root + "/feed", new_url)
+    ]
+    monkeypatch.setattr(registration, "SessionFactory", business["factory"])
+    monkeypatch.setattr(registration, "load_sources", lambda: definitions)
+    async with business["factory"].begin() as db:
+        source = await db.scalar(select(Source).where(Source.url == root + "/feed"))
+        source.active = False
+    try:
+        assert (await registration.enable_new_sources())["newly_enabled"] == 1
+        assert (await registration.enable_new_sources())["newly_enabled"] == 0
+        async with business["factory"]() as db:
+            existing = await db.scalar(
+                select(Source).where(Source.url == root + "/feed")
+            )
+            new = await db.scalar(select(Source).where(Source.url == new_url))
+            assert existing.active is False and new.active is True
+    finally:
+        async with business["factory"].begin() as db:
+            await db.execute(delete(Source).where(Source.url == new_url))
 
 
 @pytest_asyncio.fixture

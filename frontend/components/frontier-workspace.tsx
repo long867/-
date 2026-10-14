@@ -119,8 +119,8 @@ function PaperCard({
         {paper.abstract_available
           ? t("基于公开摘要整理", "Public abstract available")
           : t(
-              "题录速览 · 摘要暂未公开",
-              "Bibliographic record · abstract unavailable",
+              "题录速览 · 信源未提供摘要",
+              "Bibliographic record · no deposited abstract",
             )}
       </div>
       <p className="frontier-paper-summary">

@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Any
 
 from app.services.llm import complete_json
+from pipeline.config.research import MINERAL_SPECIES, RESEARCH_TERMS
 from pipeline.processors.entities import extract_entities
 from pipeline.processors.translator import (
     glossary,
@@ -43,6 +44,15 @@ def check_title_terms(original: str, translated: str) -> None:
             ):
                 raise ValueError(
                     f"Translated chemical term must retain {symbol}/{name}"
+                )
+    normalized = re.sub(r"[–−—]", "-", original)
+    for term, alternatives in RESEARCH_TERMS.items():
+        if re.search(
+            r"(?<![A-Za-z])" + re.escape(term) + r"(?![A-Za-z])", normalized, re.I
+        ):
+            if not any(value in translated for value in alternatives):
+                raise ValueError(
+                    "Professional term must be translated as " + alternatives[0]
                 )
 
 
@@ -140,7 +150,10 @@ async def enrich_academic(
         "应用前景、作者或机构，不把实验结果写成已实现产业化。"
     )
     system += "\n专业术语表：" + json.dumps(
-        glossary() | CHEMICAL_TERMS | {"Co-Ni": "钴-镍", "Co–Ni": "钴-镍"},
+        glossary()
+        | CHEMICAL_TERMS
+        | {"Co-Ni": "钴-镍", "Co–Ni": "钴-镍"}
+        | {term: names[0] for term, names in RESEARCH_TERMS.items()},
         ensure_ascii=False,
     )
     feedback = ""
@@ -161,6 +174,14 @@ async def enrich_academic(
     else:
         raise ValueError("Scholarly translation failed evidence checks")
     entities = extract_entities(title + "\n" + content)
+    entities["minerals"] = sorted(
+        set(entities["minerals"])
+        | {
+            mineral
+            for term, mineral in MINERAL_SPECIES.items()
+            if re.search(r"\b" + term + r"\b", title + "\n" + content, re.I)
+        }
+    )
     return translated | {
         "summary": content[:1000],
         "content_zh": content if language.startswith("zh") else None,

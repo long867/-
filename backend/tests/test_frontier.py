@@ -138,6 +138,31 @@ def test_chemical_title_terms_must_not_be_mistranslated():
         check_title_terms("Co-Ni and Cu deposits", "共镍与铜矿床")
 
 
+@pytest.mark.parametrize(
+    "original,wrong,correct",
+    [
+        ("Molybdenite and talc flotation", "黄铜矿与滑石浮选", "辉钼矿与滑石浮选"),
+        ("Flow field in a tundish", "钢包内流场研究", "中间包内流场研究"),
+        (
+            "Peridynamic rock fracture model",
+            "周期动态岩石断裂模型",
+            "近场动力学岩石断裂模型",
+        ),
+        (
+            "Pegmatite in Altyn Tagh, NW China",
+            "阿尔泰山东部伟晶岩",
+            "中国西北阿尔金山伟晶岩",
+        ),
+    ],
+)
+def test_scientific_mineral_equipment_method_and_place_terms(original, wrong, correct):
+    from pipeline.processors.academic import check_title_terms
+
+    with pytest.raises(ValueError):
+        check_title_terms(original, wrong)
+    check_title_terms(original, correct)
+
+
 def test_abstract_summary_rejects_invented_measurements():
     with pytest.raises(ValueError, match="invented"):
         validate_academic(

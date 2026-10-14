@@ -21,6 +21,7 @@ Metals、Resources，共8本期刊。后两本增加公开摘要覆盖，宽主�
 有公开摘要才提炼研究方法与结果；没有摘要只翻译题名并标注“题录速览”，
 不虚构研究结论、不绕过付费全文。中文加工校验数字与单位，实验结果不表述为已经产业化。
 中文题名同时校验矿种与 Co/Ni/Cu 等明确元素名称，避免把钴等术语译错。
+另外校验常见矿物种类、冶金设备、数值方法与关键地名术语。
 长摘要选取完整的问题、方法和主要结果句，不把半句话截断成新的研究结论。
 学术记录质量按权威性40%、DOI20%、日期10%、作者10%、期刊10%、摘要10%评分；
 新旧由发表日期排序和时间筛选体现，不将新闻的短时效衰减作为论文题录完整性评分。
@@ -34,3 +35,7 @@ Crossref 不保证摘要覆盖，也不能仅凭 journal-article 类型断言同
 
 参考：[Crossref REST API](https://www.crossref.org/documentation/retrieve-metadata/rest-api/)、
 [公开访问与限速](https://www.crossref.org/documentation/retrieve-metadata/rest-api/access-and-authentication/)。
+术语校对参考：[辉钼矿与黄铜矿](https://tnmsc.csu.edu.cn/CN/lexeme/showArticleByLexeme.do?articleID=11026)、
+[中间包](https://www.ams.org.cn/CN/abstract/abstract9851.shtml)、
+[近场动力学](https://pubs.cstam.org.cn/article/doi/10.6052/0459-1879-23-107)、
+[阿尔金山](https://ir.pku.edu.cn/handle/20.500.11897/178882)。

@@ -19,8 +19,17 @@ async def enrich(
     category: Category = "news",
     source: SourceDefinition | None = None,
     url: str | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Preserve original evidence; expose rules-only behavior when LLM is disabled."""
+    from pipeline.fetchers.scholarly_fetcher import scholarly_source
+
+    if source is not None and scholarly_source(source):
+        from pipeline.processors.academic import enrich_academic
+
+        return await enrich_academic(
+            title, content, language, authority, published_at, metadata or {}
+        )
     if get_settings().ENRICHMENT_MODE == "editorial":
         from pipeline.processors.backfill import (
             EditorialDocument,

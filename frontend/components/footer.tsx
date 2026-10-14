@@ -21,6 +21,7 @@ export function Footer() {
           </p>
         </div>
         <div className="footer-links">
+          <Link href="/frontier">{t("前沿成果", "Research frontiers")}</Link>
           <Link href="/about">{t("关于平台", "About")}</Link>
           <a href="/api-docs">
             {t("开放 API", "Open API")}

@@ -1,0 +1,594 @@
+/* Scholarly discovery shares the observatory's copper and geological palette. */
+.frontier-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: center;
+  gap: 36px;
+  padding: 44px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 85% 20%, #e2b18412, transparent 60%),
+    var(--surface);
+  overflow: hidden;
+}
+.frontier-hero h1 {
+  font-size: clamp(30px, 4vw, 48px);
+  letter-spacing: -0.04em;
+  margin: 18px 0;
+}
+.frontier-hero h1 span {
+  display: block;
+  font-size: clamp(18px, 2.2vw, 27px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-top: 12px;
+  color: var(--gold);
+}
+.frontier-hero-copy > p {
+  max-width: 610px;
+  color: var(--muted);
+  line-height: 1.9;
+  font-size: 15px;
+}
+.frontier-hero-badges {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.frontier-hero-badges > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.frontier-orbit {
+  position: relative;
+  height: 270px;
+  width: 270px;
+  justify-self: center;
+}
+.frontier-orbit-ring {
+  position: absolute;
+  inset: 15px;
+  border: 1px solid #e2b18436;
+  border-radius: 50%;
+  animation: frontier-orbit 28s linear infinite;
+}
+.frontier-orbit-ring::after {
+  content: "";
+  position: absolute;
+  height: 7px;
+  width: 7px;
+  top: 35px;
+  left: 32px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 18px #e2b18477;
+}
+.frontier-ring-two {
+  inset: 44px;
+  border-style: dashed;
+  animation-duration: 38s;
+  animation-direction: reverse;
+}
+.frontier-ring-three {
+  inset: 73px;
+  animation-duration: 18s;
+  border-color: #e2b18466;
+}
+.frontier-orbit-core {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--accent);
+}
+.frontier-orbit-core span {
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.frontier-orbit-point {
+  position: absolute;
+  font-size: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 9px;
+  color: var(--muted);
+}
+.point-one {
+  top: 5px;
+  left: 20px;
+}
+.point-two {
+  right: -10px;
+  top: 128px;
+}
+.point-three {
+  bottom: 10px;
+  left: 15px;
+}
+.frontier-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 24px 0 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.frontier-metrics > div {
+  padding: 22px 26px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.frontier-metrics > div:last-child {
+  border: 0;
+}
+.frontier-metrics strong {
+  color: var(--gold);
+  font-size: 30px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.frontier-metrics span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.frontier-controls {
+  padding: 22px;
+  margin-bottom: 30px;
+}
+.frontier-direction-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+.frontier-direction-list button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  min-height: 39px;
+  background: var(--surface);
+}
+.frontier-direction-list button.selected {
+  background: #e2b18416;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.frontier-direction-list small {
+  padding-left: 7px;
+  opacity: 0.7;
+}
+.frontier-filter-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 14px;
+  align-items: center;
+}
+.frontier-filter-row form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 0 10px 0 13px;
+  min-width: 0;
+}
+.frontier-filter-row form svg {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.frontier-filter-row input {
+  border: 0;
+  min-width: 0;
+  width: 100%;
+  height: 43px;
+  background: transparent;
+  outline-offset: -2px;
+}
+.frontier-filter-row form button {
+  font-size: 12px;
+  padding: 7px 12px;
+  flex-shrink: 0;
+  color: var(--accent);
+}
+.frontier-filter-row label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+.frontier-filter-row select {
+  min-height: 43px;
+  max-width: 190px;
+  padding: 9px 12px;
+  color: var(--text);
+}
+.frontier-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 290px;
+  gap: 28px;
+  align-items: start;
+}
+.frontier-result-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.frontier-result-heading h2 {
+  font-size: 19px;
+  font-weight: 600;
+}
+.frontier-result-heading h2 span {
+  padding-left: 9px;
+  color: var(--accent);
+  font-size: 13px;
+}
+.frontier-result-heading > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.frontier-paper-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  transition: opacity 0.2s;
+}
+.frontier-paper-grid.is-updating {
+  opacity: 0.55;
+}
+.frontier-paper {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
+  min-width: 0;
+}
+.frontier-paper:hover {
+  border-color: #e2b18466;
+  transform: translateY(-2px);
+}
+.frontier-featured {
+  grid-column: 1 / -1;
+  border-color: #e2b18444;
+  background: linear-gradient(120deg, #e2b18408, transparent), var(--surface);
+}
+.frontier-paper-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.frontier-paper-meta span {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.frontier-paper-journal {
+  color: var(--accent);
+  font-size: 12px;
+  margin-top: 17px;
+}
+.frontier-paper-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 9px;
+}
+.frontier-paper-title h2 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.frontier-featured h2 {
+  font-size: 22px;
+}
+.frontier-paper-title svg {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.frontier-original-title {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+  margin-top: 9px;
+}
+.frontier-evidence-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 17px 0 9px;
+}
+.frontier-paper-summary {
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--text);
+  opacity: 0.9;
+}
+.frontier-paper-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 17px 0;
+}
+.frontier-paper-tags > * {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 7px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.frontier-paper-tags a {
+  color: var(--gold);
+}
+.frontier-authors,
+.frontier-institutions {
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.frontier-authors span {
+  color: var(--text);
+}
+.frontier-institutions {
+  margin-top: 4px;
+}
+.frontier-paper footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 18px;
+  margin-top: auto;
+  align-items: center;
+}
+.frontier-paper footer > span {
+  font-size: 9px;
+  color: var(--muted);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.frontier-paper footer a {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  color: var(--accent);
+  font-size: 11px;
+  flex-shrink: 0;
+  min-height: 36px;
+}
+.frontier-sidebar {
+  display: grid;
+  gap: 18px;
+  padding-top: 45px;
+}
+.frontier-sidebar .panel {
+  padding: 25px;
+}
+.frontier-sidebar h2 {
+  margin: 12px 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+.frontier-sidebar p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: var(--muted);
+}
+.frontier-method-item {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+.frontier-method-item > svg {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.frontier-method-item strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.frontier-update {
+  border-top: 1px solid var(--border);
+  margin-top: 22px;
+  padding-top: 18px;
+  display: grid;
+  gap: 8px;
+}
+.frontier-update span,
+.frontier-update small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.frontier-update strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+.frontier-ask > svg {
+  color: var(--accent);
+}
+.frontier-ask a {
+  display: inline-flex;
+  gap: 8px;
+  color: var(--accent);
+  margin-top: 18px;
+  font-size: 12px;
+  min-height: 36px;
+  align-items: center;
+}
+.frontier-pagination {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  font-size: 12px;
+}
+.frontier-pagination button {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-height: 42px;
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+.frontier-pagination button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+@keyframes frontier-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+[data-motion="paused"] .frontier-orbit-ring {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .frontier-orbit-ring {
+    animation: none;
+  }
+  .frontier-paper {
+    transition: none;
+  }
+}
+@media (min-width: 1180px) and (max-width: 1430px) {
+  .main-nav {
+    gap: 1px;
+  }
+  .main-nav a {
+    padding-inline: 7px;
+    font-size: 12px;
+  }
+  .header {
+    gap: 16px;
+  }
+}
+@media (max-width: 1100px) {
+  .frontier-content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .frontier-sidebar {
+    grid-template-columns: 1fr 1fr;
+    padding-top: 0;
+  }
+  .frontier-metrics > div {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+@media (max-width: 767px) {
+  .frontier-hero {
+    padding: 27px 22px;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .frontier-hero .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.2px;
+  }
+  .frontier-hero-copy > p {
+    font-size: 13px;
+  }
+  .frontier-orbit {
+    display: none;
+  }
+  .frontier-hero-badges {
+    gap: 12px;
+    font-size: 10px;
+  }
+  .frontier-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 16px 0;
+  }
+  .frontier-metrics > div {
+    padding: 15px 20px;
+  }
+  .frontier-metrics > div:nth-child(2) {
+    border-right: 0;
+  }
+  .frontier-metrics > div:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--border);
+  }
+  .frontier-metrics strong {
+    font-size: 27px;
+  }
+  .frontier-controls {
+    padding: 15px;
+  }
+  .frontier-direction-list {
+    gap: 6px;
+  }
+  .frontier-direction-list button {
+    padding: 7px 9px;
+    font-size: 11px;
+    min-height: 40px;
+  }
+  .frontier-filter-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 11px;
+  }
+  .frontier-filter-row form {
+    grid-column: 1 / -1;
+  }
+  .frontier-filter-row label {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+  }
+  .frontier-filter-row select {
+    width: 100%;
+    max-width: none;
+  }
+  .frontier-paper-grid,
+  .frontier-sidebar {
+    grid-template-columns: 1fr;
+  }
+  .frontier-paper {
+    padding: 21px;
+  }
+  .frontier-featured h2 {
+    font-size: 19px;
+  }
+  .frontier-paper-title h2 {
+    font-size: 17px;
+  }
+  .frontier-original-title {
+    font-size: 10px;
+  }
+  .frontier-content {
+    gap: 24px;
+  }
+  .frontier-sidebar .panel {
+    padding: 21px;
+  }
+}

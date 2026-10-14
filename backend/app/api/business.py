@@ -6,6 +6,7 @@ from app.api import (
     articles,
     digest,
     events,
+    frontier,
     minerals,
     policies,
     regions,
@@ -16,6 +17,16 @@ from app.api.api_keys import optional_api_key, required_api_key
 
 router = APIRouter(prefix="/api", dependencies=[Depends(optional_api_key)])
 open_router = APIRouter(prefix="/api/open", dependencies=[Depends(required_api_key)])
-for module in (articles, events, minerals, regions, policies, digest, trends, search):
+for module in (
+    articles,
+    events,
+    frontier,
+    minerals,
+    regions,
+    policies,
+    digest,
+    trends,
+    search,
+):
     router.include_router(module.router)
     open_router.include_router(module.router)

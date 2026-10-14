@@ -50,6 +50,7 @@ async def dry_run(source: SourceDefinition) -> dict:
                 category=row.category,
                 source=source,
                 url=row.url,
+                metadata=row.raw_json,
             )
             output.append(row.model_dump(mode="json") | values)
         except Exception as exc:

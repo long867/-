@@ -1004,3 +1004,81 @@ sources:
       require_mineral_match: true
       verification: public_country_feed_2026-10-13
       access_note: 公开 RSS/Atom 正文；遵守 robots；不采集付费正文
+  frontier_research:
+  - name: Minerals · 矿产研究
+    url: https://api.crossref.org/journals/2075-163X/works
+    type: api
+    category: report
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 86400
+    active: true
+    parser_config: &scholarly_defaults
+      adapter: crossref_journal
+      direction: exploration
+      lookback_days: 365
+      max_items: 8
+      min_interval: 3
+      verification: public_scholarly_metadata_2026-10-14
+      access_note: Crossref 公开题录与已存档摘要；不抓取付费全文；保留 DOI 和日期精度
+  - name: Ore Geology Reviews · 成矿与勘探
+    url: https://api.crossref.org/journals/0169-1368/works
+    type: api
+    category: report
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      <<: *scholarly_defaults
+      direction: exploration
+  - name: Minerals Engineering · 选矿工程
+    url: https://api.crossref.org/journals/0892-6875/works
+    type: api
+    category: report
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      <<: *scholarly_defaults
+      direction: processing
+  - name: Hydrometallurgy · 湿法冶金
+    url: https://api.crossref.org/journals/0304-386X/works
+    type: api
+    category: report
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      <<: *scholarly_defaults
+      direction: processing
+  - name: Resources Policy · 资源治理与社科
+    url: https://api.crossref.org/journals/0301-4207/works
+    type: api
+    category: report
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      <<: *scholarly_defaults
+      direction: governance
+  - name: International Journal of Mining Science and Technology · 矿业科技
+    url: https://api.crossref.org/journals/2095-2686/works
+    type: api
+    category: report
+    region: 全球
+    language: en
+    authority_score: 8
+    fetch_interval: 86400
+    active: true
+    parser_config:
+      <<: *scholarly_defaults
+      direction: digital

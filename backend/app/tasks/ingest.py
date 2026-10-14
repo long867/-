@@ -318,6 +318,7 @@ async def process_one(article_id: UUID) -> dict:
             category=article.category,
             source=definition,
             url=article.url,
+            metadata=article.raw_json,
         )
     spans = await asyncio.to_thread(split_evidence, article.content)
     vectors = await embed(
@@ -390,6 +391,14 @@ async def process_one(article_id: UUID) -> dict:
             and bool(current.summary_zh)
             and 100 <= len(current.summary_zh) <= 200
         )
+        from pipeline.fetchers.scholarly_fetcher import scholarly_source
+
+        academic_ready = (
+            scholarly_source(definition)
+            and current.raw_json.get("document_kind") == "research_paper"
+            and bool(current.title_zh)
+            and bool(current.summary_zh)
+        )
         threshold = (
             settings.INITIALIZATION_QUALITY_THRESHOLD
             if editorial_ready
@@ -404,9 +413,11 @@ async def process_one(article_id: UUID) -> dict:
                 current.language.startswith("zh")
                 or current.is_translated
                 or editorial_ready
+                or academic_ready
             )
             and (
                 bool(current.minerals)
+                or academic_ready
                 or (
                     current.category == "policy"
                     and general_mineral_policy(
@@ -429,7 +440,9 @@ async def process_one(article_id: UUID) -> dict:
         current.indexed_at = None
     if not article.language.startswith("zh"):
         TRANSLATIONS.labels(
-            "success" if current.is_translated or editorial_ready else "skipped"
+            "success"
+            if current.is_translated or editorial_ready or academic_ready
+            else "skipped"
         ).inc()
     from app.core.cache import invalidate_public_cache
 

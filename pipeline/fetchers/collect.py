@@ -39,6 +39,10 @@ class FetchBatch:
 def create_fetcher(source: SourceDefinition, **kwargs: Any) -> BaseFetcher:
     """Select a typed adapter."""
     adapters = {"rss": RSSFetcher, "web": WebFetcher, "api": APIFetcher}
+    if source.parser_config.get("adapter") == "crossref_journal":
+        from pipeline.fetchers.scholarly_fetcher import ScholarlyFetcher
+
+        return ScholarlyFetcher(source, **kwargs)
     if source.parser_config.get("adapter") in {"ppi_lithium_spot", "ppi_spot_market"}:
         return PPIPriceFetcher(source, **kwargs)
     if source.parser_config.get("adapter") == "sunsirs_mineral_daily":

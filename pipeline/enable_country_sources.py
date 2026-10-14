@@ -1,4 +1,4 @@
-"""Register verified country-monitor feeds without changing existing source switches."""
+"""Register verified public feeds without changing existing source switches."""
 
 import asyncio
 
@@ -17,7 +17,7 @@ async def enable_new_sources() -> dict[str, int]:
         for row in load_sources()
         if row.active
         and str(row.parser_config.get("verification", "")).startswith(
-            "public_country_feed_"
+            ("public_country_feed_", "public_scholarly_metadata_")
         )
     ]
     async with SessionFactory.begin() as db:
@@ -33,7 +33,7 @@ async def enable_new_sources() -> dict[str, int]:
         await sync_sources(db, definitions)
     await invalidate_public_cache()
     return {
-        "verified_country_feeds": len(definitions),
+        "verified_public_sources": len(definitions),
         "newly_enabled": sum(row.url not in existing for row in definitions),
     }
 

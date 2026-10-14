@@ -11,6 +11,7 @@ import "./mineral-luxe.css";
 import "./readability.css";
 import "./mobile.css";
 import "./country-watch.css";
+import "./frontier.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",

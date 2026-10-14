@@ -13,9 +13,16 @@ import {
   Globe2,
   Layers3,
   Search,
+  Bookmark,
+  Check,
+  Copy,
+  Download,
+  LayoutGrid,
+  List,
 } from "lucide-react";
 import { publicApi } from "@/lib/api";
 import { frontierFilters, frontierParams } from "@/lib/frontier";
+import { researchCitation, researchRis } from "@/lib/research-export.mjs";
 import { usePreferences } from "@/hooks/use-preferences";
 import { EmptyState, ErrorState, SkeletonCards } from "./ui/states";
 import type {
@@ -33,7 +40,37 @@ function PaperCard({
   featured: boolean;
   labels: Record<string, string>;
 }) {
-  const { t, language } = usePreferences();
+  const { t, language, saved, toggleSaved } = usePreferences();
+  const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
+  async function copyCitation() {
+    const text = researchCitation(paper);
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const active = document.activeElement;
+        const field = document.createElement("textarea");
+        field.value = text;
+        field.style.cssText = "position:fixed;left:-10000px;top:0";
+        document.body.appendChild(field);
+        field.select();
+        let ok = false;
+        try {
+          ok = document.execCommand("copy");
+        } finally {
+          field.remove();
+          if (active instanceof HTMLElement) active.focus();
+        }
+        if (!ok) throw new Error("Copy unavailable");
+      }
+      setCopied(true);
+      setCopyError(false);
+      window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopyError(true);
+    }
+  }
   return (
     <article
       className={`frontier-paper ${featured ? "frontier-featured" : ""}`}
@@ -43,9 +80,23 @@ function PaperCard({
           <BookOpen size={13} />
           {t("期刊论文", "Journal article")}
         </span>
-        <time dateTime={paper.published_date || undefined}>
-          {paper.published_date || t("日期未披露", "Date unavailable")}
-        </time>
+        <div className="frontier-card-tools">
+          <time dateTime={paper.published_date || undefined}>
+            {paper.published_date || t("日期未披露", "Date unavailable")}
+          </time>
+          <button
+            type="button"
+            onClick={() => toggleSaved(paper.id)}
+            aria-pressed={saved.includes(paper.id)}
+            aria-label={t("收藏论文", "Save paper")}
+            title={t("收藏论文", "Save paper")}
+          >
+            <Bookmark
+              size={15}
+              fill={saved.includes(paper.id) ? "currentColor" : "none"}
+            />
+          </button>
+        </div>
       </div>
       <div className="frontier-paper-journal">{paper.journal}</div>
       <Link
@@ -111,11 +162,28 @@ function PaperCard({
       )}
       <footer>
         <span title={paper.doi}>DOI · {paper.doi}</span>
+        <button
+          className="frontier-copy"
+          type="button"
+          onClick={copyCitation}
+          aria-label={t("复制文献引用", "Copy citation")}
+        >
+          {copied ? <Check size={13} /> : <Copy size={13} />}
+          {copied ? t("已复制", "Copied") : t("引用", "Cite")}
+        </button>
         <a href={paper.url} target="_blank" rel="noopener noreferrer">
           {t("期刊原文", "Original paper")}
           <ArrowUpRight size={14} />
         </a>
       </footer>
+      {copyError && (
+        <p className="frontier-copy-notice" role="status">
+          {t(
+            "未能自动复制，可使用上方 DOI 引用原文。",
+            "Copy unavailable; use the DOI above.",
+          )}
+        </p>
+      )}
     </article>
   );
 }
@@ -130,6 +198,7 @@ export function FrontierWorkspace({
   const { t, language } = usePreferences();
   const [filters, setFilters] = useState(initialFilters);
   const [keyword, setKeyword] = useState(initialFilters.search);
+  const [view, setView] = useState<"grid" | "list">("grid");
   const params = frontierParams(filters);
   const query = useQuery({
     queryKey: ["frontier", params],
@@ -157,6 +226,19 @@ export function FrontierWorkspace({
   }
   const data = query.data;
   const overview = data?.overview;
+  function exportPage() {
+    if (!data?.items.length) return;
+    const url = URL.createObjectURL(
+      new Blob([researchRis(data.items)], {
+        type: "application/x-research-info-systems;charset=utf-8",
+      }),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `MiningIntel-research-page-${filters.page}.ris`;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
   const labels = Object.fromEntries(
     (overview?.directions || []).map((row) => [
       row.key,
@@ -318,11 +400,38 @@ export function FrontierWorkspace({
               {t("最新研究", "Latest publications")}{" "}
               <span>{data?.total ?? "—"}</span>
             </h2>
-            <span>
-              {query.isFetching
-                ? t("正在更新…", "Updating…")
-                : t("按发表时间排序", "Newest first")}
-            </span>
+            <div className="frontier-view-tools">
+              <span>
+                {query.isFetching
+                  ? t("正在更新…", "Updating…")
+                  : t("按发表时间排序", "Newest first")}
+              </span>
+              <button
+                type="button"
+                aria-label={t("卡片视图", "Card view")}
+                aria-pressed={view === "grid"}
+                onClick={() => setView("grid")}
+              >
+                <LayoutGrid size={16} />
+              </button>
+              <button
+                type="button"
+                aria-label={t("列表视图", "List view")}
+                aria-pressed={view === "list"}
+                onClick={() => setView("list")}
+              >
+                <List size={17} />
+              </button>
+              <button
+                className="frontier-export"
+                type="button"
+                disabled={!data?.items.length || query.isFetching}
+                onClick={exportPage}
+              >
+                <Download size={14} />
+                {t("导出本页文献", "Export this page")}
+              </button>
+            </div>
           </div>
           {query.isError ? (
             <ErrorState error={query.error} retry={() => query.refetch()} />
@@ -338,7 +447,7 @@ export function FrontierWorkspace({
             />
           ) : (
             <div
-              className={`frontier-paper-grid ${query.isPlaceholderData ? "is-updating" : ""}`}
+              className={`frontier-paper-grid ${view === "list" ? "frontier-view-list" : ""} ${query.isPlaceholderData ? "is-updating" : ""}`}
             >
               {data.items.map((paper, index) => (
                 <PaperCard
@@ -373,6 +482,34 @@ export function FrontierWorkspace({
           )}
         </section>
         <aside className="frontier-sidebar">
+          <div className="panel frontier-direction-map">
+            <div className="eyebrow">RESEARCH LANDSCAPE</div>
+            <h2>{t("研究方向分布", "Research landscape")}</h2>
+            <p>
+              {t(
+                "按已收录论文分类，一篇研究可涉及多个方向。",
+                "Tracked papers may span multiple research directions.",
+              )}
+            </p>
+            {overview?.directions.map((row) => (
+              <button
+                key={row.key}
+                onClick={() => update({ direction: row.key })}
+              >
+                <span>
+                  {labels[row.key]}
+                  <b>{row.count}</b>
+                </span>
+                <i>
+                  <i
+                    style={{
+                      width: `${(100 * row.count) / Math.max(1, ...overview.directions.map((value) => value.count))}%`,
+                    }}
+                  />
+                </i>
+              </button>
+            ))}
+          </div>
           <div className="panel">
             <div className="eyebrow">SOURCE & METHOD</div>
             <h2>{t("让成果有据可查", "Trace the original research")}</h2>

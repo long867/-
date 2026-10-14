@@ -1,4 +1,145 @@
 /* Scholarly discovery shares the observatory's copper and geological palette. */
+.frontier-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#e2b18406 1px, transparent 1px),
+    linear-gradient(90deg, #e2b18406 1px, transparent 1px);
+  background-size: 38px 38px;
+  mask-image: linear-gradient(90deg, transparent 30%, #000);
+  pointer-events: none;
+}
+.frontier-hero-copy,
+.frontier-orbit {
+  position: relative;
+  z-index: 1;
+}
+.frontier-hero h1 {
+  text-shadow: 0 2px 25px #e2b18413;
+}
+.frontier-card-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.frontier-card-tools button {
+  color: var(--accent);
+  min-width: 30px;
+  min-height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+}
+.frontier-card-tools button[aria-pressed="true"] {
+  background: #e2b18415;
+}
+.frontier-paper footer .frontier-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  flex-shrink: 0;
+  min-height: 36px;
+  color: var(--muted);
+}
+.frontier-copy-notice {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.frontier-view-tools {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.frontier-view-tools > span {
+  font-size: 11px;
+  color: var(--muted);
+  margin-right: 9px;
+}
+.frontier-view-tools > button {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 33px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.frontier-view-tools > button[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: #e2b18466;
+  background: #e2b18410;
+}
+.frontier-view-tools > button.frontier-export {
+  width: auto;
+  gap: 6px;
+  padding: 0 10px;
+  font-size: 11px;
+}
+.frontier-export:disabled {
+  opacity: 0.4;
+}
+.frontier-paper-grid.frontier-view-list {
+  grid-template-columns: 1fr;
+}
+.frontier-view-list .frontier-featured h2 {
+  font-size: 19px;
+}
+.frontier-direction-map button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-top: 16px;
+}
+.frontier-direction-map button > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+}
+.frontier-direction-map b {
+  font-weight: 500;
+  color: var(--accent);
+}
+.frontier-direction-map button > i {
+  display: block;
+  height: 3px;
+  margin-top: 8px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.frontier-direction-map button > i > i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #b4784f, var(--gold));
+  transition: width 0.6s;
+}
+.frontier-direction-map button:hover > span {
+  color: var(--accent);
+}
+@media (max-width: 767px) {
+  .frontier-result-heading {
+    flex-wrap: wrap;
+  }
+  .frontier-view-tools {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .frontier-view-tools > span {
+    margin-right: auto;
+  }
+  .frontier-view-tools > button {
+    height: 38px;
+    min-width: 38px;
+  }
+  .frontier-paper footer {
+    gap: 9px;
+  }
+}
 .frontier-hero {
   position: relative;
   display: grid;

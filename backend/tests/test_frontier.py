@@ -130,6 +130,14 @@ def test_title_only_records_cannot_acquire_invented_research_results():
         )
 
 
+def test_chemical_title_terms_must_not_be_mistranslated():
+    from pipeline.processors.academic import check_title_terms
+
+    check_title_terms("Co-Ni and Cu deposits", "钴-镍与铜矿床")
+    with pytest.raises(ValueError, match="chemical"):
+        check_title_terms("Co-Ni and Cu deposits", "共镍与铜矿床")
+
+
 def test_abstract_summary_rejects_invented_measurements():
     with pytest.raises(ValueError, match="invented"):
         validate_academic(
@@ -147,6 +155,17 @@ def test_abstract_summary_rejects_invented_measurements():
             {},
             has_abstract=True,
         )
+
+
+def test_overlong_translation_keeps_complete_method_and_result_sentences():
+    from pipeline.processors.academic import concise_digest
+
+    start = "该研究考察铜尾矿超声预处理对浮选回收的影响。"
+    middle = "研究团队对矿物的表面形貌和不同工艺条件进行了系统比较。" * 12
+    result = "最佳实验条件下，铜回收率为80%，该结果限于论文所述实验。"
+    summary = concise_digest(start + middle + result)
+    assert summary.startswith(start) and result in summary
+    assert len(summary) <= 260 and summary.endswith("。")
 
 
 @pytest.mark.integration

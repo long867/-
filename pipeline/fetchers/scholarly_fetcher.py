@@ -82,6 +82,8 @@ class ScholarlyFetcher(BaseFetcher):
             "order": "desc",
             "rows": limit,
         }
+        if self.config.get("query"):
+            params["query.bibliographic"] = str(self.config["query"])[:200]
         url = self.source.url + "?" + urlencode(params)
         response = await self.transport.get(url, {})
         response.raise_for_status()
@@ -114,6 +116,13 @@ class ScholarlyFetcher(BaseFetcher):
                 continue
             seen.add(doi)
             abstract = plain_text(str(row.get("abstract") or ""))[:16000]
+            if self.config.get("require_resource_match") and not re.search(
+                r"mineral|mining|metal|lithium|copper|coal|rare earth|nickel|cobalt|"
+                r"uranium|extractive|tailing|steel|alloy|metallurg|\bore\b",
+                title + "\n" + abstract,
+                re.I,
+            ):
+                continue
             authors, institutions = [], []
             for author in row.get("author", [])[:40]:
                 name = (

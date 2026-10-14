@@ -8,12 +8,69 @@ from typing import Any
 from app.services.llm import complete_json
 from pipeline.processors.entities import extract_entities
 from pipeline.processors.translator import (
+    glossary,
     mask_evidence,
     numbers,
     numeric_translation_valid,
     restore_numeric_literals,
     summary_measurements_valid,
 )
+
+CHEMICAL_TERMS = {
+    "Li": "锂",
+    "Co": "钴",
+    "Ni": "镍",
+    "Cu": "铜",
+    "Fe": "铁",
+    "Au": "金",
+    "Ag": "银",
+    "Pb": "铅",
+    "Zn": "锌",
+    "Mo": "钼",
+}
+
+
+def check_title_terms(original: str, translated: str) -> None:
+    """Keep explicit studied minerals and standalone chemical symbols accurate."""
+    required = extract_entities(original)["minerals"]
+    for mineral in required:
+        if mineral not in translated:
+            raise ValueError("Translated title lost the mineral term: " + mineral)
+    for symbol, name in CHEMICAL_TERMS.items():
+        if re.search(r"(?<![A-Za-z])" + symbol + r"(?![A-Za-z])", original):
+            if name not in translated and not re.search(
+                r"(?<![A-Za-z])" + symbol + r"(?![A-Za-z])", translated
+            ):
+                raise ValueError(
+                    f"Translated chemical term must retain {symbol}/{name}"
+                )
+
+
+def concise_digest(text: str) -> str:
+    """Select complete translated sentences while retaining methods and results."""
+    if len(text) <= 300:
+        return text
+    sentences = re.findall(r"[^。！？]+[。！？]|[^。！？]+$", text)
+    if not sentences or len(sentences[0]) > 300:
+        raise ValueError("Scholarly summary needs complete concise sentences")
+    selected = {0}
+    length = len(sentences[0])
+    ranked = sorted(
+        range(1, len(sentences)),
+        key=lambda i: (
+            not bool(
+                re.search(
+                    r"最佳|结果|发现|显示|揭示|表明|获得|回收率.*为", sentences[i]
+                )
+            ),
+            i,
+        ),
+    )
+    for index in ranked:
+        if length + len(sentences[index]) <= 260:
+            selected.add(index)
+            length += len(sentences[index])
+    return "".join(sentences[index] for index in sorted(selected)).strip()
 
 
 def validate_academic(
@@ -36,7 +93,9 @@ def validate_academic(
         raise ValueError("Scholarly title changed numeric evidence")
     if not summary_measurements_valid(title, title_zh, language):
         raise ValueError("Scholarly title changed units")
+    check_title_terms(title, title_zh)
     if has_abstract:
+        summary_zh = concise_digest(summary_zh)
         if not 60 <= len(summary_zh) <= 300 or not re.search(
             r"[\u3400-\u9fff]", summary_zh
         ):
@@ -80,6 +139,10 @@ async def enrich_academic(
         "保留化学式、专业术语和{{MI_NUM_*}}数字锚点。不要补造数据、研究结论、"
         "应用前景、作者或机构，不把实验结果写成已实现产业化。"
     )
+    system += "\n专业术语表：" + json.dumps(
+        glossary() | CHEMICAL_TERMS | {"Co-Ni": "钴-镍", "Co–Ni": "钴-镍"},
+        ensure_ascii=False,
+    )
     feedback = ""
     for _ in range(2):
         candidate = await complete_json(system, prompt + feedback)
@@ -89,7 +152,12 @@ async def enrich_academic(
             )
             break
         except ValueError as error:
-            feedback = "\n请修正上次输出：" + str(error)
+            feedback = (
+                "\n请修正上次输出："
+                + str(error)
+                + "。摘要只保留问题、核心方法和主要发现，必须压缩为100至200字；"
+                "原标题数字、百分比、化学式和3D等缩写必须完整保留。"
+            )
     else:
         raise ValueError("Scholarly translation failed evidence checks")
     entities = extract_entities(title + "\n" + content)

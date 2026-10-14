@@ -311,12 +311,14 @@ async def test_admin_can_reprocess_reviewed_article_but_must_withdraw_published(
     from fastapi import HTTPException
 
     from app.api.routes import retry_article
-    from app.tasks import ingest
+    from app.core import task_dispatch
 
     article = await make_article(db, "processed")
     monkeypatch.setattr(db, "commit", AsyncMock())
     monkeypatch.setattr(
-        ingest, "enqueue_article", lambda *_: SimpleNamespace(id="fixture-job")
+        task_dispatch,
+        "enqueue_article",
+        lambda *_: SimpleNamespace(id="fixture-job"),
     )
     result = await retry_article(article.id, db, SimpleNamespace(is_admin=True))
     assert article.status == "pending" and result["task_id"] == "fixture-job"

@@ -13,9 +13,9 @@ from redis.lock import Lock
 from sqlalchemy import delete, func, or_, select, text
 from sqlalchemy.dialects.postgresql import insert
 
-from app.core import processing_queue
 from app.core.config import get_settings
 from app.core.db import SessionFactory
+from app.core.task_dispatch import enqueue_article as dispatch_article
 from app.models import Article, ArticleChunk, PipelineRun, Policy, Source
 from app.rag.chunking import split_evidence
 from app.rag.embedding import embed
@@ -505,15 +505,7 @@ def process_article(self: Task, article_id: str) -> dict:
 
 def enqueue_article(article_id: str) -> AsyncResult | None:
     """Publish once while queued/retrying; roll back the lease on broker failure."""
-    article_id = str(UUID(article_id))
-    task_id = str(uuid4())
-    if not processing_queue.claim(article_id, task_id):
-        return None
-    try:
-        return process_article.apply_async(args=[article_id], task_id=task_id)
-    except Exception:
-        processing_queue.release(article_id, task_id)
-        raise
+    return dispatch_article(article_id, publisher=process_article.apply_async)
 
 
 @celery_app.task(name="miningintel.dispatch_sources")

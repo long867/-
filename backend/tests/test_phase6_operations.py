@@ -231,12 +231,12 @@ async def test_admin_security_atomic_batch_and_reprocessing_recovery(
         json={"article_ids": [ids[0], ids[0]], "action": "hide"},
     )
     assert response.status_code == 200 and response.json()["changed"] == 1
-    from app.tasks import ingest
+    from app.core import task_dispatch
 
     def unavailable(*args):
         raise ConnectionError("broker unavailable")
 
-    monkeypatch.setattr(ingest, "enqueue_article", unavailable)
+    monkeypatch.setattr(task_dispatch, "enqueue_article", unavailable)
     response = await client.post(
         "/api/v1/admin/articles/batch",
         headers=headers,

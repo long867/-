@@ -99,7 +99,7 @@ async def batch(payload: BatchReview, db: DB, user: AdminUser) -> BatchResult:
     tasks = []
     deferred = False
     if payload.action == "reprocess":
-        from app.tasks.ingest import enqueue_article
+        from app.core.task_dispatch import enqueue_article
 
         for article_id in ids:
             try:

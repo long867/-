@@ -465,11 +465,11 @@ async def edit_source(
 
 @router.post("/admin/sources/{source_id}/fetch", status_code=202, tags=["admin"])
 async def trigger_fetch(source_id: UUID, db: DB, user: AdminUser) -> dict:
-    from app.tasks.ingest import fetch_source
+    from app.core.task_dispatch import enqueue_source
 
     if await db.get(Source, source_id) is None:
         raise HTTPException(404, "信源不存在")
-    result = fetch_source.delay(str(source_id))
+    result = await asyncio.to_thread(enqueue_source, str(source_id))
     return {"task_id": result.id, "status": "queued"}
 
 
@@ -527,7 +527,7 @@ async def review_article(
 @router.post("/admin/articles/{article_id}/retry", status_code=202, tags=["admin"])
 async def retry_article(article_id: UUID, db: DB, user: AdminUser) -> dict:
     """Requeue unpublished articles after committing the pending state."""
-    from app.tasks.ingest import enqueue_article
+    from app.core.task_dispatch import enqueue_article
 
     item = await db.get(Article, article_id, with_for_update=True)
     if item is None:

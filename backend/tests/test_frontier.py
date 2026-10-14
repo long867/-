@@ -74,9 +74,16 @@ async def test_scholarly_doi_deduplication_real_dates_and_abstract_scope(monkeyp
     withdrawn = deepcopy(row)
     withdrawn["DOI"] += "-RETRACTED"
     withdrawn["update-to"] = [{"type": "retraction"}]
+    editorial = deepcopy(row)
+    editorial["DOI"] += "-EDITORIAL"
+    editorial["title"] = ["Guest editorial for the special issue"]
     response = httpx.Response(
         200,
-        json={"message": {"items": [row, duplicate, future, title_only, withdrawn]}},
+        json={
+            "message": {
+                "items": [row, duplicate, future, title_only, withdrawn, editorial]
+            }
+        },
         request=httpx.Request("GET", source().url),
     )
     get = AsyncMock(return_value=response)

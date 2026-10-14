@@ -103,7 +103,10 @@ class ScholarlyFetcher(BaseFetcher):
                 or doi in seen
                 or not title
                 or re.match(
-                    r"^(retraction|corrigendum|erratum|editorial)\b", title, re.I
+                    r"^(?:(?:guest|invited)\s+)?"
+                    r"(?:retraction|corrigendum|erratum|editorial|preface)\b",
+                    title,
+                    re.I,
                 )
                 or any(
                     update.get("type") == "retraction"

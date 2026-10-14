@@ -55,6 +55,10 @@ def check_title_terms(original: str, translated: str) -> None:
                     "Professional term must be translated as " + alternatives[0]
                 )
 
+    for acronym in ("TBM", "THM", "DIC", "DFT", "DEM", "AFM", "MRI"):
+        if re.search(r"\b" + acronym + r"\b", original) and acronym not in translated:
+            raise ValueError("Retain the scientific method abbreviation " + acronym)
+
 
 def concise_digest(text: str) -> str:
     """Select complete translated sentences while retaining methods and results."""

@@ -26,9 +26,20 @@ export function Header() {
   const { t, theme, toggleTheme, toggleLanguage, language } = usePreferences();
   const [open, setOpen] = useState(false);
   const header = useRef<HTMLElement>(null);
+  const desktopNav = useRef<HTMLElement>(null);
   const mobileBar = useRef<HTMLElement>(null);
   const menuTrigger = useRef<HTMLButtonElement | null>(null);
   useEffect(() => setOpen(false), [path]);
+  useEffect(() => {
+    const nav = desktopNav.current;
+    const active = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (nav && active) {
+      nav.scrollLeft =
+        active.offsetLeft -
+        nav.offsetLeft -
+        (nav.clientWidth - active.clientWidth) / 2;
+    }
+  }, [path, language]);
   useEffect(() => {
     if (!open) return;
     const closeOutside = (event: PointerEvent) => {
@@ -88,7 +99,11 @@ export function Header() {
             <small>THE RESOURCE OBSERVATORY</small>
           </span>
         </Link>
-        <nav className="main-nav" aria-label={t("主导航", "Main navigation")}>
+        <nav
+          className="main-nav"
+          ref={desktopNav}
+          aria-label={t("主导航", "Main navigation")}
+        >
           {links.map(([href, zh, en]) => (
             <Link
               key={href}

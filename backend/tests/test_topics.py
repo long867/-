@@ -61,6 +61,16 @@ def test_rules_have_two_orientations_exact_original_quotes_and_real_scores():
     assert service.candidates([], {}) == []
 
 
+def test_postgresql_window_constraint_quotes_reserved_identifier():
+    from sqlalchemy.dialects import postgresql
+    from sqlalchemy.schema import CreateTable
+
+    from app.models import Topic
+
+    ddl = str(CreateTable(Topic.__table__).compile(dialect=postgresql.dialect()))
+    assert 'CHECK ("window" IN' in ddl
+
+
 async def test_no_model_configuration_never_calls_gateway(monkeypatch):
     gateway = AsyncMock(side_effect=AssertionError("must not call model"))
     monkeypatch.setattr(service, "complete_json", gateway)

@@ -63,7 +63,7 @@ def upgrade() -> None:
         sa.CheckConstraint("heat_score BETWEEN 0 AND 100", name="ck_topics_heat"),
         sa.CheckConstraint("source IN ('generated','manual')", name="ck_topics_source"),
         sa.CheckConstraint("mode IN ('rule','llm')", name="ck_topics_mode"),
-        sa.CheckConstraint("window IN ('7d','30d','90d')", name="ck_topics_window"),
+        sa.CheckConstraint("\"window\" IN ('7d','30d','90d')", name="ck_topics_window"),
     )
     op.create_index(
         "ix_topics_owner_window", "topics", ["user_id", "window", "created_at"]

@@ -479,7 +479,7 @@ class Topic(Identity, Created, Base):
         CheckConstraint("heat_score BETWEEN 0 AND 100", name="ck_topics_heat"),
         CheckConstraint("source IN ('generated','manual')", name="ck_topics_source"),
         CheckConstraint("mode IN ('rule','llm')", name="ck_topics_mode"),
-        CheckConstraint("window IN ('7d','30d','90d')", name="ck_topics_window"),
+        CheckConstraint("\"window\" IN ('7d','30d','90d')", name="ck_topics_window"),
         Index("ix_topics_owner_window", "user_id", "window", "created_at"),
     )
     user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))

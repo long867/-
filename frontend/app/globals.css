@@ -165,6 +165,12 @@ select {
   height: 100%;
   gap: 26px;
   flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.main-nav::-webkit-scrollbar {
+  display: none;
 }
 .main-nav a {
   display: flex;

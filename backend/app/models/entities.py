@@ -465,3 +465,83 @@ class NotificationDelivery(Identity, Created, Base):
     sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     attempts: Mapped[int] = mapped_column(default=0, server_default="0")
     last_error: Mapped[str | None] = mapped_column(String(100))
+
+
+class Topic(Identity, Created, Base):
+    """Account-owned research proposals, never assertions of proven novelty."""
+
+    __tablename__ = "topics"
+    __table_args__ = (
+        UniqueConstraint("user_id", "fingerprint", name="uq_topics_owner_fingerprint"),
+        CheckConstraint(
+            "type IN ('achievement','social_science')", name="ck_topics_type"
+        ),
+        CheckConstraint("heat_score BETWEEN 0 AND 100", name="ck_topics_heat"),
+        CheckConstraint("source IN ('generated','manual')", name="ck_topics_source"),
+        CheckConstraint("mode IN ('rule','llm')", name="ck_topics_mode"),
+        CheckConstraint("window IN ('7d','30d','90d')", name="ck_topics_window"),
+        Index("ix_topics_owner_window", "user_id", "window", "created_at"),
+    )
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
+    type: Mapped[str] = mapped_column(String(20))
+    title: Mapped[str] = mapped_column(Text)
+    title_zh: Mapped[str] = mapped_column(Text)
+    summary: Mapped[str] = mapped_column(Text)
+    rationale: Mapped[str] = mapped_column(Text)
+    keywords: Mapped[list[str]] = array_column()
+    minerals: Mapped[list[str]] = array_column()
+    regions: Mapped[list[str]] = array_column()
+    heat_score: Mapped[float] = mapped_column()
+    source: Mapped[str] = mapped_column(String(20), default="generated")
+    mode: Mapped[str] = mapped_column(String(10), default="rule")
+    window: Mapped[str] = mapped_column(String(10))
+    fingerprint: Mapped[str] = mapped_column(String(64))
+    generated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    last_refresh_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class TopicEvidence(Identity, Created, Base):
+    """Exact original spans; the backing article gates policy/event visibility."""
+
+    __tablename__ = "topic_evidence"
+    __table_args__ = (
+        UniqueConstraint("topic_id", "position", name="uq_topic_evidence_position"),
+        CheckConstraint(
+            "evidence_type IN ('article','policy','event')",
+            name="ck_topic_evidence_type",
+        ),
+        CheckConstraint(
+            "quote_field IN ('title','content')", name="ck_topic_evidence_field"
+        ),
+        CheckConstraint(
+            "position >= 1 AND start_char >= 0 AND end_char > start_char",
+            name="ck_topic_evidence_span",
+        ),
+        Index("ix_topic_evidence_topic", "topic_id"),
+    )
+    topic_id: Mapped[UUID] = mapped_column(ForeignKey("topics.id", ondelete="CASCADE"))
+    entity_id: Mapped[UUID] = mapped_column()
+    evidence_type: Mapped[str] = mapped_column(String(10))
+    article_id: Mapped[UUID] = mapped_column(
+        ForeignKey("articles.id", ondelete="CASCADE")
+    )
+    quote: Mapped[str] = mapped_column(Text)
+    quote_field: Mapped[str] = mapped_column(String(10))
+    source_url: Mapped[str] = mapped_column(Text)
+    support: Mapped[str] = mapped_column(Text)
+    position: Mapped[int] = mapped_column()
+    start_char: Mapped[int] = mapped_column()
+    end_char: Mapped[int] = mapped_column()
+
+
+class TopicBookmark(Identity, Created, Base):
+    """Durable favorites scoped to the authenticated account."""
+
+    __tablename__ = "topic_bookmarks"
+    __table_args__ = (
+        UniqueConstraint("user_id", "topic_id", name="uq_topic_bookmark"),
+    )
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
+    topic_id: Mapped[UUID] = mapped_column(
+        ForeignKey("topics.id", ondelete="CASCADE"), index=True
+    )

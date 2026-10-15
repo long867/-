@@ -66,6 +66,7 @@ export function Header() {
     ["/trends", "趋势", "Trends"],
     ["/digest", "简报", "Briefs"],
     ["/frontier", "前沿成果", "Frontiers"],
+    ["/topics", "选题推荐", "Research topics"],
     ["/research", "研判", "Research"],
     ["/chat", AGENT_NAME, AGENT_NAME],
     ...(auth.user?.is_admin ? [["/admin", "管理", "Admin"]] : []),

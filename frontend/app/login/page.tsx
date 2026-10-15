@@ -25,7 +25,10 @@ export default function Login() {
       const destination = new URLSearchParams(location.search).get("next");
       // Consultation entry points can resume locally; external redirects are excluded.
       router.push(
-        destination === "/chat" || destination?.startsWith("/chat?")
+        destination === "/chat" ||
+          destination?.startsWith("/chat?") ||
+          destination === "/topics" ||
+          destination?.startsWith("/topics?")
           ? destination
           : "/",
       );

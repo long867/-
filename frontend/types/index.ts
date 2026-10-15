@@ -391,3 +391,50 @@ export interface Run {
   error: string | null;
   created_at: string;
 }
+
+export type TopicType = "achievement" | "social_science";
+export type TopicWindow = "7d" | "30d" | "90d";
+export interface TopicEvidence {
+  id: string;
+  evidence_type: "article" | "policy" | "event";
+  entity_id: string;
+  article_id: string;
+  quote: string;
+  quote_field: "title" | "content";
+  source_url: string;
+  support: string;
+  position: number;
+  start_char: number;
+  end_char: number;
+  title: string;
+  source_name: string;
+  published_at: string | null;
+}
+export interface Topic {
+  id: string;
+  type: TopicType;
+  title: string;
+  title_zh: string;
+  summary: string;
+  rationale: string;
+  keywords: string[];
+  minerals: string[];
+  regions: string[];
+  heat_score: number;
+  source: "generated" | "manual";
+  mode: "rule" | "llm";
+  window: TopicWindow;
+  created_at: string;
+  generated_at: string;
+  bookmarked: boolean;
+  evidence_count: number;
+  evidence: TopicEvidence[];
+  limitation: string;
+}
+export interface TopicPage {
+  items: Topic[];
+  total: number;
+  window: TopicWindow;
+  mode: "rule" | "llm" | "mixed" | "insufficient";
+  message: string;
+}

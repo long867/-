@@ -1,5 +1,18 @@
 # MiningIntel API · 阶段 3
 
+## 账号专属选题推荐
+
+所有 `/api/v1/topics/*` 接口要求有效的 Bearer JWT，仅访问本人选题与收藏；其他账号记录返回 404。响应使用 `Cache-Control: private, no-store`，不进入公开 Redis 缓存。网页入口为 `/topics`，公开前沿成果 `/frontier` 保持匿名可读。
+
+- `GET /api/v1/topics/recommendations`：`type=achievement|social_science`（成果/社科；省略为全部）、`window=7d|30d|90d`（默认 30d）、`limit=1..50`（默认 20）、`bookmarked=true|false`。返回 `items/total/window/mode/message`。首次访问无记录时以规则生成并保存，不调用 LLM；无符合时间窗的已发布资料返回空数组、`mode=insufficient` 和“依据不足”。未知/未来发布日期不计入时间窗。
+- `GET /api/v1/topics/{id}`：返回题目、摘要、逐条引用理由、矿种/地区/关键词、热度、生成方式、收藏状态及完整证据。证据包含 `evidence_type/entity_id/article_id/quote/quote_field/source_url/position/start_char/end_char/title/source_name/published_at`。原文位置为原始标题/正文中从零开始的字符区间 `[start_char,end_char)`，不是翻译文本位置。
+- `POST /api/v1/topics/recommendations/refresh`：请求 `{"type":null,"window":"30d"}`。同步返回推荐页；至多一批十二个候选，LLM 调用限定 25 秒，只通过现有 `complete_json(system=..., prompt=...)` 网关。模型不可用、超时或结构校验失败时返回规则结果；假引用与对应理由一起剔除，剩余引用重新编号，全无效则回退规则。每账户串行生成，同时生成返回 409；刷新间隔至少一分钟，429 带 Retry-After。相同证据指纹复用选题 ID，保留收藏。
+- `PUT /api/v1/topics/{id}/bookmark`、`DELETE /api/v1/topics/{id}/bookmark`：幂等收藏/取消，204。收藏保存在 PostgreSQL，GET 列表可筛选本人收藏。
+
+热度是库内关注度评分（0–100），不是市场预测、论文影响因子或申报成功率。每批读取最近最多 240 篇已发布资料，以矿种、政策主题和研究方向聚合，7d 窗口复用既有热点分析器。事件证据使用该事件的已发布支持文章，政策证据须关联已发布同 URL 文章；不引用未审核的事件摘要。读取时重新核验原文摘录、URL、实体关联与发布状态，证据撤回/修改后整条旧推荐隐藏，避免展示失效理由。创新性和研究空白没有经过系统文献检索，明确标为依据不足。前端提供 Markdown 导出，仅包含服务端已核验内容。
+
+数据库迁移为 `0010_topics`（继承 `0009_conversation_context`）。`topics` 按用户及证据指纹唯一，`topic_evidence` 保存原文定位，`topic_bookmarks` 按用户和选题唯一；删除账户级联删除本模块数据，不修改采集、问答、报告逻辑。
+
 完整模型见运行中的 `/docs` 和 `/openapi.json`。网站读取基础路径为 `/api`；相同第三方读取接口挂载 `/api/open`，强制 `X-API-Key`。个人订阅、密钥管理和咨询需要 Bearer JWT，管理操作需要管理员。
 
 ## 文章、事件与聚合

@@ -18,6 +18,9 @@ from app.models.entities import (
     Report,
     Source,
     Subscription,
+    Topic,
+    TopicBookmark,
+    TopicEvidence,
     User,
     VectorSyncJob,
 )
@@ -42,6 +45,9 @@ __all__ = [
     "ResearchReport",
     "Source",
     "Subscription",
+    "Topic",
+    "TopicBookmark",
+    "TopicEvidence",
     "User",
     "VectorSyncJob",
 ]

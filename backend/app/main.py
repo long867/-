@@ -30,6 +30,7 @@ from app.api.operations import router as operations_router
 from app.api.research import router as research_router
 from app.api.routes import router
 from app.api.subscriptions import router as subscriptions_router
+from app.api.topics import router as topics_router
 from app.core.config import get_settings
 from app.core.db import SessionFactory, engine
 from app.core.logging import configure_logging
@@ -108,6 +109,7 @@ app.include_router(subscriptions_router)
 app.include_router(notifications_router)
 app.include_router(operations_router)
 app.include_router(research_router)
+app.include_router(topics_router)
 app.include_router(chat_router, prefix="/api/chat")
 app.include_router(chat_router, prefix="/api/v1/chat")
 

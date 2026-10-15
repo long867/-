@@ -11,7 +11,7 @@ from uuid import UUID, uuid4
 
 import structlog
 from fastapi import HTTPException
-from sqlalchemy import delete, func, select, text
+from sqlalchemy import delete, func, or_, select, text
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -45,6 +45,12 @@ logger = structlog.get_logger()
 WINDOW_DAYS = {"7d": 7, "30d": 30, "90d": 90}
 MAX_CORPUS = 240
 MAX_CANDIDATES = 12
+
+
+def precise_publication() -> list:
+    """Partial scholarly dates cannot silently become invented exact dates."""
+    precision = Article.raw_json["date_precision"].astext
+    return [or_(precision.is_(None), precision == "day")]
 
 
 @dataclass
@@ -117,6 +123,7 @@ async def corpus(db: AsyncSession, window: TopicWindow) -> list[Evidence]:
             .outerjoin(Event, Event.id == Article.event_id)
             .where(
                 *public_conditions(),
+                *precise_publication(),
                 Article.published_at >= now - timedelta(days=WINDOW_DAYS[window]),
                 Article.published_at <= now,
             )
@@ -231,7 +238,7 @@ def rule_proposal(candidate: Candidate) -> Proposal:
     if candidate.type == "achievement":
         title = f"{candidate.label}相关技术的适用条件与验证路径研究"
         support = (
-            "可围绕原文涉及的方法或技术开展文献核对、适用条件比较与验证方案设计，"
+            "可围绕原文主题检索相关技术文献，比较适用条件并设计验证方案，"
             "效果和产业化可行性需另行验证"
         )
     else:
@@ -467,6 +474,7 @@ async def views(db: AsyncSession, user_id: UUID, topics: list[Topic]) -> list[To
             .where(
                 TopicEvidence.topic_id.in_(ids),
                 *public_conditions(),
+                *precise_publication(),
                 Article.published_at <= datetime.now(UTC),
             )
             .order_by(TopicEvidence.position)

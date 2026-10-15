@@ -289,3 +289,14 @@ async def test_empty_or_future_corpus_returns_insufficient_and_no_topics(busines
     )
     assert result.status_code == 200
     assert result.json()["items"] == [] and result.json()["mode"] == "insufficient"
+    async with business["factory"].begin() as db:
+        for article_id in business["ids"]:
+            row = await db.get(Article, article_id)
+            row.published_at = datetime.now(UTC) - timedelta(days=1)
+            row.raw_json = {"date_precision": "month"}
+    # A month-only date must not be presented as an exact publication day.
+    result = await business["client"].get(
+        "/api/v1/topics/recommendations", headers=business["headers"]
+    )
+    assert result.status_code == 200
+    assert result.json()["items"] == [] and result.json()["mode"] == "insufficient"

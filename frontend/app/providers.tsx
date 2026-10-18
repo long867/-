@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/hooks/use-auth";
 import { PreferencesProvider } from "@/hooks/use-preferences";
+import { PageMotionProvider } from "@/hooks/use-page-motion";
 export function Providers({ children }: { children: ReactNode }) {
   const [client] = useState(
     () =>
@@ -15,7 +16,9 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={client}>
       <PreferencesProvider>
-        <AuthProvider>{children}</AuthProvider>
+        <PageMotionProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </PageMotionProvider>
       </PreferencesProvider>
     </QueryClientProvider>
   );

@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { usePreferences } from "@/hooks/use-preferences";
 import { AGENT_NAME } from "@/lib/branding";
+import { MotionControl } from "./motion-control";
 export function Header() {
   const path = usePathname();
   const auth = useAuth();
@@ -117,6 +118,7 @@ export function Header() {
           ))}
         </nav>
         <div className="header-actions">
+          <MotionControl compact />
           <Link
             className="icon-button"
             href="/search"

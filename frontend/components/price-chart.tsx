@@ -11,8 +11,10 @@ import {
 } from "recharts";
 import { usePreferences } from "@/hooks/use-preferences";
 import type { Price } from "@/types";
+import { usePageMotion } from "@/hooks/use-page-motion";
 export function PriceChart({ prices }: { prices: Price[] }) {
   const { t } = usePreferences();
+  const { enabled } = usePageMotion();
   const groups = new Map<string, Price[]>();
   for (const price of prices) {
     const key = [
@@ -168,7 +170,9 @@ export function PriceChart({ prices }: { prices: Price[] }) {
               strokeWidth={2}
               dot={{ r: 3, strokeWidth: 2, fill: "var(--surface)" }}
               activeDot={{ r: 5 }}
-              isAnimationActive={false}
+              isAnimationActive={enabled}
+              animationDuration={900}
+              animationEasing="ease-out"
             />
           </LineChart>
         </ResponsiveContainer>

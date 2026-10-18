@@ -9,12 +9,14 @@ import {
   YAxis,
 } from "recharts";
 import { usePreferences } from "@/hooks/use-preferences";
+import { usePageMotion } from "@/hooks/use-page-motion";
 export default function ReportChart({
   data,
 }: {
   data: { date: string; count: number }[];
 }) {
   const { t } = usePreferences();
+  const { enabled } = usePageMotion();
   return (
     <div
       className="h-60"
@@ -47,7 +49,8 @@ export default function ReportChart({
             dataKey="count"
             name={t("报道数", "Articles")}
             fill="var(--accent)"
-            isAnimationActive={false}
+            isAnimationActive={enabled}
+            animationDuration={900}
           />
         </BarChart>
       </ResponsiveContainer>

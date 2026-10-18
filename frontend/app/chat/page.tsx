@@ -17,6 +17,7 @@ import type {
   ConversationContext,
 } from "@/types";
 import { AGENT_NAME } from "@/lib/branding";
+import { SceneGlyph } from "@/components/scene-glyph";
 
 type Pending = {
   question: string;
@@ -148,7 +149,8 @@ export default function Chat() {
   });
   if (!auth.user)
     return (
-      <main className="small-page">
+      <main className="small-page auth-scene">
+        <SceneGlyph />
         <div className="eyebrow">MINING INTELLIGENCE AGENT</div>
         <h1>{AGENT_NAME}</h1>
         <p className="subtitle mb-6">
@@ -188,6 +190,7 @@ export default function Chat() {
   const busy = mutation.isPending || deletion.isPending || forgetting.isPending;
   return (
     <main className="small-page chat-workspace">
+      <SceneGlyph />
       <div className="eyebrow">EVIDENCE-BASED CONSULTATION</div>
       <div className="chat-heading flex justify-between items-center gap-3">
         <h1>{AGENT_NAME}</h1>

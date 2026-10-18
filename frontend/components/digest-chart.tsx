@@ -8,11 +8,13 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
+import { usePageMotion } from "@/hooks/use-page-motion";
 export default function DigestChart({
   minerals,
 }: {
   minerals: Record<string, number>;
 }) {
+  const { enabled } = usePageMotion();
   const data = Object.entries(minerals)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 8)
@@ -55,6 +57,9 @@ export default function DigestChart({
             fill="var(--accent)"
             radius={[4, 4, 0, 0]}
             maxBarSize={40}
+            isAnimationActive={enabled}
+            animationDuration={900}
+            animationEasing="ease-out"
           />
         </BarChart>
       </ResponsiveContainer>

@@ -4,6 +4,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PwaRegister } from "@/components/pwa-register";
 import { AssistantDock } from "@/components/assistant-dock";
+import { SiteExperience } from "@/components/site-experience";
 import "./fonts.css";
 import "./globals.css";
 import "./mineral-design.css";
@@ -12,6 +13,7 @@ import "./readability.css";
 import "./mobile.css";
 import "./country-watch.css";
 import "./frontier.css";
+import "./experience.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",
@@ -38,7 +40,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-CN" data-theme="dark" suppressHydrationWarning>
+    <html
+      lang="zh-CN"
+      data-theme="dark"
+      data-visuals="off"
+      suppressHydrationWarning
+    >
       <head>
         <link
           rel="preload"
@@ -56,7 +63,9 @@ export default function RootLayout({
         </a>
         <Providers>
           <Header />
-          <div id="main-content">{children}</div>
+          <div id="main-content">
+            <SiteExperience>{children}</SiteExperience>
+          </div>
           <Footer />
           <AssistantDock />
           <PwaRegister />

@@ -23,6 +23,7 @@ export function Sparkline({
       <title>{label}</title>
       <line x1="4" y1="36" x2="116" y2="36" stroke="var(--border)" />
       <polyline
+        pathLength={1}
         points={points}
         fill="none"
         stroke="var(--accent)"

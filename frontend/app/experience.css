@@ -1,0 +1,639 @@
+/* Shared motion language. All layers are decorative; database values stay intact. */
+.site-experience {
+  --scene-rgb: 224 171 130;
+  position: relative;
+  isolation: isolate;
+}
+.site-experience[data-scene="atlas"],
+.site-experience[data-scene="network"] {
+  --scene-rgb: 123 179 191;
+}
+.site-experience[data-scene="discovery"],
+.site-experience[data-scene="reasoning"] {
+  --scene-rgb: 182 164 219;
+}
+.site-experience[data-scene="signals"],
+.site-experience[data-scene="operations"] {
+  --scene-rgb: 110 185 164;
+}
+.scene-content {
+  position: relative;
+  z-index: 1;
+}
+.scene-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.58;
+}
+.scene-atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(var(--scene-rgb) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--scene-rgb) / 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(180deg, #000, transparent 85%);
+}
+.scene-atmosphere > svg {
+  width: 100%;
+  height: 100%;
+  color: rgb(var(--scene-rgb) / 0.13);
+}
+.geological-contour {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.8;
+  stroke-dasharray: 3 10;
+  animation: geological-travel 55s linear infinite;
+}
+.geological-contour:nth-child(2n) {
+  animation-direction: reverse;
+  opacity: 0.45;
+}
+.scene-aurora {
+  position: absolute;
+  width: min(72vw, 1000px);
+  height: min(60vw, 650px);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgb(var(--scene-rgb) / 0.1),
+    transparent 68%
+  );
+  animation: aurora-drift 20s ease-in-out infinite alternate;
+}
+.scene-aurora-one {
+  top: -180px;
+  right: -200px;
+}
+.scene-aurora-two {
+  top: 45%;
+  left: -400px;
+  animation-delay: -9s;
+  opacity: 0.65;
+}
+.scene-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgb(var(--scene-rgb) / 0.45);
+  box-shadow: 0 0 12px rgb(var(--scene-rgb) / 0.2);
+  animation: mineral-drift 12s ease-in-out infinite alternate;
+}
+.request-trace {
+  position: fixed;
+  z-index: 65;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.request-trace.is-fetching {
+  opacity: 1;
+}
+.request-trace span {
+  display: block;
+  height: 100%;
+  width: 32%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent),
+    var(--gold),
+    transparent
+  );
+  transform: translateX(-110%);
+}
+.request-trace.is-fetching span {
+  animation: request-travel 1.8s ease-in-out infinite;
+}
+.scene-heading {
+  position: relative;
+  isolation: isolate;
+  min-height: 150px;
+  padding: 8px 0 28px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border);
+}
+.scene-heading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  transform-origin: left;
+  animation: heading-underline 1s ease-out;
+}
+.scene-heading > div:not(.scene-glyph) {
+  position: relative;
+  z-index: 1;
+}
+.scene-heading > .heading-copy {
+  max-width: calc(100% - 185px);
+}
+.scene-heading .heading-actions {
+  align-self: flex-end;
+}
+.scene-heading:has(.heading-actions) .scene-glyph {
+  opacity: 0.25;
+}
+.scene-heading .subtitle {
+  max-width: 780px;
+}
+.scene-glyph {
+  position: absolute;
+  right: 0;
+  top: -12px;
+  width: 190px;
+  height: 160px;
+  pointer-events: none;
+  color: var(--accent);
+  opacity: 0.72;
+  z-index: 0;
+}
+.scene-glyph svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.scene-glyph-atlas,
+.scene-glyph-network {
+  color: #82b5bf;
+}
+.scene-glyph-reasoning,
+.scene-glyph-discovery {
+  color: #bba7dd;
+}
+.scene-glyph-signals,
+.scene-glyph-operations {
+  color: #8bc6ac;
+}
+.glyph-orbit {
+  transform-origin: 100px 80px;
+  animation: glyph-orbit 36s linear infinite;
+  opacity: 0.45;
+}
+.glyph-orbit-inner {
+  animation-direction: reverse;
+  animation-duration: 25s;
+  opacity: 0.3;
+}
+.glyph-core {
+  animation: glyph-float 7s ease-in-out infinite;
+}
+.glyph-draw {
+  stroke-dasharray: 750;
+  stroke-dashoffset: 0;
+  animation: glyph-draw 2s ease-out;
+}
+.glyph-flow {
+  animation: glyph-flow 10s linear infinite;
+}
+.glyph-beacon {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: glyph-beacon 3.8s ease-in-out infinite;
+}
+.scene-card[data-entered="true"] {
+  animation: scene-arrival 0.62s cubic-bezier(0.2, 0.65, 0.3, 1)
+    var(--entry-delay, 0ms) backwards;
+}
+.scene-card[data-in-view="false"] .sparkline circle {
+  animation-play-state: paused;
+}
+.scene-card {
+  transition:
+    border-color 0.25s,
+    box-shadow 0.3s;
+}
+.scene-card:focus-within {
+  border-color: rgb(var(--scene-rgb) / 0.55);
+}
+.scene-card .sparkline polyline {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.scene-card[data-entered="true"] .sparkline polyline {
+  animation: observation-draw 1.1s ease-out var(--entry-delay, 0ms) backwards;
+}
+.sparkline circle:last-child {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: observation-beacon 4s ease-in-out infinite;
+}
+.value-reveal {
+  display: inline-block;
+  animation: value-arrival 0.7s cubic-bezier(0.2, 0.65, 0.3, 1);
+  font-variant-numeric: tabular-nums;
+}
+.tabs button,
+.chip,
+.tag,
+.icon-button,
+.btn,
+.source-link {
+  transition:
+    color 0.2s,
+    background-color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    translate 0.2s;
+}
+.tabs button:active,
+.chip:active,
+.icon-button:active,
+.btn:active {
+  translate: 0 1px;
+}
+.tabs button.active,
+.tabs button[aria-selected="true"] {
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+.modal-overlay {
+  animation: modal-fade 0.2s ease-out;
+}
+.modal-content {
+  animation: modal-focus 0.28s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.message {
+  animation: scene-arrival 0.35s ease-out backwards;
+}
+.motion-toggle:disabled {
+  opacity: 0.55;
+}
+.skeleton-stream .skeleton {
+  position: relative;
+  overflow: hidden;
+}
+.skeleton-stream .skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent,
+    rgb(var(--scene-rgb) / 0.1),
+    transparent
+  );
+  translate: -110% 0;
+  animation: skeleton-travel 1.8s ease-in-out infinite;
+}
+.auth-scene {
+  position: relative;
+}
+.auth-scene > .scene-glyph {
+  width: 130px;
+  height: 110px;
+  top: -12px;
+  right: 20px;
+  opacity: 0.28;
+}
+.chat-workspace {
+  position: relative;
+}
+.chat-workspace > .scene-glyph {
+  top: 28px;
+  right: 28px;
+  opacity: 0.14;
+}
+.observatory-metric strong {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  animation: value-arrival 0.8s ease-out backwards;
+}
+.chat-intro {
+  position: relative;
+  overflow: hidden;
+}
+.chat-intro::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  top: -80px;
+  width: 200px;
+  height: 200px;
+  border: 1px dashed rgb(var(--scene-rgb) / 0.22);
+  border-radius: 50%;
+  animation: glyph-orbit 30s linear infinite;
+  pointer-events: none;
+}
+.loading-scene {
+  min-height: 65vh;
+  padding-top: 50px;
+}
+.loading-scene .scene-glyph {
+  position: relative;
+  margin: 0 auto 24px;
+}
+.loading-scene .subtitle {
+  text-align: center;
+  margin-bottom: 30px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .scene-card:is(
+      .article-card,
+      .policy-card,
+      .directory-card,
+      .market-card,
+      .country-card,
+      .frontier-paper,
+      .topic-card,
+      .event-card,
+      .notification-item
+    ):hover {
+    border-color: rgb(var(--scene-rgb) / 0.55);
+    box-shadow:
+      0 15px 36px #00000020,
+      inset 0 1px 0 rgb(var(--scene-rgb) / 0.11);
+    background-image: radial-gradient(
+      320px circle at var(--glow-x, 50%) var(--glow-y, 0%),
+      rgb(var(--scene-rgb) / 0.07),
+      transparent 70%
+    );
+  }
+  .btn:hover {
+    box-shadow: 0 5px 22px rgb(var(--scene-rgb) / 0.13);
+  }
+}
+[data-theme="light"] .scene-atmosphere {
+  opacity: 0.44;
+}
+[data-theme="light"] .scene-glyph {
+  opacity: 0.6;
+}
+[data-theme="light"] .scene-glyph-atlas,
+[data-theme="light"] .scene-glyph-network {
+  color: #377981;
+}
+[data-theme="light"] .scene-glyph-reasoning,
+[data-theme="light"] .scene-glyph-discovery {
+  color: #79629c;
+}
+[data-theme="light"] .scene-glyph-signals,
+[data-theme="light"] .scene-glyph-operations {
+  color: #40795f;
+}
+@keyframes geological-travel {
+  to {
+    stroke-dashoffset: -260;
+  }
+}
+@keyframes aurora-drift {
+  to {
+    transform: translate3d(60px, 45px, 0) scale(1.12);
+  }
+}
+@keyframes mineral-drift {
+  to {
+    transform: translate3d(12px, -70px, 0);
+    opacity: 0.1;
+  }
+}
+@keyframes request-travel {
+  to {
+    transform: translateX(420%);
+  }
+}
+@keyframes heading-underline {
+  from {
+    transform: scaleX(0.2);
+    opacity: 0.3;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+@keyframes glyph-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes glyph-float {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes glyph-draw {
+  from {
+    stroke-dashoffset: 750;
+    opacity: 0.25;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+@keyframes glyph-flow {
+  to {
+    stroke-dashoffset: -320;
+  }
+}
+@keyframes glyph-beacon {
+  50% {
+    transform: scale(1.5);
+    opacity: 0.35;
+  }
+}
+@keyframes scene-arrival {
+  from {
+    opacity: 0.55;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes observation-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes observation-beacon {
+  50% {
+    opacity: 0.35;
+    scale: 1.35;
+  }
+}
+@keyframes value-arrival {
+  from {
+    opacity: 0.35;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes modal-focus {
+  from {
+    opacity: 0.5;
+    translate: 0 10px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes skeleton-travel {
+  to {
+    translate: 110% 0;
+  }
+}
+@media (max-width: 800px) {
+  .scene-atmosphere > svg {
+    opacity: 0.45;
+  }
+  .scene-aurora-two,
+  .scene-particle:nth-last-child(n + 4) {
+    display: none;
+  }
+  .scene-aurora {
+    animation-duration: 30s;
+  }
+  .scene-heading {
+    min-height: 125px;
+    padding-bottom: 22px;
+  }
+  .scene-heading .scene-glyph {
+    width: 120px;
+    height: 110px;
+    right: -4px;
+    top: 3px;
+    opacity: 0.22;
+  }
+  .scene-heading > .heading-copy {
+    max-width: 100%;
+  }
+  .scene-heading .page-heading-actions {
+    position: relative;
+  }
+  .scene-card[data-entered="true"] {
+    animation-duration: 0.42s;
+  }
+  .chat-workspace > .scene-glyph {
+    width: 110px;
+    height: 100px;
+    top: 12px;
+    right: 12px;
+    opacity: 0.1;
+  }
+}
+@media (max-width: 370px) {
+  .header-actions .motion-toggle {
+    width: 28px;
+    min-width: 28px;
+  }
+}
+html[data-visuals="off"]
+  :is(
+    .scene-atmosphere,
+    .scene-atmosphere *,
+    .scene-glyph *,
+    .scene-card,
+    .value-reveal,
+    .sparkline *,
+    .topic-orbit::after,
+    .frontier-orbit *,
+    .message,
+    .modal-content,
+    .modal-overlay,
+    .scene-heading::after,
+    .observatory-metric strong
+  ) {
+  animation: none !important;
+}
+html[data-visuals="off"] .skeleton-stream .skeleton::after {
+  animation: none;
+  translate: 0 0;
+}
+html[data-visuals="off"] .topic-orbit::after,
+html[data-visuals="off"] .chat-intro::after,
+html[data-visuals="off"] .scene-heading::after {
+  animation: none !important;
+}
+html[data-visuals="off"] .request-trace.is-fetching span {
+  animation: none;
+  transform: none;
+  width: 100%;
+}
+html[data-visuals="off"]
+  :is(
+    .resource-atlas,
+    .resource-crystal,
+    .mineral-crystal,
+    .assistant-dock,
+    .mineral-observatory,
+    .world-coverage
+  )
+  *,
+html[data-visuals="off"]
+  :is(
+    .resource-atlas,
+    .resource-crystal,
+    .mineral-crystal,
+    .assistant-dock,
+    .mineral-observatory,
+    .world-coverage
+  )
+  *::before,
+html[data-visuals="off"]
+  :is(
+    .resource-atlas,
+    .resource-crystal,
+    .mineral-crystal,
+    .assistant-dock,
+    .mineral-observatory,
+    .world-coverage
+  )
+  *::after {
+  animation-play-state: paused !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-atmosphere *,
+  .scene-glyph *,
+  .scene-card,
+  .value-reveal,
+  .sparkline *,
+  .message,
+  .modal-content,
+  .modal-overlay,
+  .chat-intro::after,
+  .scene-heading::after {
+    animation: none !important;
+  }
+  .scene-card,
+  .tabs button,
+  .chip,
+  .icon-button,
+  .btn,
+  .tag {
+    transition: none;
+  }
+  .skeleton-stream .skeleton::after {
+    animation: none;
+  }
+}

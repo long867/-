@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import type { Token } from "@/types";
+import { SceneGlyph } from "@/components/scene-glyph";
 export default function Login() {
   const [register, setRegister] = useState(false);
   const [email, setEmail] = useState("");
@@ -35,7 +36,8 @@ export default function Login() {
     },
   });
   return (
-    <main className="small-page">
+    <main className="small-page auth-scene">
+      <SceneGlyph />
       <div className="eyebrow">YOUR INTELLIGENCE WORKSPACE</div>
       <h1>
         {register

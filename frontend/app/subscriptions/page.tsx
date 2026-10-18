@@ -1,4 +1,5 @@
 "use client";
+import { SceneGlyph } from "@/components/scene-glyph";
 import Link from "next/link";
 import { usePreferences } from "@/hooks/use-preferences";
 import { useEffect, useState } from "react";
@@ -64,7 +65,8 @@ export default function Subscriptions() {
   });
   if (!auth.user)
     return (
-      <main className="small-page">
+      <main className="small-page auth-scene">
+        <SceneGlyph />
         <h1>{t("订阅你的矿产领域", "Subscribe to your mineral interests")}</h1>
         <p className="subtitle mb-5">
           {t(
@@ -78,7 +80,8 @@ export default function Subscriptions() {
       </main>
     );
   return (
-    <main className="small-page">
+    <main className="small-page auth-scene">
+      <SceneGlyph />
       <div className="eyebrow">PERSONAL INTELLIGENCE FEED</div>
       <h1>{t("我的订阅", "My subscriptions")}</h1>
       <p className="subtitle mb-6">

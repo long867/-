@@ -3,7 +3,11 @@ import { RefreshCw, FileSearch } from "lucide-react";
 import { usePreferences } from "@/hooks/use-preferences";
 export function SkeletonCards({ count = 3 }: { count?: number }) {
   return (
-    <div aria-label="正在加载 / Loading" aria-busy="true">
+    <div
+      className="skeleton-stream"
+      aria-label="正在加载 / Loading"
+      aria-busy="true"
+    >
       {Array.from({ length: count }, (_, i) => (
         <div className="skeleton-card" key={i}>
           <div className="skeleton w-1/4 h-3" />

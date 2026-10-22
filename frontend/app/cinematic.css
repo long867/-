@@ -15,6 +15,11 @@
   background: color-mix(in srgb, var(--bg) 94%, transparent);
   box-shadow: 0 8px 35px #00000010;
 }
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 96px;
+  }
+}
 .brand-emblem {
   overflow: hidden;
   isolation: isolate;

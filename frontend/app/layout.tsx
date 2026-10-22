@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer";
 import { PwaRegister } from "@/components/pwa-register";
 import { AssistantDock } from "@/components/assistant-dock";
 import { SiteExperience } from "@/components/site-experience";
+import { ReadingTools } from "@/components/reading-tools";
 import "./fonts.css";
 import "./globals.css";
 import "./mineral-design.css";
@@ -14,6 +15,7 @@ import "./mobile.css";
 import "./country-watch.css";
 import "./frontier.css";
 import "./experience.css";
+import "./cinematic.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",
@@ -63,6 +65,7 @@ export default function RootLayout({
         </a>
         <Providers>
           <Header />
+          <ReadingTools />
           <div id="main-content">
             <SiteExperience>{children}</SiteExperience>
           </div>

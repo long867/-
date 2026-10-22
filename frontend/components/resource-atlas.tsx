@@ -103,6 +103,32 @@ export function ResourceAtlas({ regions }: { regions?: Facet[] }) {
       {mode === "globe" ? (
         <>
           <div className="globe-stage">
+            <svg
+              className="atlas-orbital-frame"
+              viewBox="0 0 600 420"
+              fill="none"
+              aria-hidden="true"
+            >
+              <g className="atlas-orbit-ring">
+                <ellipse
+                  cx="300"
+                  cy="210"
+                  rx="238"
+                  ry="182"
+                  stroke="currentColor"
+                  strokeDasharray="2 15"
+                />
+                <path
+                  d="M300 28A182 182 0 0 1 482 210"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+              </g>
+              <path
+                d="M36 68V38H66M534 38H564V68M36 352V382H66M534 382H564V352"
+                stroke="currentColor"
+              />
+            </svg>
             <div className="globe-reticle" aria-hidden="true" />
             <div className="globe-grid" aria-hidden="true" />
             <Globe regions={sorted} focus={focus} onSelect={setFocus} />

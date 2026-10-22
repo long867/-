@@ -3,6 +3,10 @@ import { ArrowDown, ArrowUpRight, Search, ShieldCheck } from "lucide-react";
 import { ResourceAtlas, ObservatoryClock } from "./resource-atlas";
 import { Locale } from "./locale";
 import type { Facets } from "@/types";
+import {
+  ObservatorySignature,
+  ObservatoryDestinations,
+} from "./observatory-signature";
 
 /** The observatory uses published article counts, never synthetic live counters. */
 export function HomeHero({
@@ -60,7 +64,15 @@ export function HomeHero({
         </span>
       </div>
       <section className="hero observatory-hero">
+        <ObservatorySignature />
         <div className="hero-copy">
+          <div className="hero-edition">
+            <span className="edition-line" />
+            <Locale
+              zh="以全球视野，读懂资源价值"
+              en="A global perspective on resource intelligence"
+            />
+          </div>
           <div className="eyebrow">
             <span className="hero-eyebrow-line" /> THE MINERAL INTELLIGENCE
             TERMINAL
@@ -144,6 +156,7 @@ export function HomeHero({
           ))}
         </div>
       </section>
+      <ObservatoryDestinations />
     </>
   );
 }

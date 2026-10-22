@@ -20,6 +20,10 @@ export function SectionHeading({
   const { t } = usePreferences();
   return (
     <div className="page-heading scene-heading">
+      <div className="heading-orbit-frame" aria-hidden="true">
+        <span />
+        <span />
+      </div>
       <SceneGlyph />
       <div className="heading-copy">
         <div className="eyebrow">{eyebrow}</div>

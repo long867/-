@@ -96,6 +96,7 @@ export function SiteExperience({ children }: { children: ReactNode }) {
   return (
     <div className="site-experience" data-scene={scene} data-route={path}>
       <div className="scene-atmosphere" aria-hidden="true">
+        <div className="cinema-spectrum" />
         <div className="scene-aurora scene-aurora-one" />
         <div className="scene-aurora scene-aurora-two" />
         <svg

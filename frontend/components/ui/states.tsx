@@ -29,7 +29,9 @@ export function EmptyState({
   const { t } = usePreferences();
   return (
     <div className="empty">
-      <FileSearch size={26} className="mx-auto mb-3 text-muted" />
+      <span className="state-symbol">
+        <FileSearch size={27} strokeWidth={1.4} aria-hidden="true" />
+      </span>
       <strong>
         {title || t("暂时没有相关资料", "No matching evidence yet")}
       </strong>

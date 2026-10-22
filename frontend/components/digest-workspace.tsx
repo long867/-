@@ -9,6 +9,8 @@ import {
   Newspaper,
   Globe2,
   Layers3,
+  Download,
+  Copy,
 } from "lucide-react";
 import { publicApi } from "@/lib/api";
 import { usePreferences } from "@/hooks/use-preferences";
@@ -17,6 +19,7 @@ import { EmptyState, ErrorState, SkeletonCards } from "./ui/states";
 import type { Digest } from "@/types";
 import { ReportArchive } from "./report-archive";
 import { ReportAnalysis } from "./report-analysis";
+import { digestMarkdown } from "@/lib/digest-export.mjs";
 const Chart = dynamic(() => import("./digest-chart"), {
   ssr: false,
   loading: () => <div className="skeleton h-60" />,
@@ -25,6 +28,7 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
   const { t } = usePreferences();
   const [kind, setKind] = useState<Digest["kind"]>("daily");
   const [reportId, setReportId] = useState<string | null>(null);
+  const [exportNotice, setExportNotice] = useState("");
   const [scope, setScope] = useState<"current" | "previous" | "latest">(
     "latest",
   );
@@ -58,6 +62,31 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
     staleTime: 3600000,
   });
   const d = query.data;
+  function downloadBrief() {
+    if (!d) return;
+    const url = URL.createObjectURL(
+      new Blob([digestMarkdown(d)], { type: "text/markdown;charset=utf-8" }),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `MiningIntel-${d.kind}-${d.period_start}.md`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  async function copyBrief() {
+    if (!d) return;
+    try {
+      await navigator.clipboard.writeText(digestMarkdown(d));
+      setExportNotice(t("简报与来源已复制", "Brief and sources copied"));
+    } catch {
+      setExportNotice(
+        t(
+          "当前浏览器未允许复制，可使用导出简报。",
+          "Clipboard is unavailable. Use Export brief instead.",
+        ),
+      );
+    }
+  }
   return (
     <main className="workspace">
       <SectionHeading
@@ -128,7 +157,24 @@ export function DigestWorkspace({ initial }: { initial?: Digest }) {
       ) : (
         d && (
           <>
-            <h2 className="text-xl mb-5">{d.title}</h2>
+            <div className="digest-title-row">
+              <h2 className="text-xl">{d.title}</h2>
+              <div className="digest-actions">
+                <button className="btn btn-outline" onClick={copyBrief}>
+                  <Copy size={15} />
+                  {t("复制简报", "Copy brief")}
+                </button>
+                <button className="btn btn-outline" onClick={downloadBrief}>
+                  <Download size={15} />
+                  {t("导出简报", "Export brief")}
+                </button>
+              </div>
+            </div>
+            {exportNotice && (
+              <p className="text-sm text-muted mb-4" role="status">
+                {exportNotice}
+              </p>
+            )}
             <div className="panel mb-5 flex flex-wrap items-center justify-between gap-4">
               <p className="text-sm text-muted">
                 {t(

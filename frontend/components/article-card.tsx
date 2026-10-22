@@ -1,7 +1,13 @@
 "use client";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
-import { Bookmark, Share2, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { useId, useState, type ReactNode } from "react";
+import {
+  Bookmark,
+  Share2,
+  ArrowUpRight,
+  ShieldCheck,
+  ChevronDown,
+} from "lucide-react";
 import { usePreferences } from "@/hooks/use-preferences";
 import { formatDate } from "@/lib/format-date";
 import type { Article, Source } from "@/types";
@@ -35,14 +41,18 @@ export function ArticleCard({
   source,
   onTag,
   query,
+  expandedSummary = false,
 }: {
   article: Article;
   source?: Source;
   onTag?: (name: string) => void;
   query?: string;
+  expandedSummary?: boolean;
 }) {
   const { t, language, saved, toggleSaved } = usePreferences();
   const [notice, setNotice] = useState("");
+  const [expanded, setExpanded] = useState(expandedSummary);
+  const summaryId = useId();
   const title =
     language === "zh" ? article.title_zh || article.title : article.title;
   const summary =
@@ -104,9 +114,26 @@ export function ArticleCard({
         </Link>
       </h3>
       {summary && (
-        <p className="article-summary">
+        <p
+          id={summaryId}
+          className={`article-summary ${expanded ? "is-expanded" : ""}`}
+        >
           <Highlight text={summary} query={query} />
         </p>
+      )}
+      {summary && summary.length > 160 && !expandedSummary && (
+        <button
+          className="summary-control"
+          aria-expanded={expanded}
+          aria-controls={summaryId}
+          onClick={() => setExpanded((value) => !value)}
+        >
+          {t(
+            expanded ? "收起摘要" : "展开摘要",
+            expanded ? "Less" : "Read summary",
+          )}
+          <ChevronDown size={13} />
+        </button>
       )}
       <div className="article-bottom">
         <div className="article-tags">

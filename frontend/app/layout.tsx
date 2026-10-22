@@ -6,6 +6,7 @@ import { PwaRegister } from "@/components/pwa-register";
 import { AssistantDock } from "@/components/assistant-dock";
 import { SiteExperience } from "@/components/site-experience";
 import { ReadingTools } from "@/components/reading-tools";
+import { WorkspaceRibbon } from "@/components/workspace-tools";
 import "./fonts.css";
 import "./globals.css";
 import "./mineral-design.css";
@@ -16,6 +17,7 @@ import "./country-watch.css";
 import "./frontier.css";
 import "./experience.css";
 import "./cinematic.css";
+import "./studio.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",
@@ -35,7 +37,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 const preferencesScript =
-  "try{document.documentElement.dataset.theme=localStorage.getItem('mi-theme')==='light'?'light':'dark';document.documentElement.lang=localStorage.getItem('mi-language')==='en'?'en':'zh-CN';document.documentElement.dataset.motion=localStorage.getItem('mi-motion')==='paused'?'paused':'running'}catch(e){}";
+  "try{document.documentElement.dataset.theme=localStorage.getItem('mi-theme')==='light'?'light':'dark';document.documentElement.lang=localStorage.getItem('mi-language')==='en'?'en':'zh-CN';document.documentElement.dataset.motion=localStorage.getItem('mi-motion')==='paused'?'paused':'running';document.documentElement.dataset.readingSize=localStorage.getItem('mi-reading-size')==='large'?'large':'standard';document.documentElement.dataset.density=localStorage.getItem('mi-density')==='compact'?'compact':'comfortable'}catch(e){}";
 export default function RootLayout({
   children,
 }: {
@@ -65,6 +67,7 @@ export default function RootLayout({
         </a>
         <Providers>
           <Header />
+          <WorkspaceRibbon />
           <ReadingTools />
           <div id="main-content">
             <SiteExperience>{children}</SiteExperience>

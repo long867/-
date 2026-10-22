@@ -8,18 +8,28 @@ export function Dialog({
   title,
   description,
   children,
+  className,
+  onOpenAutoFocus,
+  onCloseAutoFocus,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
   description: string;
   children: ReactNode;
+  className?: string;
+  onOpenAutoFocus?: (event: Event) => void;
+  onCloseAutoFocus?: (event: Event) => void;
 }) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="modal-overlay" />
-        <DialogPrimitive.Content className="modal-content">
+        <DialogPrimitive.Content
+          className={`modal-content ${className || ""}`}
+          onOpenAutoFocus={onOpenAutoFocus}
+          onCloseAutoFocus={onCloseAutoFocus}
+        >
           <DialogPrimitive.Title className="text-xl font-semibold pr-8">
             {title}
           </DialogPrimitive.Title>

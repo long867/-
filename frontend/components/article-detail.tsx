@@ -46,7 +46,7 @@ export function ArticleDetail({
         article && (
           <div className="article-detail-layout">
             <section>
-              <ArticleCard article={article} />
+              <ArticleCard article={article} expandedSummary />
               <div className="panel">
                 <div className="flex flex-wrap gap-4 justify-between items-center mb-5">
                   <h2 className="inline-flex items-center gap-2">

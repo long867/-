@@ -16,14 +16,17 @@ import {
   FileText,
   TrendingUp,
   MessagesSquare,
+  Type,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { usePreferences } from "@/hooks/use-preferences";
 import { AGENT_NAME } from "@/lib/branding";
 import { MotionControl } from "./motion-control";
+import { useWorkspaceTools } from "./workspace-tools";
 export function Header() {
   const path = usePathname();
   const auth = useAuth();
+  const tools = useWorkspaceTools();
   const { t, theme, toggleTheme, toggleLanguage, language } = usePreferences();
   const [open, setOpen] = useState(false);
   const header = useRef<HTMLElement>(null);
@@ -119,14 +122,17 @@ export function Header() {
         </nav>
         <div className="header-actions">
           <MotionControl compact />
-          <Link
-            className="icon-button"
-            href="/search"
-            prefetch={false}
-            aria-label={t("全局搜索", "Global search")}
+          <button
+            className="icon-button workspace-command-trigger"
+            onClick={() => tools.open()}
+            aria-label={t("快捷导航与搜索", "Quick navigation and search")}
+            title={t(
+              "快捷导航与搜索 · Ctrl / ⌘ K",
+              "Quick navigation and search · Ctrl / ⌘ K",
+            )}
           >
             <Search size={16} />
-          </Link>
+          </button>
           <Link
             className="icon-button hidden xl:inline-flex"
             href="/bookmarks"
@@ -209,6 +215,26 @@ export function Header() {
           <Link href="/search" prefetch={false} onClick={() => setOpen(false)}>
             {t("搜索情报", "Search")}
           </Link>
+          <button
+            className="mobile-account-link"
+            onClick={() => {
+              setOpen(false);
+              tools.open();
+            }}
+          >
+            <Search size={16} />
+            {t("快捷导航与搜索", "Quick navigation and search")}
+          </button>
+          <button
+            className="mobile-account-link"
+            onClick={() => {
+              setOpen(false);
+              tools.open("reading");
+            }}
+          >
+            <Type size={16} />
+            {t("阅读与外观设置", "Reading and appearance")}
+          </button>
           <Link
             href="/bookmarks"
             prefetch={false}

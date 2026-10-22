@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { LayoutGrid, List, ChevronLeft, ChevronRight } from "lucide-react";
+import { LayoutGrid, List, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { publicApi } from "@/lib/api";
 import { useUrlFilters } from "@/hooks/use-url-filters";
 import { usePreferences } from "@/hooks/use-preferences";
@@ -103,6 +103,25 @@ export function PolicyWorkspace({ initial }: { initial?: PolicyPage }) {
               timeline ? "Cards" : "Timeline",
             )}
           </button>
+          {(filters.minerals.length > 0 ||
+            filters.regions.length > 0 ||
+            filters.date_from ||
+            filters.date_to) && (
+            <button
+              className="btn btn-ghost"
+              onClick={() =>
+                change({
+                  minerals: [],
+                  regions: [],
+                  date_from: "",
+                  date_to: "",
+                })
+              }
+            >
+              <X size={14} />
+              {t("清除政策筛选", "Clear policy filters")}
+            </button>
+          )}
         </div>
       </div>
       <div className="section-bar">

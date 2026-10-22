@@ -11,6 +11,10 @@ interface Preferences {
   language: Language;
   theme: "dark" | "light";
   saved: string[];
+  readingSize: "standard" | "large";
+  density: "comfortable" | "compact";
+  setReadingSize: (size: "standard" | "large") => void;
+  setDensity: (density: "comfortable" | "compact") => void;
   t: (zh: string, en: string) => string;
   toggleTheme: () => void;
   toggleLanguage: () => void;
@@ -21,11 +25,27 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [language, setLanguage] = useState<Language>("zh");
   const [saved, setSaved] = useState<string[]>([]);
+  const [readingSize, setReadingSize] = useState<"standard" | "large">(
+    "standard",
+  );
+  const [density, setDensity] = useState<"comfortable" | "compact">(
+    "comfortable",
+  );
   const [ready, setReady] = useState(false);
   useEffect(() => {
     try {
       setTheme(localStorage.getItem("mi-theme") === "light" ? "light" : "dark");
       setLanguage(localStorage.getItem("mi-language") === "en" ? "en" : "zh");
+      setReadingSize(
+        localStorage.getItem("mi-reading-size") === "large"
+          ? "large"
+          : "standard",
+      );
+      setDensity(
+        localStorage.getItem("mi-density") === "compact"
+          ? "compact"
+          : "comfortable",
+      );
       const ids = JSON.parse(localStorage.getItem("mi-saved") || "[]");
       if (Array.isArray(ids))
         setSaved(
@@ -45,6 +65,11 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     if (ready && document.documentElement.lang !== locale)
       document.documentElement.lang = locale;
   }, [language, ready]);
+  useEffect(() => {
+    if (!ready) return;
+    document.documentElement.dataset.readingSize = readingSize;
+    document.documentElement.dataset.density = density;
+  }, [readingSize, density, ready]);
   function persist(key: string, value: string) {
     try {
       localStorage.setItem(key, value);
@@ -58,6 +83,16 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
         theme,
         language,
         saved,
+        readingSize,
+        density,
+        setReadingSize: (size) => {
+          setReadingSize(size);
+          persist("mi-reading-size", size);
+        },
+        setDensity: (value) => {
+          setDensity(value);
+          persist("mi-density", value);
+        },
         t: (zh, en) => (language === "zh" ? zh : en),
         toggleTheme: () => {
           const next = theme === "dark" ? "light" : "dark";

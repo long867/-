@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search, ArrowUpRight } from "lucide-react";
+import { Search, ArrowUpRight, X } from "lucide-react";
 import { publicApi } from "@/lib/api";
 import { useUrlFilters } from "@/hooks/use-url-filters";
 import { usePreferences } from "@/hooks/use-preferences";
@@ -129,6 +129,27 @@ export function SearchWorkspace() {
               onChange={(e) => change({ date_to: e.target.value })}
             />
           </label>
+          {(filters.minerals.length > 0 ||
+            filters.regions.length > 0 ||
+            filters.category ||
+            filters.date_from ||
+            filters.date_to) && (
+            <button
+              className="btn btn-ghost"
+              onClick={() =>
+                change({
+                  minerals: [],
+                  regions: [],
+                  category: "",
+                  date_from: "",
+                  date_to: "",
+                })
+              }
+            >
+              <X size={14} />
+              {t("重置筛选", "Reset filters")}
+            </button>
+          )}
         </div>
         <p className="text-xs text-muted mt-3">
           {t(

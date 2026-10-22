@@ -9,6 +9,7 @@
 **/.next-preview
 **/.next-upgrade
 **/.next-luxe
+**/.next-*
 **/*.tsbuildinfo
 artifacts
 docs

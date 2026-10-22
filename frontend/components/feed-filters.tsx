@@ -35,6 +35,13 @@ export function FeedFiltersBar({
     (filters.company ? 1 : 0) +
     (filters.date_from ? 1 : 0) +
     (filters.date_to ? 1 : 0);
+  const typeLabels: Record<string, string> = {
+    news: t("新闻", "News"),
+    price: t("价格", "Prices"),
+    policy: t("政策", "Policy"),
+    report: t("研报", "Research"),
+    company: t("公告", "Company"),
+  };
   return (
     <div
       className={`filter-panel feed-filter-panel ${expanded ? "filters-expanded" : ""}`}
@@ -208,6 +215,56 @@ export function FeedFiltersBar({
           <SlidersHorizontal size={13} className="text-muted" />
         )}
       </div>
+      {active > 0 && (
+        <div
+          className="active-filter-tray"
+          aria-label={t("已应用筛选", "Applied filters")}
+        >
+          <span>{t("已选条件", "Selected")}</span>
+          {(["minerals", "regions", "tags"] as const).flatMap((key) =>
+            filters[key].map((value) => (
+              <button
+                key={`${key}-${value}`}
+                onClick={() =>
+                  update({
+                    [key]: filters[key].filter((item) => item !== value),
+                  })
+                }
+                aria-label={t(`移除${value}筛选`, `Remove ${value} filter`)}
+              >
+                {value}
+                <X size={12} />
+              </button>
+            )),
+          )}
+          {(["search", "company", "date_from", "date_to", "category"] as const)
+            .filter((key) => filters[key])
+            .map((key) => (
+              <button
+                key={key}
+                onClick={() => update({ [key]: "" })}
+                aria-label={t(
+                  `移除${filters[key]}筛选`,
+                  `Remove ${filters[key]} filter`,
+                )}
+              >
+                {key === "date_from"
+                  ? t("从 ", "From ")
+                  : key === "date_to"
+                    ? t("至 ", "To ")
+                    : ""}
+                {key === "category"
+                  ? typeLabels[filters[key]] || filters[key]
+                  : filters[key]}
+                <X size={12} />
+              </button>
+            ))}
+          <button className="clear-all" onClick={() => update(emptyFilters)}>
+            {t("清除全部", "Clear all")}
+            <X size={12} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

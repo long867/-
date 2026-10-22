@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/hooks/use-auth";
 import { PreferencesProvider } from "@/hooks/use-preferences";
 import { PageMotionProvider } from "@/hooks/use-page-motion";
+import { WorkspaceToolsProvider } from "@/components/workspace-tools";
 export function Providers({ children }: { children: ReactNode }) {
   const [client] = useState(
     () =>
@@ -17,7 +18,9 @@ export function Providers({ children }: { children: ReactNode }) {
     <QueryClientProvider client={client}>
       <PreferencesProvider>
         <PageMotionProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <WorkspaceToolsProvider>{children}</WorkspaceToolsProvider>
+          </AuthProvider>
         </PageMotionProvider>
       </PreferencesProvider>
     </QueryClientProvider>

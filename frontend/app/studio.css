@@ -482,6 +482,10 @@ textarea:focus-visible {
 .article-detail-layout > section > .panel {
   padding: clamp(23px, 3vw, 42px);
 }
+.article-detail-layout > section,
+.article-detail-layout > aside {
+  min-width: 0;
+}
 .article-detail-layout .reading-content {
   max-width: 74ch;
   margin-inline: auto;
@@ -985,6 +989,9 @@ textarea:focus-visible {
     padding: 24px 22px;
     border-radius: 16px;
     margin-bottom: 24px;
+  }
+  .article-detail-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
   .scene-heading h1 {
     font-size: clamp(26px, 7vw, 33px);

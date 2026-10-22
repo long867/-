@@ -159,6 +159,14 @@
   border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
   background: color-mix(in srgb, var(--bg) 75%, transparent);
 }
+.observatory-hero .hero-search .search-field > svg {
+  position: static;
+  flex-shrink: 0;
+}
+.observatory-hero .hero-search input {
+  padding: 11px 10px;
+  font-size: 16px;
+}
 .observatory-signature {
   position: absolute;
   inset: 0;

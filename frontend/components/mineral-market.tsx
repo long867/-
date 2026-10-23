@@ -13,6 +13,7 @@ import {
 import { publicApi } from "@/lib/api";
 import { SectionHeading } from "./section-heading";
 import { EmptyState, ErrorState, SkeletonCards } from "./ui/states";
+import { MineralWatchButton } from "./mineral-watch-button";
 import type { MineralMarket, MineralMarketItem, Price } from "@/types";
 
 export function priceNumber(price: string | number): string {
@@ -105,6 +106,9 @@ function MineralCard({ item }: { item: MineralMarketItem }) {
       <div className="flex flex-wrap justify-between gap-2 text-xs text-muted mt-4">
         <span>{item.group}</span>
         <span>{item.article_count} 篇情报</span>
+      </div>
+      <div className="market-watch-action">
+        <MineralWatchButton name={item.name} label />
       </div>
       {item.prices.length ? (
         <>

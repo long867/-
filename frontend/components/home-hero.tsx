@@ -69,30 +69,29 @@ export function HomeHero({
           <div className="hero-edition">
             <span className="edition-line" />
             <Locale
-              zh="以全球视野，读懂资源价值"
-              en="A global perspective on resource intelligence"
+              zh="全球资源情报 · 专业研究工作台"
+              en="Global resource intelligence · Your research desk"
             />
           </div>
           <div className="eyebrow">
-            <span className="hero-eyebrow-line" /> THE MINERAL INTELLIGENCE
-            TERMINAL
+            <span className="hero-eyebrow-line" /> GLOBAL RESOURCE INTELLIGENCE
           </div>
           <h1>
             <span className="locale-zh">
-              <span className="hero-line">洞察资源脉动，</span>
+              <span className="hero-line">看清资源变化，</span>
               <br />
-              <span className="hero-accent">看见全球格局。</span>
+              <span className="hero-accent">让判断更进一步。</span>
             </span>
             <span className="locale-en">
-              <span className="hero-line">Intelligence.</span>
+              <span className="hero-line">Global signals.</span>
               <br />
-              <span className="hero-accent">From the ground up.</span>
+              <span className="hero-accent">Your perspective.</span>
             </span>
           </h1>
           <p className="subtitle">
             <Locale
-              zh="从一座矿山到全球供应链。追踪价格、政策与产业变化，让每一次判断都有情报支撑。"
-              en="From a single mine to the global supply chain. Track markets, policy and industry with intelligence you can verify."
+              zh="市场、政策、产业、科研，一张工作台掌握全球矿产变化。建立自己的观察清单，从真实资料进入深度研判。"
+              en="Markets, policy, industry and research, in one resource desk. Build your watchlist and turn original sources into informed research."
             />
           </p>
           <div className="hero-capabilities">
@@ -110,8 +109,8 @@ export function HomeHero({
             </span>
           </div>
           <div className="hero-actions">
-            <a href="#intelligence-feed" className="observatory-primary">
-              <Locale zh="探索矿产情报" en="Explore intelligence" />
+            <a href="#signal-desk" className="observatory-primary">
+              <Locale zh="打开情报工作台" en="Open your intelligence desk" />
               <ArrowDown size={15} />
             </a>
             <Link

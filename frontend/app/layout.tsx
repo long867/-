@@ -7,6 +7,7 @@ import { AssistantDock } from "@/components/assistant-dock";
 import { SiteExperience } from "@/components/site-experience";
 import { ReadingTools } from "@/components/reading-tools";
 import { WorkspaceRibbon } from "@/components/workspace-tools";
+import { PageOutline } from "@/components/page-outline";
 import "./fonts.css";
 import "./globals.css";
 import "./mineral-design.css";
@@ -18,6 +19,7 @@ import "./frontier.css";
 import "./experience.css";
 import "./cinematic.css";
 import "./studio.css";
+import "./workbench.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",
@@ -69,6 +71,7 @@ export default function RootLayout({
           <Header />
           <WorkspaceRibbon />
           <ReadingTools />
+          <PageOutline />
           <div id="main-content">
             <SiteExperience>{children}</SiteExperience>
           </div>

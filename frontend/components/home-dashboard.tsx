@@ -29,6 +29,7 @@ import { ErrorState, SkeletonCards } from "./ui/states";
 import { ResourceOverview } from "./resource-overview";
 import { IntelligenceTicker } from "./intelligence-ticker";
 import { MineralMarketStrip } from "./mineral-market";
+import { ObservationDesk } from "./observation-desk";
 export interface HomeData {
   articles?: ArticlePage;
   hot?: Article[];
@@ -40,6 +41,8 @@ export interface HomeData {
   prices?: Price[];
   featured?: ArticlePage;
   market?: MineralMarket;
+  desk?: ArticlePage;
+  papers?: ArticlePage;
 }
 export function HomeDashboard({ initial }: { initial: HomeData }) {
   const surface = useRef<HTMLDivElement>(null);
@@ -111,6 +114,17 @@ export function HomeDashboard({ initial }: { initial: HomeData }) {
   const hotItems = isHot ? hot.data || [] : initial.featured?.items || [];
   return (
     <div className="home-content" ref={surface} onPointerMove={illuminate}>
+      <ObservationDesk
+        initialArticles={initial.desk}
+        initialPapers={initial.papers}
+        initialMarket={initial.market}
+        policies={policies.data}
+        policyPending={policies.isPending}
+        policyError={policies.error}
+        retryPolicy={() => {
+          policies.refetch();
+        }}
+      />
       <IntelligenceTicker articles={initial.featured?.items || []} />
       <MineralMarketStrip initial={initial.market} />
       <ResourceOverview

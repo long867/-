@@ -5,6 +5,7 @@ import { AuthProvider } from "@/hooks/use-auth";
 import { PreferencesProvider } from "@/hooks/use-preferences";
 import { PageMotionProvider } from "@/hooks/use-page-motion";
 import { WorkspaceToolsProvider } from "@/components/workspace-tools";
+import { MineralWatchlistProvider } from "@/hooks/use-mineral-watchlist";
 export function Providers({ children }: { children: ReactNode }) {
   const [client] = useState(
     () =>
@@ -19,7 +20,9 @@ export function Providers({ children }: { children: ReactNode }) {
       <PreferencesProvider>
         <PageMotionProvider>
           <AuthProvider>
-            <WorkspaceToolsProvider>{children}</WorkspaceToolsProvider>
+            <MineralWatchlistProvider>
+              <WorkspaceToolsProvider>{children}</WorkspaceToolsProvider>
+            </MineralWatchlistProvider>
           </AuthProvider>
         </PageMotionProvider>
       </PreferencesProvider>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight, Search, ShieldCheck } from "lucide-react";
-import { ObservatoryClock } from "./resource-atlas";
+import { ObservatoryClock } from "./observatory-clock";
 import { HeroObservatory } from "./resource-field";
 import { Locale } from "./locale";
 import type { Article, Facets, MineralMarket } from "@/types";

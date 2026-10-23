@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
@@ -16,44 +16,28 @@ import type { Facet } from "@/types";
 import { WorldCoverage } from "./world-coverage";
 import { MotionControl } from "./motion-control";
 
-const Globe = dynamic(
-  () => import("./resource-globe").then((module) => module.ResourceGlobe),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="globe-placeholder" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
-    ),
-  },
-);
-
-/** A live clock is separate from the data display; article counts never oscillate. */
-export function ObservatoryClock() {
-  const [time, setTime] = useState("—:—:—");
-  useEffect(() => {
-    const update = () =>
-      setTime(
-        new Intl.DateTimeFormat("en-GB", {
-          timeZone: "Asia/Shanghai",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hourCycle: "h23",
-        }).format(new Date()),
-      );
-    update();
-    const timer = setInterval(update, 1000);
-    return () => clearInterval(timer);
-  }, []);
-  return (
-    <span className="observatory-clock">
-      <span>BJT</span> <time suppressHydrationWarning>{time}</time>
-    </span>
-  );
+async function loadGlobe() {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      return (await import("./resource-globe")).ResourceGlobe;
+    } catch (error) {
+      if (attempt === 2) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
+    }
+  }
+  throw new Error("Globe could not load");
 }
+
+const Globe = dynamic(loadGlobe, {
+  ssr: false,
+  loading: () => (
+    <div className="globe-placeholder" aria-hidden="true">
+      <span />
+      <span />
+      <span />
+    </div>
+  ),
+});
 
 export function ResourceAtlas({ regions }: { regions?: Facet[] }) {
   const { t, language } = usePreferences();

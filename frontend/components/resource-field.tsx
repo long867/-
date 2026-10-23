@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   ArrowUpRight,
@@ -20,11 +21,31 @@ import { latestQuotation } from "@/lib/observation.mjs";
 import { REGION_CENTERS } from "@/lib/resource-geography";
 import type { Article, Facets, MineralMarket } from "@/types";
 import { Dialog } from "./ui/dialog";
-import { ResourceAtlas } from "./resource-atlas";
+import { VisualBoundary } from "./visual-boundary";
 import { MineralWatchButton } from "./mineral-watch-button";
 import { MotionControl } from "./motion-control";
 
 type Scope = "minerals" | "regions";
+
+async function loadAtlas() {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      return (await import("./resource-atlas")).ResourceAtlas;
+    } catch (error) {
+      if (attempt === 2) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
+    }
+  }
+  throw new Error("Visualization could not load");
+}
+function AtlasLoading() {
+  const { t } = usePreferences();
+  return (
+    <div className="field-load-state" role="status">
+      {t("正在展开全球地球…", "Opening the global atlas…")}
+    </div>
+  );
+}
 interface FieldProps {
   facets?: Facets;
   market?: MineralMarket;
@@ -358,6 +379,11 @@ export function HeroObservatory({
   const [focus, setFocus] = useState("");
   const [automatic, setAutomatic] = useState(true);
   const [expanded, setExpanded] = useState(false);
+  const [atlasAttempt, setAtlasAttempt] = useState(0);
+  const Atlas = useMemo(
+    () => dynamic(loadAtlas, { ssr: false, loading: AtlasLoading }),
+    [atlasAttempt],
+  );
   const expandTrigger = useRef<HTMLButtonElement>(null);
   const props: FieldProps = {
     facets,
@@ -406,7 +432,28 @@ export function HeroObservatory({
         </div>
       </div>
       {view === "globe" && !expanded ? (
-        <ResourceAtlas regions={facets?.regions} />
+        <VisualBoundary
+          key={atlasAttempt}
+          onRetry={() => setAtlasAttempt((value) => value + 1)}
+          fallback={(retry) => (
+            <div className="field-load-state" role="alert">
+              <p>
+                {t(
+                  "地球视图暂时未能加载，资料和其他功能仍可使用。",
+                  "The globe could not load. Sources and other features remain available.",
+                )}
+              </p>
+              <button onClick={retry}>
+                {t("重试图形", "Retry visualization")}
+              </button>
+              <button onClick={() => setView("field")}>
+                {t("返回资源星图", "Return to constellation")}
+              </button>
+            </div>
+          )}
+        >
+          <Atlas regions={facets?.regions} />
+        </VisualBoundary>
       ) : (
         <div className="field-embed">
           {!expanded && <ResourceField {...props} />}

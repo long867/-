@@ -76,6 +76,26 @@
 .field-embed {
   min-height: 572px;
 }
+.field-load-state {
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 17px;
+  padding: 35px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.9;
+  text-align: center;
+}
+.field-load-state button {
+  min-height: 40px;
+  padding: 7px 16px;
+  border: 1px solid var(--studio-edge);
+  color: var(--gold);
+  border-radius: 7px;
+}
 .resource-field {
   min-width: 0;
   position: relative;

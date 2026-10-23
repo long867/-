@@ -64,6 +64,8 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - name: Exercise production visualization switches
+        run: npm run test:production
   containers:
     runs-on: ubuntu-latest
     needs: [backend, frontend]

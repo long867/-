@@ -1,0 +1,1204 @@
+/* Immersive resource observatory. Decorative light is separate from factual data. */
+:root {
+  --field-blue: #82cadd;
+  --field-glow: #70b9d32e;
+}
+[data-theme="light"] {
+  --field-blue: #36798a;
+  --field-glow: #72aab828;
+}
+.observatory-hero {
+  grid-template-columns: minmax(0, 0.91fr) minmax(0, 1.15fr);
+  border-radius: 25px 25px 9px 25px;
+}
+.observatory-hero .hero-copy {
+  padding-bottom: 30px;
+}
+.observatory-hero .hero-edition {
+  border-radius: 18px;
+  font-size: 11px;
+}
+.hero-observatory {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  align-self: center;
+  padding: 15px 0 8px;
+}
+.observatory-mode-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--field-blue) 20%, var(--border));
+}
+.observatory-mode-bar > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--field-blue);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.observatory-mode-bar > div {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.observatory-mode-bar button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.observatory-mode-bar button[aria-pressed="true"] {
+  color: var(--gold);
+  border-color: var(--studio-edge);
+  background: color-mix(in srgb, var(--gold) 7%, transparent);
+}
+.observatory-mode-bar button:hover {
+  color: var(--gold);
+}
+.observatory-mode-bar .field-expand {
+  border-left: 1px solid var(--border);
+  border-radius: 0;
+  padding-left: 11px;
+  margin-left: 4px;
+  color: var(--gold);
+}
+.field-embed {
+  min-height: 572px;
+}
+.resource-field {
+  min-width: 0;
+  position: relative;
+}
+.field-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0 0;
+  gap: 12px;
+}
+.field-scopes {
+  display: flex;
+  gap: 5px;
+}
+.field-scopes button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  border-radius: 5px;
+  font-size: 11px;
+  padding: 5px 9px;
+  min-height: 29px;
+}
+.field-scopes button[aria-pressed="true"] {
+  color: var(--field-blue);
+  background: color-mix(in srgb, var(--field-blue) 8%, transparent);
+}
+.field-cruise {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  min-height: 30px;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+.field-motion-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.field-motion-actions .motion-toggle {
+  width: 29px;
+  height: 29px;
+  min-height: 29px;
+  padding: 6px;
+  color: var(--muted);
+}
+.field-motion-actions .motion-toggle svg {
+  width: 13px;
+  height: 13px;
+}
+.field-cruise[aria-pressed="true"] {
+  color: var(--field-blue);
+  border-color: color-mix(in srgb, var(--field-blue) 25%, var(--border));
+}
+.field-content {
+  min-width: 0;
+}
+.field-stage {
+  position: relative;
+  height: 355px;
+  min-width: 0;
+  isolation: isolate;
+}
+.field-nebula {
+  position: absolute;
+  inset: 12% 10%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 45% 50%, var(--field-glow), transparent 60%),
+    radial-gradient(ellipse at 65% 55%, #c99d5e15, transparent 60%);
+}
+.field-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--field-blue) 25%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 31px 29px;
+  mask-image: radial-gradient(ellipse, #0007, transparent 73%);
+}
+.field-connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  color: var(--field-blue);
+}
+.field-orbit-track {
+  fill: none;
+  stroke: color-mix(in srgb, var(--gold) 18%, transparent);
+  stroke-width: 0.8;
+  stroke-dasharray: 1 6;
+}
+.field-orbit-inner {
+  fill: none;
+  stroke: color-mix(in srgb, var(--field-blue) 18%, transparent);
+  stroke-width: 0.8;
+  stroke-dasharray: 22 8 2 8;
+}
+.field-link > path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--field-blue) 18%, transparent);
+  stroke-width: 0.8;
+}
+.field-link.is-focused > path {
+  stroke: color-mix(in srgb, var(--gold) 60%, transparent);
+  stroke-width: 1.2;
+}
+.field-link > .field-link-flow {
+  stroke: var(--field-blue);
+  stroke-width: 1.5;
+  stroke-dasharray: 0.04 0.96;
+  opacity: 0.7;
+}
+.field-link.is-focused > .field-link-flow {
+  stroke: var(--gold);
+  stroke-width: 2.2;
+}
+.field-axis {
+  position: absolute;
+  left: 50%;
+  top: 7%;
+  transform: translateX(-50%);
+  color: var(--muted);
+  opacity: 0.6;
+  font-size: 7px;
+  letter-spacing: 0.25em;
+  white-space: nowrap;
+}
+.field-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 126px;
+  height: 126px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 9px;
+  pointer-events: none;
+}
+.field-core::before {
+  content: "";
+  position: absolute;
+  inset: 15px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--bg) 45%, var(--field-glow)),
+    var(--bg)
+  );
+  box-shadow:
+    0 0 35px var(--field-glow),
+    inset 0 0 25px var(--field-glow);
+  border: 1px solid color-mix(in srgb, var(--field-blue) 35%, transparent);
+}
+.field-core strong {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  font-size: 33px;
+  font-weight: 500;
+  color: var(--gold);
+  font-family: "Inter Variable", sans-serif;
+  text-shadow: 0 0 25px color-mix(in srgb, var(--gold) 22%, transparent);
+}
+.field-core > span:last-child {
+  position: relative;
+  z-index: 2;
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+.field-core-orbit {
+  position: absolute;
+  inset: 0;
+  border: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
+  border-radius: 50%;
+  border-left-color: transparent;
+  transform: rotate(-30deg) scaleY(0.64);
+}
+.field-core-orbit-two {
+  inset: -6px;
+  transform: rotate(35deg) scaleY(0.65);
+  border-color: color-mix(in srgb, var(--field-blue) 40%, transparent);
+  border-right-color: transparent;
+}
+.field-core-sphere {
+  position: absolute;
+  inset: 17px;
+  opacity: 0.25;
+}
+.field-core-sphere svg {
+  width: 100%;
+  height: 100%;
+  fill: color-mix(in srgb, var(--gold) 6%, transparent);
+  stroke: var(--gold);
+  stroke-width: 0.8;
+}
+.field-core-sphere .field-core-flow {
+  fill: none;
+  stroke: var(--field-blue);
+  stroke-width: 2;
+  stroke-dasharray: 10 60;
+}
+.field-node {
+  position: absolute;
+  width: 92px;
+  min-height: 70px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border-radius: 8px;
+  padding: 5px;
+  color: var(--muted);
+  text-align: center;
+}
+.field-node:hover,
+.field-node:focus-visible {
+  background: color-mix(in srgb, var(--field-blue) 5%, var(--surface));
+  color: var(--text);
+}
+.field-node-target {
+  display: grid;
+  place-items: center;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: 1px solid color-mix(in srgb, var(--field-blue) 40%, var(--border));
+  border-radius: 50%;
+}
+.field-node-target > span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--field-blue);
+  box-shadow: 0 0 8px var(--field-glow);
+}
+.field-node-target > i {
+  position: absolute;
+  inset: -6px;
+  border: 1px solid var(--field-blue);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.field-node strong {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.field-node small {
+  font-size: 11px;
+  font-family: "Inter Variable", sans-serif;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+.field-node.is-focused {
+  color: var(--gold);
+}
+.field-node.is-focused .field-node-target {
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 12%, var(--bg));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--gold) 12%, transparent);
+}
+.field-node.is-focused .field-node-target > span {
+  background: var(--gold);
+}
+.field-node.is-focused .field-node-target > i {
+  border-color: var(--gold);
+}
+.field-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-top: 170px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.field-inspector {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px 18px;
+  grid-template-areas: "heading heading" "focus price" "actions actions";
+  border: 1px solid var(--studio-edge);
+  border-radius: 12px;
+  padding: 13px 17px;
+  background: linear-gradient(
+    125deg,
+    color-mix(in srgb, var(--gold) 4%, var(--surface)),
+    color-mix(in srgb, var(--bg) 40%, var(--surface))
+  );
+  box-shadow: inset 0 1px #e6c78b12;
+}
+.field-inspector-heading {
+  grid-area: heading;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1;
+}
+.field-inspector-heading > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--field-blue);
+}
+.field-inspector-heading .mineral-watch-button {
+  min-height: 23px;
+  padding: 2px;
+}
+.field-focus-title {
+  grid-area: focus;
+  min-width: 0;
+}
+.field-focus-title > a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--gold);
+}
+.field-focus-title h3 {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 7px;
+  overflow-wrap: anywhere;
+}
+.field-focus-title > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.field-focus-title > span > strong {
+  font-size: 19px;
+  font-family: "Inter Variable", sans-serif;
+  color: var(--text);
+  font-weight: 500;
+}
+.field-price {
+  grid-area: price;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-left: 1px solid var(--border);
+  padding-left: 16px;
+}
+.field-price > span {
+  font-size: 10px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.field-price > strong {
+  font-size: 18px;
+  font-family: "Inter Variable", sans-serif;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.field-price small {
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.field-price > a {
+  font-size: 10px;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.field-price > a:hover {
+  color: var(--gold);
+}
+.field-preview {
+  display: none;
+}
+.field-inspector-actions {
+  grid-area: actions;
+  display: flex;
+  justify-content: space-between;
+  gap: 13px;
+  border-top: 1px solid var(--border);
+  margin-top: 5px;
+  padding-top: 10px;
+}
+.field-inspector-actions > a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--gold);
+  min-height: 24px;
+}
+.field-legend {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.7;
+  padding: 13px 3px 0;
+}
+.field-legend-dot {
+  width: 4px;
+  height: 4px;
+  min-width: 4px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--field-blue);
+}
+.hero-observatory > .resource-atlas {
+  padding: 15px 0 0;
+}
+.field-dialog {
+  width: min(1180px, calc(100vw - 48px));
+  max-width: 1180px;
+  max-height: calc(100dvh - 55px);
+  overflow-y: auto;
+}
+.field-dialog > .subtitle {
+  max-width: 850px;
+  margin-top: 10px;
+}
+.field-dialog .field-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+  align-items: center;
+}
+.field-dialog .field-stage {
+  height: min(62dvh, 560px);
+  min-height: 400px;
+}
+.field-dialog .field-inspector {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+}
+.field-dialog .field-focus-title h3 {
+  font-size: 28px;
+}
+.field-dialog .field-focus-title > span > strong {
+  font-size: 32px;
+}
+.field-dialog .field-price {
+  border-left: 0;
+  border-top: 1px solid var(--border);
+  padding: 18px 0 0;
+}
+.field-dialog .field-price > span {
+  white-space: normal;
+  font-size: 12px;
+}
+.field-dialog .field-price > strong {
+  font-size: 24px;
+}
+.field-dialog .field-preview {
+  display: block;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+.field-preview a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px;
+  gap: 10px;
+}
+.field-preview a > span {
+  grid-column: 1/-1;
+  color: var(--muted);
+  font-size: 11px;
+}
+.field-preview strong {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  color: var(--copy, var(--text));
+}
+.field-preview svg {
+  color: var(--gold);
+  margin-top: 6px;
+}
+.field-dialog .field-inspector-actions {
+  flex-wrap: wrap;
+}
+
+/* Reader-controlled slideshow. Focus/hover and global pause stop the timer. */
+.desk-tab-bar {
+  gap: 15px;
+}
+.desk-playback {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.desk-playback button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 28px;
+  min-height: 31px;
+  padding: 5px;
+  border-radius: 5px;
+  color: var(--muted);
+}
+.desk-playback button:hover {
+  color: var(--gold);
+  background: var(--surface-2);
+}
+.desk-playback button[aria-pressed="true"] {
+  color: var(--gold);
+}
+.desk-playback button:disabled {
+  opacity: 0.35;
+}
+.desk-playback span {
+  font-size: 11px;
+}
+.desk-cycle-track {
+  height: 2px;
+  background: color-mix(in srgb, var(--gold) 5%, transparent);
+  overflow: hidden;
+}
+.desk-cycle-track > span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--field-blue), var(--gold));
+  animation: immersive-cycle 9s linear infinite;
+  animation-play-state: paused;
+}
+.desk-surface[data-cycling="true"] .desk-cycle-track > span {
+  animation-play-state: running;
+}
+
+/* Route-specific material depth with accessible, stationary reading content. */
+.scene-route-ribbon {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.scene-route-ribbon > span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--scene-rgb) / 0.8),
+    var(--gold),
+    transparent
+  );
+}
+.page-heading.scene-heading {
+  min-height: 214px;
+  overflow: clip;
+  background:
+    radial-gradient(
+      ellipse at 92% 45%,
+      rgb(var(--scene-rgb) / 0.16),
+      transparent 55%
+    ),
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--surface) 94%, var(--gold)),
+      var(--surface)
+    );
+  border-radius: 22px 22px 8px 22px;
+}
+.page-heading.scene-heading::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 42%;
+  background: linear-gradient(
+    110deg,
+    transparent 10%,
+    rgb(var(--scene-rgb) / 0.03) 48%,
+    rgb(var(--scene-rgb) / 0.16) 50%,
+    transparent 54%
+  );
+  pointer-events: none;
+  transform: translateX(-20%);
+  opacity: 0.8;
+}
+.scene-heading .scene-glyph {
+  width: 290px;
+  height: 230px;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.85;
+}
+.scene-heading > .heading-copy {
+  max-width: calc(100% - 210px);
+}
+.scene-heading:has(.heading-actions) .scene-glyph {
+  opacity: 0.23;
+}
+.scene-heading .glyph-orbit-outer {
+  stroke-width: 1.2;
+}
+.scene-heading .glyph-core {
+  filter: drop-shadow(0 0 12px rgb(var(--scene-rgb) / 0.15));
+}
+.scene-heading .heading-orbit-frame > span {
+  border-color: rgb(var(--scene-rgb) / 0.2);
+}
+.scene-card[data-depth="true"] {
+  transform-style: preserve-3d;
+  transition:
+    transform 0.28s ease,
+    border-color 0.25s,
+    box-shadow 0.3s;
+}
+.scene-card[data-depth="true"]:focus-within {
+  transform: none;
+}
+
+html[data-visuals="on"] .field-nebula {
+  animation: field-nebula 10s ease-in-out infinite alternate;
+}
+.resource-field[data-visible="false"]
+  :is(
+    .field-nebula,
+    .field-grid,
+    .field-core-orbit,
+    .field-core-flow,
+    .field-link-flow,
+    .field-node-target > i
+  ) {
+  animation-play-state: paused;
+}
+@media (min-width: 801px) {
+  .field-dialog .field-node {
+    width: 110px;
+  }
+  .field-dialog .field-node strong {
+    font-size: 15px;
+  }
+  .field-dialog .field-node small {
+    font-size: 12px;
+  }
+  .field-dialog .field-node-target {
+    width: 28px;
+    height: 28px;
+  }
+  .field-dialog .field-core {
+    width: 155px;
+    height: 155px;
+  }
+  .field-dialog .field-core strong {
+    font-size: 40px;
+  }
+}
+[data-reading-size="large"] .field-focus-title h3 {
+  font-size: 24px;
+}
+[data-reading-size="large"] .field-inspector-actions > a {
+  font-size: 13px;
+}
+html[data-visuals="on"] .field-grid {
+  animation: field-drift 32s linear infinite;
+}
+html[data-visuals="on"] .field-core-orbit {
+  animation: field-orbit 13s linear infinite;
+}
+html[data-visuals="on"] .field-core-orbit-two {
+  animation: field-orbit-two 17s linear infinite reverse;
+}
+html[data-visuals="on"] .field-core-flow {
+  animation: field-core-flow 8s linear infinite;
+}
+html[data-visuals="on"] .field-link-flow {
+  animation: field-flow 5.2s linear infinite var(--flow-delay, 0s);
+}
+html[data-visuals="on"] .field-node-target > i {
+  animation: field-node-pulse 4.6s ease-out infinite var(--node-delay, 0s);
+}
+html[data-visuals="on"] .field-inspector {
+  animation: field-inspect 0.42s ease both;
+}
+html[data-visuals="on"] .scene-route-ribbon > span {
+  animation: field-route 1s ease forwards;
+}
+html[data-visuals="on"] .page-heading.scene-heading::before {
+  animation: field-heading-light 9s ease-in-out infinite alternate;
+}
+.resource-field:hover .field-link-flow {
+  animation-duration: 7s;
+}
+@media (hover: hover) and (pointer: fine) {
+  html[data-visuals="on"]
+    .scene-card[data-depth="true"]:hover:not(:focus-within) {
+    transform: perspective(1000px) rotateX(var(--depth-x, 0deg))
+      rotateY(var(--depth-y, 0deg)) translateY(-3px);
+    box-shadow:
+      0 18px 45px #00000024,
+      inset 0 1px color-mix(in srgb, var(--gold) 15%, transparent);
+  }
+}
+@keyframes field-nebula {
+  to {
+    transform: scale(1.15) rotate(8deg);
+    opacity: 0.6;
+  }
+}
+@keyframes field-drift {
+  to {
+    background-position: 62px -58px;
+  }
+}
+@keyframes field-orbit {
+  to {
+    transform: rotate(330deg) scaleY(0.64);
+  }
+}
+@keyframes field-orbit-two {
+  to {
+    transform: rotate(395deg) scaleY(0.65);
+  }
+}
+@keyframes field-core-flow {
+  to {
+    stroke-dashoffset: -140;
+  }
+}
+@keyframes field-flow {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+@keyframes field-node-pulse {
+  from {
+    opacity: 0.5;
+    transform: scale(0.75);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+@keyframes field-inspect {
+  from {
+    opacity: 0.55;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes field-route {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes field-heading-light {
+  to {
+    transform: translateX(40%);
+    opacity: 0.35;
+  }
+}
+@keyframes immersive-cycle {
+  to {
+    transform: scaleX(1);
+  }
+}
+[data-theme="light"] .field-core::before {
+  background: radial-gradient(circle, #fcfbef, var(--surface-2));
+  box-shadow: 0 0 35px #70aeb820;
+}
+[data-theme="light"] .field-inspector {
+  box-shadow:
+    0 8px 25px #2c44530a,
+    inset 0 1px #fff;
+}
+@media (max-width: 1200px) {
+  .desk-verification {
+    display: none;
+  }
+  .observatory-mode-bar {
+    flex-wrap: wrap;
+  }
+  .observatory-mode-bar > div {
+    margin-left: auto;
+  }
+  .field-stage {
+    height: 350px;
+  }
+  .field-node {
+    width: 80px;
+  }
+  .field-core {
+    width: 108px;
+    height: 108px;
+  }
+  .field-core strong {
+    font-size: 28px;
+  }
+  .field-inspector {
+    padding: 12px 14px;
+    gap: 8px 12px;
+  }
+  .field-focus-title h3 {
+    font-size: 20px;
+  }
+  .field-price > strong {
+    font-size: 16px;
+  }
+}
+@media (max-width: 900px) {
+  .scene-heading > .heading-copy {
+    max-width: calc(100% - 120px);
+  }
+  .scene-heading .scene-glyph {
+    width: 220px;
+    right: -15px;
+    opacity: 0.5;
+  }
+  .field-dialog .field-content {
+    grid-template-columns: minmax(0, 1fr) 245px;
+    gap: 12px;
+  }
+  .field-dialog .field-inspector {
+    padding: 19px;
+  }
+}
+@media (max-width: 800px) {
+  .observatory-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero-observatory {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: 10px;
+  }
+  .field-embed {
+    min-height: 0;
+  }
+  .field-stage {
+    height: 400px;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+  .field-node {
+    width: 90px;
+  }
+  .field-node strong {
+    font-size: 13px;
+  }
+  .field-inspector {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 16px 20px;
+  }
+  .field-core {
+    width: 128px;
+    height: 128px;
+  }
+  .field-core strong {
+    font-size: 32px;
+  }
+  .field-dialog .field-content {
+    display: block;
+  }
+  .field-dialog .field-stage {
+    min-height: 350px;
+    height: 390px;
+  }
+  .field-dialog .field-inspector {
+    display: grid;
+    grid-template-areas: "heading heading" "focus price" "preview preview" "actions actions";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+  }
+  .field-dialog .field-price {
+    border-top: 0;
+    border-left: 1px solid var(--border);
+    padding: 0 0 0 15px;
+  }
+  .field-dialog .field-preview {
+    grid-area: preview;
+    padding-top: 12px;
+  }
+  .field-dialog .field-focus-title h3 {
+    font-size: 22px;
+  }
+  .field-dialog .field-focus-title > span > strong {
+    font-size: 25px;
+  }
+  .field-dialog .field-price > strong {
+    font-size: 20px;
+  }
+}
+@media (max-width: 600px) {
+  .observatory-hero {
+    border-radius: 18px;
+  }
+  .hero-observatory {
+    padding-top: 18px;
+  }
+  .observatory-mode-bar > span {
+    font-size: 10px;
+  }
+  .observatory-mode-bar button {
+    font-size: 10px;
+    min-height: 34px;
+    padding: 6px;
+  }
+  .observatory-mode-bar {
+    gap: 10px;
+  }
+  .field-controls {
+    padding-top: 11px;
+  }
+  .field-stage {
+    height: 340px;
+  }
+  .field-node {
+    width: 69px;
+    min-height: 64px;
+    padding: 3px;
+    gap: 4px;
+  }
+  .field-node strong {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .field-node small {
+    font-size: 10px;
+  }
+  .field-node-target {
+    width: 20px;
+    height: 20px;
+  }
+  .field-node-target > span {
+    width: 4px;
+    height: 4px;
+  }
+  .field-core {
+    width: 96px;
+    height: 96px;
+    gap: 5px;
+  }
+  .field-core strong {
+    font-size: 26px;
+  }
+  .field-core > span:last-child {
+    font-size: 5px;
+  }
+  .field-axis {
+    display: none;
+  }
+  .field-inspector {
+    padding: 12px 14px;
+    gap: 9px;
+  }
+  .field-price {
+    padding-left: 12px;
+  }
+  .field-price > strong {
+    font-size: 16px;
+  }
+  .field-focus-title h3 {
+    font-size: 19px;
+  }
+  .field-inspector-actions > a {
+    font-size: 11px;
+    min-height: 32px;
+  }
+  .field-legend {
+    font-size: 10px;
+    padding-top: 12px;
+  }
+  .field-dialog {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 32px);
+  }
+  .field-dialog .field-stage {
+    min-height: 310px;
+    height: 310px;
+  }
+  .field-dialog .field-inspector {
+    padding: 13px;
+  }
+  .field-dialog .field-price > strong {
+    font-size: 17px;
+  }
+  .field-dialog .field-preview {
+    display: none;
+  }
+  .field-dialog .field-focus-title h3 {
+    font-size: 20px;
+  }
+  .field-dialog .field-focus-title > span > strong {
+    font-size: 23px;
+  }
+  .desk-tab-bar {
+    flex-wrap: wrap;
+    padding-bottom: 7px;
+    gap: 0;
+  }
+  .desk-playback {
+    margin-top: 5px;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .desk-playback button {
+    min-height: 29px;
+  }
+  .desk-tab-bar [role="tablist"] {
+    margin-bottom: 0;
+  }
+  .page-heading.scene-heading {
+    min-height: 185px;
+    padding: 28px 22px;
+  }
+  .scene-heading > .heading-copy {
+    max-width: 100%;
+  }
+  .scene-heading .scene-glyph {
+    width: 200px;
+    height: 175px;
+    right: -35px;
+    opacity: 0.17;
+  }
+  .page-heading.scene-heading::before {
+    width: 75%;
+    opacity: 0.4;
+  }
+}
+@media (max-width: 360px) {
+  .observatory-mode-bar > span {
+    width: 100%;
+  }
+  .observatory-mode-bar > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .field-stage {
+    height: 320px;
+  }
+  .field-node {
+    width: 60px;
+  }
+  .field-node strong {
+    font-size: 10px;
+  }
+  .field-core {
+    width: 82px;
+    height: 82px;
+  }
+  .field-core strong {
+    font-size: 23px;
+  }
+  .field-core > span:last-child {
+    font-size: 4px;
+  }
+  .field-core::before {
+    inset: 10px;
+  }
+  .field-price small {
+    font-size: 9px;
+  }
+}
+html[data-visuals="off"] .desk-cycle-track > span {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .field-nebula,
+  .field-grid,
+  .field-core-orbit,
+  .field-core-flow,
+  .field-link-flow,
+  .field-node-target > i,
+  .field-inspector,
+  .scene-route-ribbon > span,
+  .page-heading.scene-heading::before,
+  .desk-cycle-track > span {
+    animation: none !important;
+  }
+  .scene-card[data-depth="true"] {
+    transform: none !important;
+    transition: none;
+  }
+}

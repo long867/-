@@ -50,4 +50,6 @@ export const sceneCardSelector = [
   ".chat-source",
   ".topic-evidence",
   ".research-source",
+  ".destination-card",
+  ".desk-quote",
 ].join(",");

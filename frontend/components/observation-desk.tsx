@@ -7,6 +7,8 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Check,
+  ChevronLeft,
+  ChevronRight,
   FileText,
   FlaskConical,
   Layers3,
@@ -15,12 +17,15 @@ import {
   ShieldCheck,
   Sparkles,
   Star,
+  Pause,
+  Play,
 } from "lucide-react";
 import { publicApi } from "@/lib/api";
 import { formatDate } from "@/lib/format-date";
 import { latestQuotation, observationItems } from "@/lib/observation.mjs";
 import { useMineralWatchlist } from "@/hooks/use-mineral-watchlist";
 import { usePreferences } from "@/hooks/use-preferences";
+import { useAmbientCycle } from "@/hooks/use-ambient-cycle";
 import type {
   Article,
   ArticlePage,
@@ -168,6 +173,8 @@ export function ObservationDesk({
   const [selected, setSelected] = useState<string | null>(null);
   const [editor, setEditor] = useState(false);
   const [expandedWatch, setExpandedWatch] = useState(false);
+  const [automatic, setAutomatic] = useState(true);
+  const editorial = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState("");
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const editorTrigger = useRef<HTMLButtonElement>(null);
@@ -237,6 +244,16 @@ export function ObservationDesk({
     ...new Map(stories.map((story) => [story.id, story])).values(),
   ].slice(0, 6);
   const story = unique.find((item) => item.id === selected) || unique[0];
+  function stepStory(direction: number) {
+    if (unique.length < 2) return;
+    const index = unique.findIndex((item) => item.id === story?.id);
+    setSelected(unique[(index + direction + unique.length) % unique.length].id);
+  }
+  const { running, interactionProps } = useAmbientCycle(
+    editorial,
+    () => stepStory(1),
+    automatic && unique.length > 1,
+  );
   const current = definitions.find((definition) => definition.key === tab)!;
   const busy =
     tab === "research"
@@ -262,6 +279,7 @@ export function ObservationDesk({
   function changeTab(next: DeskTab) {
     setTab(next);
     setSelected(null);
+    setAutomatic(false);
   }
   function navigateTab(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     let next: number;
@@ -301,7 +319,7 @@ export function ObservationDesk({
           <ArrowDownRight size={18} />
         </a>
       </div>
-      <div className="desk-surface">
+      <div className="desk-surface" data-cycling={running}>
         <div className="desk-tab-bar">
           <div
             role="tablist"
@@ -330,6 +348,47 @@ export function ObservationDesk({
             <ShieldCheck size={13} />{" "}
             {t("真实资料 · 来源可追溯", "Original, traceable sources")}
           </span>
+          <div
+            className="desk-playback"
+            aria-label={t("焦点资讯播放控制", "Focus story playback")}
+          >
+            <button
+              disabled={unique.length < 2}
+              aria-label={t("上一条焦点", "Previous focus story")}
+              onClick={() => {
+                setAutomatic(false);
+                stepStory(-1);
+              }}
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <button
+              aria-pressed={automatic}
+              disabled={unique.length < 2}
+              onClick={() => setAutomatic(!automatic)}
+              aria-label={
+                automatic
+                  ? t("暂停焦点轮播", "Pause focus slideshow")
+                  : t("播放焦点轮播", "Play focus slideshow")
+              }
+            >
+              {automatic ? <Pause size={13} /> : <Play size={13} />}
+              <span>{t("巡播", "Slideshow")}</span>
+            </button>
+            <button
+              disabled={unique.length < 2}
+              aria-label={t("下一条焦点", "Next focus story")}
+              onClick={() => {
+                setAutomatic(false);
+                stepStory(1);
+              }}
+            >
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </div>
+        <div className="desk-cycle-track" aria-hidden="true">
+          <span key={story?.id} />
         </div>
         <div className="desk-grid">
           <div
@@ -337,6 +396,8 @@ export function ObservationDesk({
             role="tabpanel"
             id={`${id}-panel`}
             aria-labelledby={`${id}-${tab}`}
+            ref={editorial}
+            {...interactionProps}
           >
             {story ? (
               <>
@@ -350,7 +411,10 @@ export function ObservationDesk({
                       type="button"
                       className={item.id === story.id ? "is-selected" : ""}
                       aria-pressed={item.id === story.id}
-                      onClick={() => setSelected(item.id)}
+                      onClick={() => {
+                        setSelected(item.id);
+                        setAutomatic(false);
+                      }}
                     >
                       <span className="desk-story-number">
                         {String(index + 1).padStart(2, "0")}

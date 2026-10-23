@@ -22,6 +22,19 @@ export function SiteExperience({ children }: { children: ReactNode }) {
     let scanFrame = 0,
       pointerFrame = 0;
     let pointer: { card: HTMLElement; x: number; y: number } | null = null;
+    let lastCard: HTMLElement | null = null;
+    function resetDepth() {
+      if (!lastCard) return;
+      lastCard.style.removeProperty("--depth-x");
+      lastCard.style.removeProperty("--depth-y");
+      lastCard = null;
+    }
+    function leave() {
+      resetDepth();
+      pointer = null;
+      cancelAnimationFrame(pointerFrame);
+      pointerFrame = 0;
+    }
     const seen = new WeakSet<Element>();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -41,6 +54,12 @@ export function SiteExperience({ children }: { children: ReactNode }) {
           if (seen.has(card)) return;
           seen.add(card);
           card.classList.add("scene-card");
+          if (
+            card.matches(
+              ".market-card,.country-card,.hot-card,.frontier-paper,.destination-card,.desk-quote",
+            )
+          )
+            card.dataset.depth = "true";
           card.style.setProperty(
             "--entry-delay",
             `${Math.min((i % 5) * 45, 180)}ms`,
@@ -75,19 +94,43 @@ export function SiteExperience({ children }: { children: ReactNode }) {
       pointerFrame = requestAnimationFrame(() => {
         pointerFrame = 0;
         if (!pointer) return;
+        if (lastCard !== pointer.card) resetDepth();
+        lastCard = pointer.card;
         const rect = pointer.card.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const x = Math.min(
+          1,
+          Math.max(0, (pointer.x - rect.left) / rect.width),
+        );
+        const y = Math.min(
+          1,
+          Math.max(0, (pointer.y - rect.top) / rect.height),
+        );
+        pointer.card.style.setProperty("--depth-x", `${(0.5 - y) * 3}deg`);
+        pointer.card.style.setProperty("--depth-y", `${(x - 0.5) * 4}deg`);
         pointer.card.style.setProperty(
           "--glow-x",
           `${pointer.x - rect.left}px`,
         );
         pointer.card.style.setProperty("--glow-y", `${pointer.y - rect.top}px`);
+        pointer.card.style.setProperty(
+          "--pointer-x",
+          `${pointer.x - rect.left}px`,
+        );
+        pointer.card.style.setProperty(
+          "--pointer-y",
+          `${pointer.y - rect.top}px`,
+        );
       });
     }
     root.addEventListener("pointermove", move, { passive: true });
+    root.addEventListener("pointerleave", leave);
     return () => {
       observer.disconnect();
       mutations.disconnect();
       root.removeEventListener("pointermove", move);
+      root.removeEventListener("pointerleave", leave);
+      resetDepth();
       cancelAnimationFrame(scanFrame);
       cancelAnimationFrame(pointerFrame);
     };
@@ -95,6 +138,9 @@ export function SiteExperience({ children }: { children: ReactNode }) {
 
   return (
     <div className="site-experience" data-scene={scene} data-route={path}>
+      <div className="scene-route-ribbon" key={path} aria-hidden="true">
+        <span />
+      </div>
       <div className="scene-atmosphere" aria-hidden="true">
         <div className="cinema-spectrum" />
         <div className="scene-aurora scene-aurora-one" />

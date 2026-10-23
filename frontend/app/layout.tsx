@@ -20,6 +20,7 @@ import "./experience.css";
 import "./cinematic.css";
 import "./studio.css";
 import "./workbench.css";
+import "./immersive.css";
 export const metadata: Metadata = {
   title: {
     default: "MiningIntel · 全球矿产情报",

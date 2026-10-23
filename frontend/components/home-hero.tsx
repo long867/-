@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight, Search, ShieldCheck } from "lucide-react";
-import { ResourceAtlas, ObservatoryClock } from "./resource-atlas";
+import { ObservatoryClock } from "./resource-atlas";
+import { HeroObservatory } from "./resource-field";
 import { Locale } from "./locale";
-import type { Facets } from "@/types";
+import type { Article, Facets, MineralMarket } from "@/types";
 import {
   ObservatorySignature,
   ObservatoryDestinations,
@@ -13,10 +14,14 @@ export function HomeHero({
   articleCount,
   sourceCount,
   facets,
+  market,
+  articles,
 }: {
   articleCount?: number;
   sourceCount?: number;
   facets?: Facets;
+  market?: MineralMarket;
+  articles?: Article[];
 }) {
   const metrics = [
     {
@@ -69,8 +74,8 @@ export function HomeHero({
           <div className="hero-edition">
             <span className="edition-line" />
             <Locale
-              zh="全球资源情报 · 专业研究工作台"
-              en="Global resource intelligence · Your research desk"
+              zh="全球资源情报 · 沉浸式观测舱"
+              en="Global resource intelligence · Immersive observatory"
             />
           </div>
           <div className="eyebrow">
@@ -137,7 +142,7 @@ export function HomeHero({
             </button>
           </form>
         </div>
-        <ResourceAtlas regions={facets?.regions} />
+        <HeroObservatory facets={facets} market={market} articles={articles} />
         <div className="observatory-metrics">
           {metrics.map((metric, index) => (
             <div className="observatory-metric" key={metric.code}>

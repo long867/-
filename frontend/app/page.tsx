@@ -46,6 +46,8 @@ export default async function Page() {
         articleCount={initial.articles?.total}
         sourceCount={sources?.length}
         facets={initial.facets}
+        market={initial.market}
+        articles={initial.desk?.items}
       />
       <HomeDashboard initial={dashboardData} />
     </main>

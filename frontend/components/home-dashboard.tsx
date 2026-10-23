@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef, type PointerEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowUpRight,
@@ -45,40 +44,6 @@ export interface HomeData {
   papers?: ArticlePage;
 }
 export function HomeDashboard({ initial }: { initial: HomeData }) {
-  const surface = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (
-      !surface.current ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("resource-arriving");
-            observer.unobserve(entry.target);
-          }
-        }
-      },
-      { threshold: 0.12 },
-    );
-    surface.current
-      .querySelectorAll(".observatory-card, .hot-card, .panel, .consult-panel")
-      .forEach((card) => observer.observe(card));
-    return () => observer.disconnect();
-  }, []);
-  function illuminate(event: PointerEvent<HTMLDivElement>) {
-    if (event.pointerType !== "mouse" || !(event.target instanceof Element))
-      return;
-    const card = event.target.closest<HTMLElement>(
-      ".observatory-card, .hot-card, .article-card",
-    );
-    if (!card) return;
-    const bounds = card.getBoundingClientRect();
-    card.style.setProperty("--pointer-x", `${event.clientX - bounds.left}px`);
-    card.style.setProperty("--pointer-y", `${event.clientY - bounds.top}px`);
-  }
   const { t, language } = usePreferences();
   const hot = useQuery({
     queryKey: ["hot-articles"],
@@ -113,7 +78,7 @@ export function HomeDashboard({ initial }: { initial: HomeData }) {
   const isHot = Boolean(hot.data?.length);
   const hotItems = isHot ? hot.data || [] : initial.featured?.items || [];
   return (
-    <div className="home-content" ref={surface} onPointerMove={illuminate}>
+    <div className="home-content">
       <ObservationDesk
         initialArticles={initial.desk}
         initialPapers={initial.papers}
